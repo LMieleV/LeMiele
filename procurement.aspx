@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Working with Procurement, made simple. A practical guide for everyone at Etex on when to involve Procurement, how Source-to-Pay flows, and where to start your request.">
+<meta name="theme-color" content="#10161a">
+<meta property="og:title" content="Working with Procurement, made simple">
+<meta property="og:description" content="A practical guide for everyone at Etex on when to involve Procurement, how Source-to-Pay flows, and where to start your request.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M2 14 L10 7 L18 14' stroke='%23f06d0c' stroke-width='3.6' fill='none'/%3E%3C/svg%3E">
 <title>Etex Procurement — Working with Procurement, made simple</title>
 <style>
 /* ============================================================
@@ -50,6 +55,14 @@ body{
 }
 
 ::selection{ background:var(--accent); color:#10161a; }
+
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+
+html{ scrollbar-color:#2c3840 var(--bg); }
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:#2c3840; border-radius:99px; }
+::-webkit-scrollbar-thumb:hover{ background:#3a474f; }
 
 a{ color:inherit; text-decoration:none; }
 ul{ list-style:none; }
@@ -148,10 +161,6 @@ body.loaded .preloader{ transform:translateY(-100%); pointer-events:none; }
   border-bottom-color:var(--line-soft);
 }
 .nav__logo{ display:flex; align-items:center; gap:.7rem; }
-.nav__wordmark{
-  font-family:var(--sans); font-weight:700; font-size:1.25rem;
-  letter-spacing:-.02em; line-height:1; display:flex; align-items:center; gap:.28rem;
-}
 .nav__division{
   font-size:.68rem; letter-spacing:.3em; text-transform:uppercase;
   color:var(--muted); border-left:1px solid var(--line);
@@ -195,7 +204,7 @@ body.loaded .nav{ opacity:1; transform:none; }
   content:""; position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(ellipse at 50% 120%, transparent 40%, rgba(16,22,26,.65) 100%);
 }
-.hero__inner{ position:relative; z-index:2; max-width:1400px; margin:0 auto; width:100%; }
+.hero__inner{ position:relative; z-index:2; max-width:1400px; margin:0 auto; width:100%; will-change:transform,opacity; }
 
 .hero__eyebrow{
   display:flex; align-items:center; gap:1rem;
@@ -269,7 +278,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   padding:1.3rem 0; overflow:hidden; white-space:nowrap;
   background:var(--bg-2);
 }
-.marquee__track{ display:inline-flex; animation:marquee 30s linear infinite; }
+.marquee__track{ display:inline-flex; animation:marquee 34s linear infinite; }
 .marquee:hover .marquee__track{ animation-play-state:paused; }
 .marquee__item{
   font-family:var(--serif); font-size:clamp(1.05rem,2.2vw,1.55rem);
@@ -291,6 +300,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
 .section__label{ font-size:.72rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent); }
 .section__num{ font-family:var(--serif); font-style:italic; color:var(--muted); font-size:.95rem; white-space:nowrap; }
 .section__title{
+  text-wrap:balance;
   font-family:var(--serif); font-weight:400;
   font-size:clamp(2rem,4.6vw,3.8rem); line-height:1.08; letter-spacing:-.02em;
   max-width:900px; margin-bottom:1.4rem;
@@ -306,7 +316,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
 .reveal[data-delay="3"]{ transition-delay:.36s; }
 
 /* ---------- manifesto ---------- */
-.manifesto p{
+#manifestoText{
   font-family:var(--serif); font-weight:400;
   font-size:clamp(1.6rem,4vw,3.2rem);
   line-height:1.3; letter-spacing:-.01em; max-width:1150px;
@@ -411,7 +421,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   padding:clamp(1.6rem,3vw,2.6rem); position:relative; overflow:hidden;
   transition:border-color .4s, transform .5s var(--ease-out);
 }
-.path:hover{ border-color:rgba(240,109,12,.45); transform:translateY(-4px); }
+.path:hover{ border-color:rgba(240,109,12,.45); }
 .path__tag{
   display:inline-block; font-size:.65rem; letter-spacing:.3em; text-transform:uppercase;
   color:var(--accent); border:1px solid rgba(240,109,12,.4);
@@ -502,7 +512,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   background:var(--bg-2); position:relative;
   transition:border-color .4s, transform .5s var(--ease-out);
 }
-.contact:hover{ border-color:rgba(240,109,12,.45); transform:translateY(-4px); }
+.contact:hover{ border-color:rgba(240,109,12,.45); }
 .contact__mono{
   font-family:var(--serif); font-style:italic; color:var(--accent);
   font-size:.95rem; margin-bottom:2.2rem; display:block;
@@ -549,6 +559,8 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   padding:0 0 1.7rem calc(.9rem + clamp(1rem,3vw,2.4rem));
   color:var(--ink-dim); font-size:.95rem; max-width:820px;
 }
+.faq details[open] .a{ animation:faqIn .5s var(--ease-out); }
+@keyframes faqIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 .faq .a b{ color:var(--accent-tint); font-weight:600; }
 
 /* ---------- footer ---------- */
@@ -590,7 +602,6 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
 .footer__grid a{ transition:color .3s; }
 .footer__grid a:hover{ color:var(--accent); }
 .footer__brand{ display:flex; align-items:center; gap:.6rem; }
-.footer__brand .word{ font-weight:700; font-size:1rem; letter-spacing:-.02em; text-transform:none; color:var(--ink); }
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
@@ -692,7 +703,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">When should I contact Procurement?</span>
-      <span class="section__num">02 / 08</span>
+      <span class="section__num">01 / 09</span>
     </div>
     <h2 class="section__title reveal">Bring us in <em>before</em> a commitment is made.</h2>
     <p class="section__intro reveal">
@@ -734,7 +745,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">How we work best together</span>
-      <span class="section__num">03 / 08</span>
+      <span class="section__num">02 / 09</span>
     </div>
     <h2 class="section__title reveal">Our engagement <em>principles.</em></h2>
     <p class="section__intro reveal">
@@ -774,7 +785,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">The Source-to-Pay process at a glance</span>
-      <span class="section__num">04 / 08</span>
+      <span class="section__num">03 / 09</span>
     </div>
     <h2 class="section__title reveal">One <em>end-to-end</em> framework, across Etex.</h2>
     <div class="steps" style="margin-top:clamp(2rem,5vh,3.5rem)">
@@ -826,7 +837,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">How do I start a request?</span>
-      <span class="section__num">05 / 08</span>
+      <span class="section__num">04 / 09</span>
     </div>
     <h2 class="section__title reveal">Two paths, one <em>front door.</em></h2>
     <p class="section__intro reveal">
@@ -834,7 +845,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       request — we'll route it to the right team within one working day.
     </p>
     <div class="paths">
-      <article class="path reveal" data-hover>
+      <article class="path reveal">
         <span class="path__tag">› Path A</span>
         <h3>New sourcing or supplier</h3>
         <p class="path__sub">No existing contract or new commercial scope</p>
@@ -854,7 +865,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
           <li><span class="t">Week 7+</span><span>Contract signature &amp; onboarding</span></li>
         </ul>
       </article>
-      <article class="path reveal" data-delay="1" data-hover>
+      <article class="path reveal" data-delay="1">
         <span class="path__tag">› Path B</span>
         <h3>Purchase request / order</h3>
         <p class="path__sub">Operational purchasing under existing scope</p>
@@ -883,7 +894,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Roles &amp; responsibilities</span>
-      <span class="section__num">06 / 08</span>
+      <span class="section__num">05 / 09</span>
     </div>
     <h2 class="section__title reveal">A <em>shared</em> responsibility.</h2>
     <p class="section__intro reveal">
@@ -919,7 +930,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Sustainability &amp; compliance</span>
-      <span class="section__num">07 / 08</span>
+      <span class="section__num">06 / 09</span>
     </div>
     <h2 class="section__title reveal">Embedded, <em>not bolted on.</em></h2>
     <p class="section__intro reveal">
@@ -946,7 +957,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Tools you may interact with</span>
-      <span class="section__num">08 / 08</span>
+      <span class="section__num">07 / 09</span>
     </div>
     <h2 class="section__title reveal">The <em>digital toolbox.</em></h2>
     <p class="section__intro reveal">
@@ -998,7 +1009,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Who to contact</span>
-      <span class="section__num">09</span>
+      <span class="section__num">08 / 09</span>
     </div>
     <h2 class="section__title reveal">Not sure where to start? We're here to <em>partner.</em></h2>
     <p class="section__intro reveal">
@@ -1006,25 +1017,25 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       we'll route you within one working day.
     </p>
     <div class="contacts">
-      <article class="contact reveal" data-hover>
+      <article class="contact reveal">
         <span class="contact__mono">LP</span>
         <h3>Local / regional Procurement</h3>
         <p>Site- and country-specific contacts</p>
         <span class="contact__arrow" aria-hidden="true">›</span>
       </article>
-      <article class="contact reveal" data-delay="1" data-hover>
+      <article class="contact reveal" data-delay="1">
         <span class="contact__mono">CM</span>
         <h3>Category &amp; commodity managers</h3>
         <p>For specialised sourcing topics</p>
         <span class="contact__arrow" aria-hidden="true">›</span>
       </article>
-      <article class="contact reveal" data-delay="2" data-hover>
+      <article class="contact reveal" data-delay="2">
         <span class="contact__mono">PM</span>
         <h3>Procurement PMO / Process</h3>
         <p>Tools, governance &amp; transformation</p>
         <span class="contact__arrow" aria-hidden="true">›</span>
       </article>
-      <article class="contact reveal" data-delay="3" data-hover>
+      <article class="contact reveal" data-delay="3">
         <span class="contact__mono">TC</span>
         <h3>Procurement Teams channel</h3>
         <p>Community Q&amp;A &amp; updates</p>
@@ -1039,7 +1050,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Frequently asked questions</span>
-      <span class="section__num">10</span>
+      <span class="section__num">09 / 09</span>
     </div>
     <h2 class="section__title reveal">Quick answers to <em>common questions.</em></h2>
     <div class="reveal" style="margin-top:clamp(2rem,5vh,3rem)">
@@ -1119,14 +1130,16 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   "use strict";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- preloader ---------- */
+  /* ---------- preloader (skipped on repeat visits this session) ---------- */
   var countEl = document.getElementById("loadCount");
   function finishLoad(){ document.body.classList.add("loaded"); }
-  if (reduceMotion){
+  var seen = false;
+  try{ seen = sessionStorage.getItem("etex-proc-seen") === "1"; sessionStorage.setItem("etex-proc-seen","1"); }catch(e){}
+  if (reduceMotion || seen){
     countEl.textContent = "100";
     finishLoad();
   } else {
-    var t0 = null, DUR = 1400;
+    var t0 = null, DUR = 1100;
     function tick(ts){
       if (!t0) t0 = ts;
       var p = Math.min((ts - t0) / DUR, 1);
@@ -1141,6 +1154,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   /* ---------- nav + scroll progress ---------- */
   var nav = document.getElementById("nav");
   var progress = document.querySelector(".progress");
+  var heroInner = document.querySelector(".hero__inner");
   var ticking = false;
   function onScroll(){
     if (ticking) return;
@@ -1150,6 +1164,10 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       nav.classList.toggle("scrolled", y > 40);
       var max = document.documentElement.scrollHeight - window.innerHeight;
       progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+      if (!reduceMotion && heroInner && y < window.innerHeight){
+        heroInner.style.transform = "translateY(" + (y * 0.22) + "px)";
+        heroInner.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.9));
+      }
       updateManifesto();
       ticking = false;
     });
