@@ -3,27 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Group Procurement — creating value beyond cost through strategic sourcing, supplier partnerships and sustainable supply chains.">
-<title>Group Procurement — Sourcing Tomorrow, Together</title>
+<meta name="description" content="Working with Procurement, made simple. A practical guide for everyone at Etex on when to involve Procurement, how Source-to-Pay flows, and where to start your request.">
+<title>Etex Procurement — Working with Procurement, made simple</title>
 <style>
 /* ============================================================
-   GROUP PROCUREMENT — single-file, zero-dependency site
-   Dark editorial aesthetic · system fonts · SharePoint-safe
+   ETEX PROCUREMENT — Working with Procurement, made simple
+   Single-file, zero-dependency · Etex brand · SharePoint-safe
+   Palette sourced from the Procurement deck:
+   charcoal #151D21 · orange #F06D0C · slate #5A6770
+   mist #DDE1E4 · deep blue #00324B · green #80A45D
    ============================================================ */
 
 :root{
-  --bg:        #0a0a09;
-  --bg-2:      #121210;
-  --bg-3:      #1a1a17;
-  --ink:       #eae7e0;
-  --ink-dim:   #b5b1a6;
-  --muted:     #817d72;
-  --accent:    #c8a15a;
-  --accent-2:  #e4c98c;
-  --line:      rgba(234,231,224,.12);
-  --line-soft: rgba(234,231,224,.07);
+  --bg:        #10161a;
+  --bg-2:      #151d21;
+  --bg-3:      #1b252b;
+  --ink:       #edf1f4;
+  --ink-dim:   #c0c9cf;
+  --muted:     #7f8b94;
+  --accent:    #f06d0c;
+  --accent-soft:#ffb36b;
+  --accent-tint:#ffe1c3;
+  --green:     #80a45d;
+  --blue:      #0064a0;
+  --line:      rgba(221,225,228,.14);
+  --line-soft: rgba(221,225,228,.08);
   --serif:     Georgia, "Times New Roman", "Palatino Linotype", serif;
-  --sans:      -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --sans:      "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --ease-out:  cubic-bezier(.19,1,.22,1);
   --ease-soft: cubic-bezier(.25,.46,.45,.94);
 }
@@ -43,7 +49,7 @@ body{
   overflow-x:hidden;
 }
 
-::selection{ background:var(--accent); color:#0a0a09; }
+::selection{ background:var(--accent); color:#10161a; }
 
 a{ color:inherit; text-decoration:none; }
 ul{ list-style:none; }
@@ -52,7 +58,7 @@ img,svg,canvas{ display:block; max-width:100%; }
 /* ---------- skip link ---------- */
 .skip-link{
   position:fixed; top:-60px; left:16px; z-index:300;
-  background:var(--accent); color:#0a0a09;
+  background:var(--accent); color:#10161a;
   padding:.6em 1.2em; font-size:.8rem; font-weight:600;
   transition:top .2s;
 }
@@ -63,7 +69,7 @@ img,svg,canvas{ display:block; max-width:100%; }
   position:fixed; inset:-50%; z-index:120; pointer-events:none;
   width:200%; height:200%;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-  opacity:.045;
+  opacity:.04;
   animation:grain 8s steps(10) infinite;
 }
 @keyframes grain{
@@ -79,7 +85,7 @@ img,svg,canvas{ display:block; max-width:100%; }
 .progress{
   position:fixed; top:0; left:0; height:2px; width:100%;
   z-index:210; transform-origin:0 50%; transform:scaleX(0);
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  background:linear-gradient(90deg,var(--accent),var(--accent-soft));
 }
 
 /* ---------- custom cursor ---------- */
@@ -90,15 +96,15 @@ img,svg,canvas{ display:block; max-width:100%; }
 }
 .cursor-dot{ width:6px; height:6px; background:var(--accent); }
 .cursor-ring{
-  width:36px; height:36px; border:1px solid rgba(200,161,90,.55);
+  width:36px; height:36px; border:1px solid rgba(240,109,12,.55);
   transition:width .35s var(--ease-out), height .35s var(--ease-out),
              border-color .35s, opacity .3s, background .35s;
 }
 body.cursor-on .cursor-dot, body.cursor-on .cursor-ring{ opacity:1; }
 body.cursor-hover .cursor-ring{
   width:72px; height:72px;
-  border-color:rgba(200,161,90,.9);
-  background:rgba(200,161,90,.08);
+  border-color:rgba(240,109,12,.9);
+  background:rgba(240,109,12,.08);
 }
 @media (hover:none), (pointer:coarse){
   .cursor-dot,.cursor-ring{ display:none; }
@@ -121,30 +127,38 @@ body.cursor-hover .cursor-ring{
   margin-top:1rem; font-size:.7rem; letter-spacing:.4em;
   text-transform:uppercase; color:var(--muted);
 }
-body.loaded .preloader{ transform:translateY(-100%); }
-body.loaded .preloader{ pointer-events:none; }
+.preloader__label b{ color:var(--accent); font-weight:600; }
+body.loaded .preloader{ transform:translateY(-100%); pointer-events:none; }
+
+/* ---------- etex chevron mark ---------- */
+.xmark{ display:inline-block; vertical-align:middle; }
 
 /* ---------- nav ---------- */
 .nav{
   position:fixed; top:0; left:0; right:0; z-index:150;
   display:flex; align-items:center; justify-content:space-between;
-  padding:1.6rem clamp(1.2rem,4vw,3.5rem);
-  transition:background .5s, padding .5s, border-color .5s;
+  padding:1.5rem clamp(1.2rem,4vw,3.5rem);
   border-bottom:1px solid transparent;
 }
 .nav.scrolled{
-  background:rgba(10,10,9,.72);
+  background:rgba(16,22,26,.78);
   -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
-  padding-top:1rem; padding-bottom:1rem;
+  padding-top:.9rem; padding-bottom:.9rem;
   border-bottom-color:var(--line-soft);
 }
-.nav__logo{
-  font-family:var(--serif); font-size:1.05rem; letter-spacing:.02em;
+.nav__logo{ display:flex; align-items:center; gap:.7rem; }
+.nav__wordmark{
+  font-family:var(--sans); font-weight:700; font-size:1.25rem;
+  letter-spacing:-.02em; line-height:1; display:flex; align-items:center; gap:.28rem;
 }
-.nav__logo sup{ color:var(--accent); font-size:.6em; margin-left:.15em; }
-.nav__links{ display:flex; gap:2.4rem; }
+.nav__division{
+  font-size:.68rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--muted); border-left:1px solid var(--line);
+  padding-left:.7rem; margin-left:.1rem;
+}
+.nav__links{ display:flex; gap:2rem; }
 .nav__links a{
-  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
   color:var(--ink-dim); position:relative; padding:.3em 0;
   transition:color .3s;
 }
@@ -156,14 +170,15 @@ body.loaded .preloader{ pointer-events:none; }
 .nav__links a:hover{ color:var(--ink); }
 .nav__links a:hover::after{ transform:scaleX(1); transform-origin:0 50%; }
 .nav__cta{
-  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
-  border:1px solid var(--line); padding:.75em 1.6em; border-radius:99px;
-  transition:background .35s, color .35s, border-color .35s;
+  font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+  border:1px solid var(--accent); color:var(--accent-tint);
+  padding:.75em 1.5em; border-radius:99px;
+  transition:background .35s, color .35s;
 }
-.nav__cta:hover{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
-@media (max-width:820px){ .nav__links{ display:none; } }
+.nav__cta:hover{ background:var(--accent); color:#10161a; }
+@media (max-width:960px){ .nav__links{ display:none; } }
+@media (max-width:520px){ .nav__division{ display:none; } }
 
-/* entrance choreography */
 .nav{ opacity:0; transform:translateY(-12px); transition:opacity .8s .2s, transform .8s .2s var(--ease-out), background .5s, padding .5s, border-color .5s; }
 body.loaded .nav{ opacity:1; transform:none; }
 
@@ -171,51 +186,46 @@ body.loaded .nav{ opacity:1; transform:none; }
 .hero{
   position:relative; min-height:100svh;
   display:flex; flex-direction:column; justify-content:center;
-  padding:0 clamp(1.2rem,4vw,3.5rem);
+  padding:7rem clamp(1.2rem,4vw,3.5rem) 3rem;
   overflow:hidden;
 }
 .hero__canvas{ position:absolute; inset:0; width:100%; height:100%; }
 .hero::after{
   content:""; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(ellipse at 50% 120%, transparent 40%, rgba(10,10,9,.65) 100%);
+  background:radial-gradient(ellipse at 50% 120%, transparent 40%, rgba(16,22,26,.65) 100%);
 }
 .hero__inner{ position:relative; z-index:2; max-width:1400px; margin:0 auto; width:100%; }
 
 .hero__eyebrow{
   display:flex; align-items:center; gap:1rem;
   font-size:.72rem; letter-spacing:.35em; text-transform:uppercase;
-  color:var(--accent); margin-bottom:clamp(1.5rem,3vh,3rem);
+  color:var(--accent); margin-bottom:clamp(1.5rem,3vh,2.6rem);
 }
 .hero__eyebrow::before{ content:""; width:3rem; height:1px; background:var(--accent); }
 
 .hero__title{
   font-family:var(--serif); font-weight:400;
-  font-size:clamp(3rem,8.6vw,8.5rem);
-  line-height:.98; letter-spacing:-.03em;
-  text-transform:uppercase;
+  font-size:clamp(2.7rem,7.6vw,7.2rem);
+  line-height:1.02; letter-spacing:-.025em;
 }
-.hero__title .italic{
-  font-style:italic; text-transform:none; color:var(--accent-2);
-  letter-spacing:-.02em;
-}
-.line-mask{ display:block; overflow:hidden; }
+.hero__title .italic{ font-style:italic; color:var(--accent-soft); }
+.line-mask{ display:block; overflow:hidden; padding-bottom:.06em; margin-bottom:-.06em; }
 .line-mask > span{
   display:block; transform:translateY(115%);
   transition:transform 1.2s var(--ease-out);
 }
 body.loaded .line-mask:nth-child(1) > span{ transition-delay:.55s; }
 body.loaded .line-mask:nth-child(2) > span{ transition-delay:.68s; }
-body.loaded .line-mask:nth-child(3) > span{ transition-delay:.81s; }
 body.loaded .line-mask > span{ transform:translateY(0); }
 
 .hero__foot{
   display:flex; justify-content:space-between; align-items:flex-end;
-  gap:2rem; margin-top:clamp(2rem,6vh,4.5rem);
+  gap:2rem; margin-top:clamp(2rem,5vh,3.5rem);
   opacity:0; transform:translateY(20px);
-  transition:opacity 1s 1.15s, transform 1s 1.15s var(--ease-out);
+  transition:opacity 1s 1.05s, transform 1s 1.05s var(--ease-out);
 }
 body.loaded .hero__foot{ opacity:1; transform:none; }
-.hero__desc{ max-width:420px; color:var(--ink-dim); font-size:.95rem; }
+.hero__desc{ max-width:460px; color:var(--ink-dim); font-size:.98rem; }
 .hero__scroll{
   display:flex; align-items:center; gap:.8rem;
   font-size:.68rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
@@ -229,41 +239,63 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
   background:var(--accent); animation:scrolltick 2.2s var(--ease-soft) infinite;
 }
 @keyframes scrolltick{ 0%{ top:-100%; } 55%{ top:0; } 100%{ top:100%; } }
-@media (max-width:640px){ .hero__foot{ flex-direction:column; align-items:flex-start; } }
+
+.hero__meta{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--line-soft); border:1px solid var(--line-soft);
+  margin-top:clamp(2.2rem,5vh,3.5rem);
+  opacity:0; transform:translateY(20px);
+  transition:opacity 1s 1.25s, transform 1s 1.25s var(--ease-out);
+}
+body.loaded .hero__meta{ opacity:1; transform:none; }
+.hero__meta div{
+  background:rgba(21,29,33,.72); padding:1.1rem 1.3rem;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+}
+.hero__meta dt{
+  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.35rem;
+}
+.hero__meta dd{ font-size:.92rem; color:var(--ink-dim); }
+@media (max-width:820px){
+  .hero__meta{ grid-template-columns:repeat(2,1fr); }
+  .hero__foot{ flex-direction:column; align-items:flex-start; }
+}
 
 /* ---------- marquee ---------- */
 .marquee{
   border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
-  padding:1.4rem 0; overflow:hidden; white-space:nowrap;
+  padding:1.3rem 0; overflow:hidden; white-space:nowrap;
   background:var(--bg-2);
 }
-.marquee__track{ display:inline-flex; animation:marquee 28s linear infinite; }
+.marquee__track{ display:inline-flex; animation:marquee 30s linear infinite; }
 .marquee:hover .marquee__track{ animation-play-state:paused; }
 .marquee__item{
-  font-family:var(--serif); font-size:clamp(1.1rem,2.4vw,1.7rem);
-  letter-spacing:.04em; text-transform:uppercase; color:var(--ink-dim);
-  padding:0 1.6rem; display:inline-flex; align-items:center; gap:3.2rem;
+  font-family:var(--serif); font-size:clamp(1.05rem,2.2vw,1.55rem);
+  letter-spacing:.03em; color:var(--ink-dim);
+  padding:0 1.5rem; display:inline-flex; align-items:center; gap:3rem;
 }
-.marquee__item::after{ content:"✦"; color:var(--accent); font-size:.7em; }
+.marquee__item::after{ content:"‹›"; color:var(--accent); font-size:.8em; letter-spacing:-.1em; }
 @keyframes marquee{ to{ transform:translateX(-50%); } }
 
 /* ---------- shared section chrome ---------- */
-.section{
-  padding:clamp(5rem,12vh,10rem) clamp(1.2rem,4vw,3.5rem);
-  position:relative;
-}
+.section{ padding:clamp(4.5rem,11vh,9rem) clamp(1.2rem,4vw,3.5rem); position:relative; }
+.section--alt{ background:var(--bg-2); }
 .section__inner{ max-width:1400px; margin:0 auto; }
 .section__head{
   display:flex; align-items:baseline; justify-content:space-between;
-  gap:2rem; margin-bottom:clamp(2.5rem,6vh,5rem);
-  border-bottom:1px solid var(--line-soft); padding-bottom:1.4rem;
+  gap:2rem; margin-bottom:clamp(2rem,5vh,3.5rem);
+  border-bottom:1px solid var(--line-soft); padding-bottom:1.3rem;
 }
-.section__label{
-  font-size:.72rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent);
+.section__label{ font-size:.72rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent); }
+.section__num{ font-family:var(--serif); font-style:italic; color:var(--muted); font-size:.95rem; white-space:nowrap; }
+.section__title{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(2rem,4.6vw,3.8rem); line-height:1.08; letter-spacing:-.02em;
+  max-width:900px; margin-bottom:1.4rem;
 }
-.section__num{
-  font-family:var(--serif); font-style:italic; color:var(--muted); font-size:.95rem;
-}
+.section__title em{ color:var(--accent-soft); }
+.section__intro{ color:var(--ink-dim); max-width:640px; font-size:1rem; margin-bottom:clamp(2rem,5vh,3.5rem); }
 
 /* reveal-on-scroll */
 .reveal{ opacity:0; transform:translateY(42px); transition:opacity 1s var(--ease-soft), transform 1s var(--ease-out); }
@@ -275,89 +307,71 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
 /* ---------- manifesto ---------- */
 .manifesto p{
   font-family:var(--serif); font-weight:400;
-  font-size:clamp(1.7rem,4.2vw,3.4rem);
-  line-height:1.28; letter-spacing:-.01em;
-  max-width:1150px;
+  font-size:clamp(1.6rem,4vw,3.2rem);
+  line-height:1.3; letter-spacing:-.01em; max-width:1150px;
 }
-.manifesto .w{ color:rgba(234,231,224,.16); transition:color .5s var(--ease-soft); }
+.manifesto .w{ color:rgba(237,241,244,.15); transition:color .5s var(--ease-soft); }
 .manifesto .w.on{ color:var(--ink); }
 .manifesto .w.em{ font-style:italic; }
-.manifesto .w.em.on{ color:var(--accent-2); }
-
-/* ---------- services ---------- */
-.services{ background:var(--bg-2); }
-.service{
-  display:grid; grid-template-columns:auto 1fr auto; align-items:center;
-  gap:clamp(1.2rem,4vw,3rem);
-  padding:clamp(1.6rem,4vh,2.6rem) 0;
-  border-bottom:1px solid var(--line-soft);
-  position:relative; cursor:pointer; isolation:isolate;
-}
-.service:first-of-type{ border-top:1px solid var(--line-soft); }
-.service::before{
-  content:""; position:absolute; inset:0; z-index:-1;
-  background:linear-gradient(90deg, rgba(200,161,90,.08), transparent 65%);
-  transform:scaleY(0); transform-origin:50% 100%;
-  transition:transform .5s var(--ease-out);
-}
-.service:hover::before, .service:focus-within::before{ transform:scaleY(1); }
-.service__num{
-  font-family:var(--serif); font-style:italic; color:var(--muted);
-  font-size:clamp(.9rem,1.4vw,1.1rem); min-width:2.6em;
-  transition:color .4s;
-}
-.service:hover .service__num{ color:var(--accent); }
-.service__body h3{
-  font-family:var(--serif); font-weight:400;
-  font-size:clamp(1.6rem,4vw,3rem); letter-spacing:-.02em; line-height:1.1;
-  transition:transform .5s var(--ease-out);
-}
-.service:hover .service__body h3{ transform:translateX(.35em); }
-.service__body p{
-  color:var(--muted); font-size:.92rem; max-width:560px;
-  max-height:0; overflow:hidden; opacity:0;
-  transition:max-height .6s var(--ease-out), opacity .5s .1s, margin .6s var(--ease-out);
-}
-.service:hover .service__body p, .service:focus-within .service__body p{
-  max-height:6em; opacity:1; margin-top:.7em;
-}
-.service__arrow{
-  font-family:var(--serif); font-size:clamp(1.4rem,3vw,2.2rem); color:var(--muted);
-  transform:rotate(0deg); transition:transform .5s var(--ease-out), color .4s;
-}
-.service:hover .service__arrow{ transform:rotate(45deg); color:var(--accent); }
-@media (hover:none){
-  .service__body p{ max-height:none; opacity:1; margin-top:.7em; }
-}
-
-/* ---------- stats ---------- */
-.stats__grid{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-  background:var(--line-soft); border:1px solid var(--line-soft);
-}
-.stat{
-  background:var(--bg); padding:clamp(2rem,5vh,3.5rem) clamp(1.2rem,2.5vw,2.5rem);
-  transition:background .5s;
-}
-.stat:hover{ background:var(--bg-3); }
-.stat__value{
-  font-family:var(--serif); font-size:clamp(2.6rem,6vw,5rem);
-  line-height:1; letter-spacing:-.03em; color:var(--ink);
-  font-variant-numeric:tabular-nums;
-}
-.stat__value .suffix{ color:var(--accent); font-style:italic; font-size:.55em; margin-left:.08em; }
-.stat__label{
-  margin-top:1rem; font-size:.72rem; letter-spacing:.22em;
+.manifesto .w.em.on{ color:var(--accent-soft); }
+.manifesto__src{
+  margin-top:2rem; font-size:.68rem; letter-spacing:.3em;
   text-transform:uppercase; color:var(--muted);
 }
-@media (max-width:900px){ .stats__grid{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:480px){ .stats__grid{ grid-template-columns:1fr; } }
 
-/* ---------- process ---------- */
-.process{ background:var(--bg-2); }
-.steps{ display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(1rem,2vw,2rem); }
+/* ---------- two-panel comparison (when / principles / raci) ---------- */
+.duo{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+.duo__panel{ background:var(--bg); padding:clamp(1.6rem,3.5vw,3rem); }
+.section--alt .duo__panel{ background:var(--bg-2); }
+.duo__panel--hot{ box-shadow:inset 3px 0 0 var(--accent); }
+.duo__panel--cool{ box-shadow:inset 3px 0 0 var(--muted); }
+.duo__kicker{
+  font-size:.65rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:.5rem;
+}
+.duo__panel--hot .duo__kicker{ color:var(--accent); }
+.duo__panel h3{
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.3rem,2.2vw,1.8rem);
+  letter-spacing:-.01em; margin-bottom:1.4rem;
+}
+.list li{
+  position:relative; padding:.65rem 0 .65rem 1.8rem;
+  color:var(--ink-dim); font-size:.95rem;
+  border-bottom:1px solid var(--line-soft);
+}
+.list li:last-child{ border-bottom:0; }
+.list li::before{
+  content:"›"; position:absolute; left:.2rem; top:.55rem;
+  color:var(--accent); font-family:var(--serif); font-size:1.1em;
+}
+.list--cool li::before{ content:"—"; color:var(--muted); font-size:.9em; }
+.duo__hint{
+  margin-top:1.6rem; padding:1rem 1.2rem;
+  background:rgba(240,109,12,.07); border-left:2px solid var(--accent);
+  font-size:.88rem; color:var(--ink-dim);
+}
+.duo__hint b{ color:var(--accent-tint); font-weight:600; }
+.duo__panel--cool .duo__hint{ background:rgba(221,225,228,.05); border-left-color:var(--muted); }
+.duo__panel--cool .duo__hint b{ color:var(--ink); }
+@media (max-width:860px){ .duo{ grid-template-columns:1fr; } }
+
+/* ---------- pull quote band ---------- */
+.pull{
+  margin-top:clamp(2.5rem,6vh,4rem); text-align:center;
+  padding:clamp(2rem,5vh,3.2rem) 1rem;
+  border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+}
+.pull p{
+  font-family:var(--serif); font-size:clamp(1.4rem,3.2vw,2.4rem);
+  line-height:1.3; letter-spacing:-.01em; max-width:900px; margin:0 auto;
+}
+.pull em{ color:var(--accent-soft); }
+.pull__mark{ color:var(--accent); font-family:var(--serif); }
+
+/* ---------- source-to-pay steps ---------- */
+.steps{ display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(.9rem,1.6vw,1.6rem); counter-reset:step; }
 .step{
-  border-top:1px solid var(--line); padding-top:1.4rem; position:relative;
+  border-top:1px solid var(--line); padding-top:1.3rem; position:relative;
 }
 .step::before{
   content:""; position:absolute; top:-1px; left:0; height:1px; width:0;
@@ -366,62 +380,216 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
 .step.in-view::before{ width:100%; }
 .step__num{
   font-family:var(--serif); font-style:italic; color:var(--accent);
-  font-size:.95rem; display:block; margin-bottom:1.1rem;
+  font-size:.9rem; display:block; margin-bottom:1rem;
 }
 .step h3{
-  font-family:var(--serif); font-weight:400; font-size:clamp(1.25rem,1.9vw,1.7rem);
-  letter-spacing:-.01em; margin-bottom:.7rem;
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.15rem,1.7vw,1.5rem);
+  letter-spacing:-.01em; margin-bottom:.6rem;
 }
-.step p{ color:var(--muted); font-size:.86rem; line-height:1.65; }
-@media (max-width:1000px){ .steps{ grid-template-columns:repeat(2,1fr); row-gap:3rem; } }
+.step p{ color:var(--muted); font-size:.85rem; line-height:1.6; }
+@media (max-width:1000px){ .steps{ grid-template-columns:repeat(2,1fr); row-gap:2.6rem; } }
 @media (max-width:520px){ .steps{ grid-template-columns:1fr; } }
 
-/* ---------- quote ---------- */
-.quote{ text-align:center; }
-.quote blockquote{
-  font-family:var(--serif); font-size:clamp(1.9rem,5vw,4.2rem);
-  line-height:1.22; letter-spacing:-.02em; max-width:1100px; margin:0 auto;
+.s2p-notes{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+  background:var(--line-soft); border:1px solid var(--line-soft);
+  margin-top:clamp(2.5rem,6vh,4rem);
 }
-.quote blockquote em{ color:var(--accent-2); }
-.quote figcaption{
-  margin-top:2.4rem; font-size:.72rem; letter-spacing:.3em;
+.s2p-notes div{ background:var(--bg); padding:1.6rem 1.8rem; }
+.s2p-notes dt{
+  font-size:.65rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.7rem;
+}
+.s2p-notes dd{ color:var(--ink-dim); font-size:.9rem; }
+@media (max-width:860px){ .s2p-notes{ grid-template-columns:1fr; } }
+
+/* ---------- paths ---------- */
+.paths{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.2rem,2.5vw,2rem); }
+.path{
+  border:1px solid var(--line-soft); background:var(--bg-2);
+  padding:clamp(1.6rem,3vw,2.6rem); position:relative; overflow:hidden;
+  transition:border-color .4s, transform .5s var(--ease-out);
+}
+.path:hover{ border-color:rgba(240,109,12,.45); transform:translateY(-4px); }
+.path__tag{
+  display:inline-block; font-size:.65rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--accent); border:1px solid rgba(240,109,12,.4);
+  padding:.4em 1em; border-radius:99px; margin-bottom:1.3rem;
+}
+.path h3{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.5rem,2.6vw,2.2rem); letter-spacing:-.015em; margin-bottom:.4rem;
+}
+.path__sub{ color:var(--muted); font-size:.9rem; margin-bottom:1.6rem; }
+.path h4{
+  font-size:.65rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--ink-dim); margin:1.6rem 0 .6rem;
+}
+.timeline{ margin-top:.4rem; }
+.timeline li{
+  display:grid; grid-template-columns:6.2rem 1fr; gap:1rem;
+  padding:.55rem 0; border-bottom:1px solid var(--line-soft);
+  font-size:.9rem; color:var(--ink-dim);
+}
+.timeline li:last-child{ border-bottom:0; }
+.timeline .t{
+  font-family:var(--serif); font-style:italic; color:var(--accent-soft);
+  white-space:nowrap; font-size:.92rem;
+}
+@media (max-width:860px){ .paths{ grid-template-columns:1fr; } }
+
+/* ---------- shared responsibility banner ---------- */
+.together{
+  margin-top:clamp(2rem,5vh,3rem); text-align:center;
+  padding:1.4rem; border:1px solid rgba(240,109,12,.35);
+  background:rgba(240,109,12,.06);
+  font-family:var(--serif); font-size:clamp(1.15rem,2.4vw,1.7rem);
+}
+.together em{ color:var(--accent-soft); }
+.together + p{ text-align:center; color:var(--muted); font-size:.85rem; margin-top:1rem; }
+
+/* ---------- sustainability ---------- */
+.sustain .section__label{ color:var(--green); }
+.sustain .list li::before{ color:var(--green); }
+.sustain .pull{ border-color:rgba(128,164,93,.25); }
+.sustain .pull em{ color:#a8c785; }
+.sustain__link{
+  display:inline-flex; align-items:center; gap:.6rem;
+  margin-top:1.4rem; font-size:.75rem; letter-spacing:.22em; text-transform:uppercase;
+  color:#a8c785; border-bottom:1px solid rgba(128,164,93,.5); padding-bottom:.3em;
+  transition:letter-spacing .4s var(--ease-out), color .3s;
+}
+.sustain__link:hover{ letter-spacing:.3em; color:var(--ink); }
+.pull__src{
+  margin-top:1.6rem; font-size:.65rem; letter-spacing:.3em;
   text-transform:uppercase; color:var(--muted);
 }
-.quote figcaption::before{
-  content:""; display:block; width:3rem; height:1px;
-  background:var(--accent); margin:0 auto 1.2rem;
-}
 
-/* ---------- footer / contact ---------- */
+/* ---------- tools grid ---------- */
+.tools{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+.tool{
+  background:var(--bg); padding:clamp(1.5rem,2.5vw,2.2rem);
+  transition:background .4s; position:relative;
+}
+.tool:hover{ background:var(--bg-3); }
+.tool__mono{
+  font-family:var(--serif); font-style:italic; font-size:1rem;
+  color:var(--accent); border:1px solid rgba(240,109,12,.4);
+  width:2.9em; height:2.9em; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:1.2rem; transition:background .35s, color .35s;
+}
+.tool:hover .tool__mono{ background:var(--accent); color:#10161a; }
+.tool h3{
+  font-family:var(--serif); font-weight:400; font-size:1.35rem;
+  letter-spacing:-.01em; margin-bottom:.5rem;
+}
+.tool p{ color:var(--muted); font-size:.88rem; min-height:3.2em; }
+.tool__status{
+  display:inline-block; margin-top:1.1rem;
+  font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-dim); border:1px solid var(--line);
+  padding:.45em 1em; border-radius:99px;
+}
+@media (max-width:1000px){ .tools{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .tools{ grid-template-columns:1fr; } }
+
+/* ---------- contacts ---------- */
+.contacts{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(1rem,1.8vw,1.6rem); }
+.contact{
+  border:1px solid var(--line-soft); padding:1.8rem 1.6rem;
+  background:var(--bg-2); position:relative;
+  transition:border-color .4s, transform .5s var(--ease-out);
+}
+.contact:hover{ border-color:rgba(240,109,12,.45); transform:translateY(-4px); }
+.contact__mono{
+  font-family:var(--serif); font-style:italic; color:var(--accent);
+  font-size:.95rem; margin-bottom:2.2rem; display:block;
+}
+.contact h3{
+  font-family:var(--serif); font-weight:400; font-size:1.2rem;
+  letter-spacing:-.01em; margin-bottom:.45rem;
+}
+.contact p{ color:var(--muted); font-size:.85rem; }
+.contact__arrow{
+  position:absolute; top:1.5rem; right:1.5rem;
+  font-family:var(--serif); color:var(--muted);
+  transition:transform .4s var(--ease-out), color .3s;
+}
+.contact:hover .contact__arrow{ transform:translate(3px,-3px) rotate(45deg); color:var(--accent); }
+@media (max-width:1000px){ .contacts{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:520px){ .contacts{ grid-template-columns:1fr; } }
+
+/* ---------- faq ---------- */
+.faq details{
+  border-bottom:1px solid var(--line-soft);
+}
+.faq details:first-of-type{ border-top:1px solid var(--line-soft); }
+.faq summary{
+  cursor:pointer; list-style:none;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:baseline;
+  gap:clamp(1rem,3vw,2.4rem);
+  padding:clamp(1.2rem,2.6vh,1.7rem) 0;
+  transition:color .3s;
+}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary:hover{ color:var(--accent-tint); }
+.faq .q-num{ font-family:var(--serif); font-style:italic; color:var(--accent); font-size:.9rem; }
+.faq .q-text{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.15rem,2.4vw,1.7rem); letter-spacing:-.01em;
+}
+.faq .q-plus{
+  font-family:var(--serif); font-size:1.4rem; color:var(--muted);
+  transition:transform .4s var(--ease-out), color .3s;
+}
+.faq details[open] .q-plus{ transform:rotate(45deg); color:var(--accent); }
+.faq .a{
+  padding:0 0 1.7rem calc(.9rem + clamp(1rem,3vw,2.4rem));
+  color:var(--ink-dim); font-size:.95rem; max-width:820px;
+}
+.faq .a b{ color:var(--accent-tint); font-weight:600; }
+
+/* ---------- footer ---------- */
 .footer{
   border-top:1px solid var(--line-soft);
-  padding:clamp(5rem,12vh,9rem) clamp(1.2rem,4vw,3.5rem) 2.5rem;
+  padding:clamp(4.5rem,11vh,8rem) clamp(1.2rem,4vw,3.5rem) 2.5rem;
+  position:relative; overflow:hidden;
 }
-.footer__inner{ max-width:1400px; margin:0 auto; }
+.footer__inner{ max-width:1400px; margin:0 auto; position:relative; z-index:2; }
+.footer__quote{
+  font-family:var(--serif); font-size:clamp(1.2rem,2.4vw,1.7rem);
+  color:var(--ink-dim); max-width:760px; line-height:1.5; margin-bottom:clamp(2.5rem,6vh,4rem);
+}
+.footer__quote em{ color:var(--accent-soft); }
 .footer__cta{
   display:block; font-family:var(--serif); font-weight:400;
-  font-size:clamp(2.6rem,9vw,8rem); letter-spacing:-.03em; line-height:1.02;
-  text-transform:uppercase;
+  font-size:clamp(2.5rem,8.4vw,7.5rem); letter-spacing:-.03em; line-height:1.04;
 }
-.footer__cta em{ font-style:italic; text-transform:none; color:var(--accent-2); }
-.footer__mail{
-  display:inline-flex; align-items:center; gap:1rem;
-  margin-top:2.6rem; padding-bottom:.35em;
-  font-family:var(--serif); font-size:clamp(1.15rem,2.6vw,1.8rem); font-style:italic;
-  border-bottom:1px solid var(--accent); color:var(--accent-2);
-  transition:color .35s, border-color .35s, letter-spacing .5s var(--ease-out);
+.footer__cta em{ font-style:italic; color:var(--accent-soft); }
+.footer__actions{ display:flex; gap:1rem; flex-wrap:wrap; margin-top:2.6rem; }
+.btn{
+  display:inline-flex; align-items:center; gap:.7rem;
+  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  padding:1em 2em; border-radius:99px; border:1px solid var(--accent);
+  transition:background .35s, color .35s, transform .4s var(--ease-out);
 }
-.footer__mail:hover{ color:var(--ink); border-color:var(--ink); letter-spacing:.02em; }
+.btn:hover{ transform:translateY(-2px); }
+.btn--primary{ background:var(--accent); color:#10161a; font-weight:600; }
+.btn--primary:hover{ background:var(--accent-soft); border-color:var(--accent-soft); }
+.btn--ghost{ color:var(--accent-tint); }
+.btn--ghost:hover{ background:rgba(240,109,12,.12); }
 .footer__grid{
   display:flex; justify-content:space-between; align-items:flex-end; gap:2rem;
-  margin-top:clamp(3.5rem,9vh,6.5rem); padding-top:2rem;
+  margin-top:clamp(3rem,8vh,5.5rem); padding-top:2rem;
   border-top:1px solid var(--line-soft);
-  font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
+  font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
   flex-wrap:wrap;
 }
 .footer__grid a{ transition:color .3s; }
 .footer__grid a:hover{ color:var(--accent); }
-.footer__grid .top{ cursor:pointer; }
+.footer__brand{ display:flex; align-items:center; gap:.6rem; }
+.footer__brand .word{ font-weight:700; font-size:1rem; letter-spacing:-.02em; text-transform:none; color:var(--ink); }
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
@@ -447,221 +615,499 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
 <div class="preloader" aria-hidden="true">
   <div class="preloader__inner">
     <div class="preloader__count" id="loadCount">0</div>
-    <div class="preloader__label">Group Procurement</div>
+    <div class="preloader__label"><b>etex</b> · procurement</div>
   </div>
 </div>
 
 <!-- nav -->
 <header class="nav" id="nav">
-  <a class="nav__logo" href="#top">Procurement<sup>®</sup></a>
+  <a class="nav__logo" href="#top" aria-label="Etex Procurement — home">
+    <span class="nav__wordmark">ete<svg class="xmark" width="17" height="16" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 2 L10 9 L18 2" stroke="#edf1f4" stroke-width="3.4" fill="none"/><path d="M2 16.5 L10 10 L18 16.5" stroke="#f06d0c" stroke-width="3.4" fill="none"/></svg></span>
+    <span class="nav__division">Procurement</span>
+  </a>
   <nav class="nav__links" aria-label="Primary">
-    <a href="#manifesto" data-hover>Mission</a>
-    <a href="#services" data-hover>Expertise</a>
-    <a href="#impact" data-hover>Impact</a>
-    <a href="#process" data-hover>Process</a>
+    <a href="#when" data-hover>When</a>
+    <a href="#principles" data-hover>Principles</a>
+    <a href="#s2p" data-hover>Source-to-Pay</a>
+    <a href="#start" data-hover>Start a request</a>
+    <a href="#tools" data-hover>Tools</a>
+    <a href="#faq" data-hover>FAQ</a>
   </nav>
-  <a class="nav__cta" href="#contact" data-hover>Get in touch</a>
+  <a class="nav__cta" href="#contact" data-hover>Contact us</a>
 </header>
 
 <main id="main">
 
-<!-- hero -->
+<!-- 01 · hero -->
 <section class="hero" id="top">
   <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
   <div class="hero__inner">
-    <p class="hero__eyebrow">Group Procurement — Est. Excellence</p>
-    <h1 class="hero__title" aria-label="Sourcing tomorrow, together.">
-      <span class="line-mask" aria-hidden="true"><span>Sourcing</span></span>
-      <span class="line-mask" aria-hidden="true"><span class="italic">tomorrow,</span></span>
-      <span class="line-mask" aria-hidden="true"><span>Together.</span></span>
+    <p class="hero__eyebrow">How to work with Procurement</p>
+    <h1 class="hero__title" aria-label="Working with Procurement, made simple.">
+      <span class="line-mask" aria-hidden="true"><span>Working with Procurement,</span></span>
+      <span class="line-mask" aria-hidden="true"><span class="italic">made simple.</span></span>
     </h1>
     <div class="hero__foot">
       <p class="hero__desc">
-        We are the group's strategic sourcing partner — turning spend into
-        value, suppliers into allies, and supply chains into a competitive edge.
+        A practical guide for everyone at Etex on when to involve Procurement,
+        how Source-to-Pay flows, and where to start your request.
       </p>
       <div class="hero__scroll">
         <span>Scroll</span>
         <span class="tick" aria-hidden="true"></span>
       </div>
     </div>
+    <dl class="hero__meta">
+      <div><dt>Audience</dt><dd>All Etex colleagues</dd></div>
+      <div><dt>Owner</dt><dd>Group Procurement</dd></div>
+      <div><dt>Updated</dt><dd>27 May 2026</dd></div>
+      <div><dt>Reading time</dt><dd>~6 minutes</dd></div>
+    </dl>
   </div>
 </section>
 
 <!-- marquee -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track" id="marqueeTrack">
-    <span class="marquee__item">Strategic Sourcing</span>
-    <span class="marquee__item">Supplier Partnerships</span>
-    <span class="marquee__item">Value Creation</span>
-    <span class="marquee__item">Sustainable Supply</span>
-    <span class="marquee__item">Risk Resilience</span>
-    <span class="marquee__item">Digital Procurement</span>
+    <span class="marquee__item">Building better together</span>
+    <span class="marquee__item">Involve Procurement early</span>
+    <span class="marquee__item">One front door</span>
+    <span class="marquee__item">Source-to-Pay</span>
+    <span class="marquee__item">Partnership-driven</span>
+    <span class="marquee__item">Sustainability embedded</span>
   </div>
 </div>
 
-<!-- manifesto -->
-<section class="section manifesto" id="manifesto">
+<!-- engagement principle · manifesto -->
+<section class="section manifesto">
   <div class="section__inner">
-    <div class="section__head">
-      <span class="section__label">Our Mission</span>
-      <span class="section__num">01 / 05</span>
-    </div>
-    <p id="manifestoText">Procurement is more than buying. We orchestrate a global network of partners to deliver <em>value beyond cost</em> — quality, innovation, resilience and <em>sustainability</em>, engineered into every euro of spend.</p>
+    <p id="manifestoText">Involve Procurement <em>early.</em> Early engagement saves time, reduces risk, and increases <em>value.</em></p>
+    <p class="manifesto__src">‹ Procurement engagement principle ›</p>
   </div>
 </section>
 
-<!-- services -->
-<section class="section services" id="services">
+<!-- 02 · when to contact -->
+<section class="section section--alt" id="when">
   <div class="section__inner">
     <div class="section__head">
-      <span class="section__label">Expertise</span>
-      <span class="section__num">02 / 05</span>
+      <span class="section__label">When should I contact Procurement?</span>
+      <span class="section__num">02 / 08</span>
     </div>
-
-    <article class="service reveal" data-hover tabindex="0">
-      <span class="service__num">01</span>
-      <div class="service__body">
-        <h3>Strategic Sourcing</h3>
-        <p>Category strategies grounded in market intelligence — from demand analysis and tendering to negotiation and award, across direct and indirect spend.</p>
+    <h2 class="section__title reveal">Bring us in <em>before</em> a commitment is made.</h2>
+    <p class="section__intro reveal">
+      If it involves an external supplier, a new contract, or a commercial conversation,
+      Procurement should be at the table. The earlier we're looped in, the more value
+      we can unlock — together.
+    </p>
+    <div class="duo">
+      <div class="duo__panel duo__panel--hot reveal">
+        <p class="duo__kicker">› Contact Procurement when you</p>
+        <h3>You need our support</h3>
+        <ul class="list">
+          <li>need to buy goods or services (direct or indirect)</li>
+          <li>plan a new supplier, contract or tender</li>
+          <li>request a purchase order (PO)</li>
+          <li>negotiate commercial terms</li>
+          <li>start a CAPEX, service or project involving external suppliers</li>
+          <li>need guidance on sourcing, compliance or sustainability</li>
+        </ul>
+        <p class="duo__hint"><b>In doubt?</b> Involve Procurement early — early engagement saves time, reduces risk, and increases value.</p>
       </div>
-      <span class="service__arrow" aria-hidden="true">→</span>
-    </article>
-
-    <article class="service reveal" data-hover tabindex="0">
-      <span class="service__num">02</span>
-      <div class="service__body">
-        <h3>Supplier Management</h3>
-        <p>Performance scorecards, development programs and long-term partnerships that turn our supplier base into a source of innovation.</p>
-      </div>
-      <span class="service__arrow" aria-hidden="true">→</span>
-    </article>
-
-    <article class="service reveal" data-hover tabindex="0">
-      <span class="service__num">03</span>
-      <div class="service__body">
-        <h3>Contracts &amp; Risk</h3>
-        <p>Full contract lifecycle management, compliance assurance and continuous monitoring of supply, price and geopolitical risk.</p>
-      </div>
-      <span class="service__arrow" aria-hidden="true">→</span>
-    </article>
-
-    <article class="service reveal" data-hover tabindex="0">
-      <span class="service__num">04</span>
-      <div class="service__body">
-        <h3>Procure-to-Pay</h3>
-        <p>Frictionless digital buying — guided catalogues, automated workflows and clean master data from requisition to payment.</p>
-      </div>
-      <span class="service__arrow" aria-hidden="true">→</span>
-    </article>
-
-    <article class="service reveal" data-hover tabindex="0">
-      <span class="service__num">05</span>
-      <div class="service__body">
-        <h3>Sustainable Procurement</h3>
-        <p>Responsible sourcing, CO₂ reduction along the supply chain and circular material flows — procurement as a driver of our sustainability agenda.</p>
-      </div>
-      <span class="service__arrow" aria-hidden="true">→</span>
-    </article>
-  </div>
-</section>
-
-<!-- stats -->
-<section class="section" id="impact">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__label">Impact</span>
-      <span class="section__num">03 / 05</span>
-    </div>
-    <div class="stats__grid">
-      <div class="stat reveal">
-        <div class="stat__value"><span class="count" data-target="1.2" data-decimals="1">0</span><span class="suffix">bn€</span></div>
-        <div class="stat__label">Spend under management</div>
-      </div>
-      <div class="stat reveal" data-delay="1">
-        <div class="stat__value"><span class="count" data-target="4800">0</span><span class="suffix">+</span></div>
-        <div class="stat__label">Active suppliers</div>
-      </div>
-      <div class="stat reveal" data-delay="2">
-        <div class="stat__value"><span class="count" data-target="45">0</span><span class="suffix">↗</span></div>
-        <div class="stat__label">Countries covered</div>
-      </div>
-      <div class="stat reveal" data-delay="3">
-        <div class="stat__value"><span class="count" data-target="98">0</span><span class="suffix">%</span></div>
-        <div class="stat__label">Contract coverage</div>
+      <div class="duo__panel duo__panel--cool reveal" data-delay="1">
+        <p class="duo__kicker">— You typically do not need us when</p>
+        <h3>You can proceed on your own</h3>
+        <ul class="list list--cool">
+          <li>purchasing via approved catalogues or tools already in place</li>
+          <li>following an existing contract or framework agreement without changes</li>
+          <li>renewing under previously negotiated commercial conditions</li>
+          <li>handling expenses already covered by an established supplier panel</li>
+        </ul>
+        <p class="duo__hint"><b>Still unsure?</b> Ask your local or regional Procurement lead — a 15-minute conversation is always cheaper than the wrong contract.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- process -->
-<section class="section process" id="process">
+<!-- 03 · engagement principles -->
+<section class="section" id="principles">
   <div class="section__inner">
     <div class="section__head">
-      <span class="section__label">How we work</span>
-      <span class="section__num">04 / 05</span>
+      <span class="section__label">How we work best together</span>
+      <span class="section__num">03 / 08</span>
     </div>
-    <div class="steps">
-      <div class="step reveal">
+    <h2 class="section__title reveal">Our engagement <em>principles.</em></h2>
+    <p class="section__intro reveal">
+      Procurement is a shared discipline. The business owns the need; we own the process.
+      Here's what we expect from each other so we can move faster, smarter and with less friction.
+    </p>
+    <div class="duo">
+      <div class="duo__panel duo__panel--cool reveal">
+        <p class="duo__kicker">What we expect from</p>
+        <h3>The business</h3>
+        <ul class="list list--cool">
+          <li>involve Procurement early, before commitments are made</li>
+          <li>clearly define the business need, scope and timing</li>
+          <li>ensure budget availability and business ownership</li>
+          <li>collaborate openly and transparently</li>
+        </ul>
+      </div>
+      <div class="duo__panel duo__panel--hot reveal" data-delay="1">
+        <p class="duo__kicker">What Procurement</p>
+        <h3>Commits to provide</h3>
+        <ul class="list">
+          <li>professional sourcing and negotiation support</li>
+          <li>compliant and fair procurement processes</li>
+          <li>sustainability and risk considerations built in</li>
+          <li>pragmatic and digital ways of working</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pull reveal">
+      <p><span class="pull__mark">‹</span> Our common objective is to <em>enable the business</em> while protecting Etex's interests. <span class="pull__mark">›</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 · source-to-pay -->
+<section class="section section--alt" id="s2p">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">The Source-to-Pay process at a glance</span>
+      <span class="section__num">04 / 08</span>
+    </div>
+    <h2 class="section__title reveal">One <em>end-to-end</em> framework, across Etex.</h2>
+    <div class="steps" style="margin-top:clamp(2rem,5vh,3.5rem)">
+      <div class="step">
         <span class="step__num">— 01</span>
-        <h3>Understand</h3>
-        <p>Demand and spend analysis. We map what the business truly needs before a single supplier is contacted.</p>
+        <h3>Define the business need</h3>
+        <p>Describe scope, budget owner, and timing.</p>
       </div>
-      <div class="step reveal" data-delay="1">
+      <div class="step">
         <span class="step__num">— 02</span>
-        <h3>Strategize</h3>
-        <p>Category strategies built on market intelligence, cost models and risk mapping.</p>
+        <h3>Source the solution</h3>
+        <p>RFQ, RFP or negotiation with shortlisted suppliers.</p>
       </div>
-      <div class="step reveal" data-delay="2">
+      <div class="step">
         <span class="step__num">— 03</span>
-        <h3>Source</h3>
-        <p>Competitive tendering and fact-based negotiation to secure the best total value.</p>
+        <h3>Select &amp; contract</h3>
+        <p>Award decision, T&amp;Cs and contract signature.</p>
       </div>
-      <div class="step reveal" data-delay="3">
+      <div class="step">
         <span class="step__num">— 04</span>
-        <h3>Contract</h3>
-        <p>Clear, compliant agreements that protect the business and enable the partnership.</p>
+        <h3>Create PR &amp; PO</h3>
+        <p>Purchase request and order in SAP / Ariba.</p>
       </div>
-      <div class="step reveal" data-delay="3">
+      <div class="step">
         <span class="step__num">— 05</span>
-        <h3>Manage</h3>
-        <p>Supplier performance, continuous improvement and innovation — value that compounds over time.</p>
+        <h3>Receive &amp; pay</h3>
+        <p>Goods receipt, invoice match and payment.</p>
+      </div>
+    </div>
+    <dl class="s2p-notes reveal">
+      <div>
+        <dt>What you do</dt>
+        <dd>Bring a clear brief: scope, estimated spend, expected timeframe and key stakeholders involved.</dd>
+      </div>
+      <div>
+        <dt>What Procurement does</dt>
+        <dd>We translate the need into a sourcing strategy, validate market options and define the engagement model with you.</dd>
+      </div>
+      <div>
+        <dt>Tools &amp; references</dt>
+        <dd>SAP · Ariba · ARIS process maps · Contract repository · SHAPE4U</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- 05 · start a request -->
+<section class="section" id="start">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">How do I start a request?</span>
+      <span class="section__num">05 / 08</span>
+    </div>
+    <h2 class="section__title reveal">Two paths, one <em>front door.</em></h2>
+    <p class="section__intro reveal">
+      Choose the path that matches your situation. If you're not sure, start a sourcing
+      request — we'll route it to the right team within one working day.
+    </p>
+    <div class="paths">
+      <article class="path reveal" data-hover>
+        <span class="path__tag">› Path A</span>
+        <h3>New sourcing or supplier</h3>
+        <p class="path__sub">No existing contract or new commercial scope</p>
+        <h4>What we'll need from you</h4>
+        <ul class="list">
+          <li>Description and scope of the need</li>
+          <li>Estimated spend and budget owner</li>
+          <li>Expected timeframe and key milestones</li>
+          <li>Key stakeholders (Legal, Finance, IT)</li>
+          <li>Sustainability, risk or compliance considerations</li>
+        </ul>
+        <h4>› Typical timeline</h4>
+        <ul class="timeline">
+          <li><span class="t">Week 0</span><span>Intake call &amp; brief alignment</span></li>
+          <li><span class="t">Week 1–3</span><span>Market analysis &amp; RFQ/RFP launch</span></li>
+          <li><span class="t">Week 4–6</span><span>Negotiation &amp; supplier selection</span></li>
+          <li><span class="t">Week 7+</span><span>Contract signature &amp; onboarding</span></li>
+        </ul>
+      </article>
+      <article class="path reveal" data-delay="1" data-hover>
+        <span class="path__tag">› Path B</span>
+        <h3>Purchase request / order</h3>
+        <p class="path__sub">Operational purchasing under existing scope</p>
+        <h4>Operational purchasing checklist</h4>
+        <ul class="list">
+          <li>Create a PR in the relevant system</li>
+          <li>Ensure approvals follow the standard workflow</li>
+          <li>Reference the active contract or framework agreement</li>
+          <li>Confirm budget code and cost-centre alignment</li>
+          <li>Procurement supports PO creation and compliance</li>
+        </ul>
+        <h4>› Typical PR-to-PO flow</h4>
+        <ul class="timeline">
+          <li><span class="t">Day 0</span><span>Submit PR in SAP / Ariba</span></li>
+          <li><span class="t">Day 1–2</span><span>Approval workflow routing</span></li>
+          <li><span class="t">Day 3</span><span>PO issued to supplier</span></li>
+          <li><span class="t">Day 7+</span><span>Goods receipt &amp; invoice match</span></li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · shared responsibility -->
+<section class="section section--alt" id="raci">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">Roles &amp; responsibilities</span>
+      <span class="section__num">06 / 08</span>
+    </div>
+    <h2 class="section__title reveal">A <em>shared</em> responsibility.</h2>
+    <p class="section__intro reveal">
+      Working with Procurement is a partnership. Here's how we split — and where we meet.
+    </p>
+    <div class="duo">
+      <div class="duo__panel duo__panel--cool reveal">
+        <p class="duo__kicker">Business</p>
+        <h3>You own the need</h3>
+        <ul class="list list--cool">
+          <li>Define business needs and specifications</li>
+          <li>Confirm budget and business priority</li>
+          <li>Participate in supplier evaluations</li>
+        </ul>
+      </div>
+      <div class="duo__panel duo__panel--hot reveal" data-delay="1">
+        <p class="duo__kicker">Procurement</p>
+        <h3>We own the process</h3>
+        <ul class="list">
+          <li>Define sourcing strategy and approach</li>
+          <li>Run sourcing, negotiation and selection</li>
+          <li>Ensure compliance, governance and best value</li>
+        </ul>
+      </div>
+    </div>
+    <p class="together reveal">‹ Own supplier performance — <em>together</em> ›</p>
+    <p>Procurement also manages contracts, supplier risk &amp; procurement governance on behalf of the group.</p>
+  </div>
+</section>
+
+<!-- 07 · sustainability -->
+<section class="section sustain" id="sustainability">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">Sustainability &amp; compliance</span>
+      <span class="section__num">07 / 08</span>
+    </div>
+    <h2 class="section__title reveal">Embedded, <em>not bolted on.</em></h2>
+    <p class="section__intro reveal">
+      At Etex, sustainability and compliance are integral to procurement decisions —
+      not an afterthought. Procurement:
+    </p>
+    <div class="reveal" style="max-width:640px">
+      <ul class="list">
+        <li>integrates ESG principles into sourcing decisions</li>
+        <li>performs supplier risk and compliance checks</li>
+        <li>supports responsible and ethical sourcing across categories</li>
+      </ul>
+      <a class="sustain__link" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P" data-hover>Learn more: Sustainable Procurement ›</a>
+    </div>
+    <div class="pull reveal">
+      <p><span class="pull__mark">‹</span> Sustainability is not an add-on — it is <em>embedded in how we source</em> and select our partners. <span class="pull__mark">›</span></p>
+      <p class="pull__src">— Procurement leadership · 2026 commitment</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 · tools -->
+<section class="section section--alt" id="tools">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">Tools you may interact with</span>
+      <span class="section__num">08 / 08</span>
+    </div>
+    <h2 class="section__title reveal">The <em>digital toolbox.</em></h2>
+    <p class="section__intro reveal">
+      Depending on your role and need, you may work with one or more of these systems.
+    </p>
+    <div class="tools">
+      <div class="tool reveal">
+        <span class="tool__mono" aria-hidden="true">SA</span>
+        <h3>SAP / Ariba</h3>
+        <p>Purchase requests, purchase orders and sourcing events.</p>
+        <span class="tool__status">Operational · SSO enabled</span>
+      </div>
+      <div class="tool reveal" data-delay="1">
+        <span class="tool__mono" aria-hidden="true">CR</span>
+        <h3>Contract repository</h3>
+        <p>Search, retrieve and manage active supplier agreements.</p>
+        <span class="tool__status">Live · Access on request</span>
+      </div>
+      <div class="tool reveal" data-delay="2">
+        <span class="tool__mono" aria-hidden="true">S4</span>
+        <h3>SHAPE4U</h3>
+        <p>Etex's savings framework — track, validate and report.</p>
+        <span class="tool__status">Procurement &amp; Finance</span>
+      </div>
+      <div class="tool reveal">
+        <span class="tool__mono" aria-hidden="true">ZI</span>
+        <h3>Zero Initiatives App</h3>
+        <p>Price increase tracker with automated flow.</p>
+        <span class="tool__status">Pilot phase</span>
+      </div>
+      <div class="tool reveal" data-delay="1">
+        <span class="tool__mono" aria-hidden="true">PB</span>
+        <h3>Power BI reports</h3>
+        <p>Spend, savings and category dashboards updated weekly.</p>
+        <span class="tool__status">Read-only · Group &amp; BU</span>
+      </div>
+      <div class="tool reveal" data-delay="2">
+        <span class="tool__mono" aria-hidden="true">MT</span>
+        <h3>Procurement Teams</h3>
+        <p>Community channel for questions, news and announcements.</p>
+        <span class="tool__status">Open to all employees</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- quote -->
-<section class="section quote">
+<!-- 09 · contacts -->
+<section class="section" id="contact">
   <div class="section__inner">
     <div class="section__head">
-      <span class="section__label">Perspective</span>
-      <span class="section__num">05 / 05</span>
+      <span class="section__label">Who to contact</span>
+      <span class="section__num">09</span>
     </div>
-    <figure class="reveal">
-      <blockquote>
-        “Procurement is not about buying cheaper.<br>
-        It is about creating <em>value that lasts</em>.”
-      </blockquote>
-      <figcaption>Group Procurement Leadership</figcaption>
-    </figure>
+    <h2 class="section__title reveal">Not sure where to start? We're here to <em>partner.</em></h2>
+    <p class="section__intro reveal">
+      Reach out to your local team, a category lead, the PMO or our Teams community —
+      we'll route you within one working day.
+    </p>
+    <div class="contacts">
+      <article class="contact reveal" data-hover>
+        <span class="contact__mono">LP</span>
+        <h3>Local / regional Procurement</h3>
+        <p>Site- and country-specific contacts</p>
+        <span class="contact__arrow" aria-hidden="true">›</span>
+      </article>
+      <article class="contact reveal" data-delay="1" data-hover>
+        <span class="contact__mono">CM</span>
+        <h3>Category &amp; commodity managers</h3>
+        <p>For specialised sourcing topics</p>
+        <span class="contact__arrow" aria-hidden="true">›</span>
+      </article>
+      <article class="contact reveal" data-delay="2" data-hover>
+        <span class="contact__mono">PM</span>
+        <h3>Procurement PMO / Process</h3>
+        <p>Tools, governance &amp; transformation</p>
+        <span class="contact__arrow" aria-hidden="true">›</span>
+      </article>
+      <article class="contact reveal" data-delay="3" data-hover>
+        <span class="contact__mono">TC</span>
+        <h3>Procurement Teams channel</h3>
+        <p>Community Q&amp;A &amp; updates</p>
+        <span class="contact__arrow" aria-hidden="true">›</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · faq -->
+<section class="section section--alt faq" id="faq">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">Frequently asked questions</span>
+      <span class="section__num">10</span>
+    </div>
+    <h2 class="section__title reveal">Quick answers to <em>common questions.</em></h2>
+    <div class="reveal" style="margin-top:clamp(2rem,5vh,3rem)">
+      <details>
+        <summary data-hover>
+          <span class="q-num">01</span>
+          <span class="q-text">How long does a sourcing exercise take?</span>
+          <span class="q-plus" aria-hidden="true">+</span>
+        </summary>
+        <p class="a">Simple RFQs can close in 3–4 weeks; strategic RFPs may run 8–12 weeks. <b>Early engagement</b> with Procurement is the single biggest factor in hitting your target date.</p>
+      </details>
+      <details>
+        <summary data-hover>
+          <span class="q-num">02</span>
+          <span class="q-text">Can I contact suppliers directly?</span>
+          <span class="q-plus" aria-hidden="true">+</span>
+        </summary>
+        <p class="a">Technical conversations with existing suppliers are fine. For commercial discussions and any new supplier relationship, Procurement should be involved to protect Etex and capture the best terms.</p>
+      </details>
+      <details>
+        <summary data-hover>
+          <span class="q-num">03</span>
+          <span class="q-text">What about urgent or emergency requests?</span>
+          <span class="q-plus" aria-hidden="true">+</span>
+        </summary>
+        <p class="a">Contact Procurement immediately. We have lightweight pathways for genuine emergencies that still preserve compliance and audit trail.</p>
+      </details>
+      <details>
+        <summary data-hover>
+          <span class="q-num">04</span>
+          <span class="q-text">Do I need to use Ariba for every purchase?</span>
+          <span class="q-plus" aria-hidden="true">+</span>
+        </summary>
+        <p class="a">Ariba is the default for indirect purchasing across most countries. A handful of categories and sites operate under specific local tools — your local contact can confirm.</p>
+      </details>
+      <details>
+        <summary data-hover>
+          <span class="q-num">05</span>
+          <span class="q-text">How are sustainability criteria applied?</span>
+          <span class="q-plus" aria-hidden="true">+</span>
+        </summary>
+        <p class="a">For relevant categories, we include ESG criteria in supplier evaluation, request emissions and compliance data, and weight sustainability alongside cost and quality.</p>
+      </details>
+    </div>
   </div>
 </section>
 
 </main>
 
 <!-- footer -->
-<footer class="footer" id="contact">
+<footer class="footer">
   <div class="footer__inner">
-    <a class="footer__cta reveal" href="mailto:procurement@etexgroup.com" data-hover>
-      Let's create<br><em>value</em> together
+    <p class="footer__quote reveal">
+      ‹ Working with Procurement is designed to be <em>simple, fast and partnership-driven.</em>
+      We look forward to building better, together. ›
+    </p>
+    <a class="footer__cta reveal" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P" data-hover>
+      Building <em>better,</em> together.
     </a>
-    <div class="reveal" data-delay="1">
-      <a class="footer__mail" href="mailto:procurement@etexgroup.com" data-hover>procurement@etexgroup.com</a>
+    <div class="footer__actions reveal" data-delay="1">
+      <a class="btn btn--primary" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P" data-hover>Start a sourcing request ›</a>
+      <a class="btn btn--ghost" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P/SitePages/Home.aspx" data-hover>Visit the SharePoint site</a>
     </div>
     <div class="footer__grid">
-      <span>© <span id="year">2026</span> Group Procurement</span>
-      <span>Sourcing tomorrow, together</span>
+      <span class="footer__brand">
+        <span class="word">ete<svg class="xmark" width="14" height="13" viewBox="0 0 20 18" aria-hidden="true"><path d="M2 2 L10 9 L18 2" stroke="#edf1f4" stroke-width="3.4" fill="none"/><path d="M2 16.5 L10 10 L18 16.5" stroke="#f06d0c" stroke-width="3.4" fill="none"/></svg></span>
+        <span>Group Procurement</span>
+      </span>
+      <span>Last updated 27 May 2026 · Leander Miele · Procurement</span>
       <a class="top" href="#top" data-hover>Back to top ↑</a>
     </div>
   </div>
@@ -671,7 +1117,6 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
 (function(){
   "use strict";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ---------- preloader ---------- */
   var countEl = document.getElementById("loadCount");
@@ -704,7 +1149,7 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
       nav.classList.toggle("scrolled", y > 40);
       var max = document.documentElement.scrollHeight - window.innerHeight;
       progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
-      updateManifesto(y);
+      updateManifesto();
       ticking = false;
     });
   }
@@ -747,7 +1192,7 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
         io.unobserve(en.target);
       }
     });
-  }, { threshold:0.18, rootMargin:"0px 0px -6% 0px" });
+  }, { threshold:0.15, rootMargin:"0px 0px -6% 0px" });
   document.querySelectorAll(".reveal, .step").forEach(function(el){ io.observe(el); });
 
   /* ---------- manifesto word-by-word reveal ---------- */
@@ -774,7 +1219,6 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
     if (reduceMotion || !words.length) return;
     var rect = mani.getBoundingClientRect();
     var vh = window.innerHeight;
-    // progress: 0 when top of paragraph hits 85% of viewport, 1 when bottom passes 45%
     var start = vh * 0.85, end = vh * 0.45;
     var p = (start - rect.top) / (start - end + rect.height);
     p = Math.max(0, Math.min(1, p));
@@ -782,31 +1226,7 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
     words.forEach(function(w, i){ w.classList.toggle("on", i < n); });
   }
 
-  /* ---------- animated counters ---------- */
-  var counterIO = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if (!en.isIntersecting) return;
-      counterIO.unobserve(en.target);
-      var el = en.target;
-      var target = parseFloat(el.getAttribute("data-target"));
-      var dec = parseInt(el.getAttribute("data-decimals") || "0", 10);
-      if (reduceMotion){ el.textContent = target.toFixed(dec); return; }
-      var s0 = null, D = 1800;
-      function step(ts){
-        if (!s0) s0 = ts;
-        var p = Math.min((ts - s0) / D, 1);
-        var eased = 1 - Math.pow(1 - p, 4);
-        var val = target * eased;
-        el.textContent = dec ? val.toFixed(dec)
-                             : Math.round(val).toLocaleString("en-US");
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }, { threshold:0.6 });
-  document.querySelectorAll(".count").forEach(function(el){ counterIO.observe(el); });
-
-  /* ---------- hero canvas: drifting aurora orbs + particle field ---------- */
+  /* ---------- hero canvas: drifting brand orbs + chevron particles ---------- */
   var canvas = document.getElementById("heroCanvas");
   var ctx = canvas.getContext("2d");
   var W, H, DPR, orbs = [], parts = [];
@@ -823,13 +1243,15 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
 
   function rnd(a, b){ return a + Math.random() * (b - a); }
 
+  /* orbs in brand hues: etex orange, deep blue, slate */
+  var HUES = ["240,109,12", "0,80,130", "90,103,112"];
+  var ALPHAS = [0.10, 0.08, 0.07];
   for (var i = 0; i < 3; i++){
     orbs.push({
       x: rnd(0.15, 0.85), y: rnd(0.2, 0.8),
       r: rnd(0.28, 0.5),
       dx: rnd(-0.00006, 0.00006), dy: rnd(-0.00005, 0.00005),
-      hue: i === 0 ? "200,161,90" : (i === 1 ? "120,110,90" : "60,70,80"),
-      alpha: i === 0 ? 0.10 : 0.07,
+      hue: HUES[i], alpha: ALPHAS[i],
       ph: rnd(0, Math.PI * 2)
     });
   }
@@ -865,7 +1287,7 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
       if (p.x < 0 || p.x > 1) p.vx *= -1;
       if (p.y < 0 || p.y > 1) p.vy *= -1;
       var px = p.x * W, py = p.y * H;
-      ctx.fillStyle = "rgba(234,231,224,0.35)";
+      ctx.fillStyle = "rgba(237,241,244,0.32)";
       ctx.beginPath();
       ctx.arc(px, py, p.s * 0.7, 0, Math.PI * 2);
       ctx.fill();
@@ -874,7 +1296,7 @@ body.loaded .hero__foot{ opacity:1; transform:none; }
         var dx = (q.x - p.x) * W, dy = (q.y - p.y) * H;
         var d = Math.sqrt(dx * dx + dy * dy);
         if (d < LINK_D){
-          ctx.strokeStyle = "rgba(200,161,90," + (0.14 * (1 - d / LINK_D)) + ")";
+          ctx.strokeStyle = "rgba(240,109,12," + (0.13 * (1 - d / LINK_D)) + ")";
           ctx.beginPath();
           ctx.moveTo(px, py);
           ctx.lineTo(q.x * W, q.y * H);

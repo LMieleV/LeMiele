@@ -1,34 +1,45 @@
-# Procurement Excellence — Awwwards-style single-page site
+# Etex Procurement — "Working with Procurement, made simple"
 
 A fully self-contained, single-file website (`index.html`) with zero external
 dependencies — no CDNs, no web fonts, no frameworks. Everything (markup,
 styles, and behavior) lives in one HTML file, built with vanilla HTML, CSS,
-and JavaScript.
+and JavaScript. Content is sourced from the internal "How to work with
+Procurement" deck; the visual identity uses the Etex brand palette extracted
+from it (charcoal `#151D21`, Etex orange `#F06D0C`, slate, mist, deep blue and
+sustainability green) under the "Building better together" tagline.
 
 ## Design
 
-The site follows a dark editorial Awwwards aesthetic, with a set of
-scroll-driven animations and interactive flourishes:
+The site follows a dark editorial Awwwards aesthetic on the Etex charcoal
+ground, with a set of scroll-driven animations and interactive flourishes:
 
 - Preloader on initial load
-- Canvas-based hero animation
-- Infinite marquee (scrolling text/logo strip)
+- Canvas-based hero animation in brand hues (orange / deep blue / slate)
+- Infinite marquee (scrolling text strip with etex chevron separators)
 - `IntersectionObserver`-driven reveal animations as content scrolls into view
-- Animated numeric counters for statistics
+- Scroll-linked word-by-word reveal of the engagement principle
 - Custom cursor
 
 ## Sections
 
-The page is organized into the following sections, in order:
+The page mirrors the deck's structure, in order:
 
-1. **Hero** — full-viewport introduction with canvas animation
-2. **Marquee** — scrolling text strip
-3. **Manifesto** — editorial statement / brand positioning
-4. **Services** — offering breakdown
-5. **Stats** — animated counters
-6. **Process** — how-we-work steps
-7. **Quote** — pull quote / testimonial
-8. **Contact / Footer** — contact details and closing footer
+1. **Hero** — "Working with Procurement, made simple" + document meta
+   (audience, owner, updated, reading time)
+2. **Marquee** — brand and principle strip
+3. **Engagement principle** — "Involve Procurement early" word-by-word reveal
+4. **When to contact Procurement** — contact-us-when vs. proceed-on-your-own
+5. **Engagement principles** — what we expect from each other
+6. **Source-to-Pay** — the five-step end-to-end framework
+7. **Start a request** — Path A (new sourcing) / Path B (PR/PO) with timelines
+8. **Shared responsibility** — business vs. Procurement split
+9. **Sustainability & compliance** — embedded, not bolted on
+10. **Digital toolbox** — SAP/Ariba, Contract repository, SHAPE4U, Zero
+    Initiatives, Power BI, Teams
+11. **Contacts** — local teams, category managers, PMO, Teams channel
+12. **FAQ** — five common questions (accordion)
+13. **Footer** — "Building better, together." with links to the OneP2P
+    SharePoint site
 
 ## Graceful degradation
 
