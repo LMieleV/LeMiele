@@ -681,7 +681,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
 <!-- marquee -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track" id="marqueeTrack">
-    <span class="marquee__item">Building better together</span>
+    <span class="marquee__item">Buying better together</span>
     <span class="marquee__item">Involve Procurement early</span>
     <span class="marquee__item">One front door</span>
     <span class="marquee__item">Source-to-Pay</span>
@@ -1105,10 +1105,10 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="footer__inner">
     <p class="footer__quote reveal">
       ‹ Working with Procurement is designed to be <em>simple, fast and partnership-driven.</em>
-      We look forward to building better, together. ›
+      We look forward to buying better, together. ›
     </p>
     <a class="footer__cta reveal" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P" data-hover>
-      Building <em>better,</em> together.
+      Buying <em>better,</em> together.
     </a>
     <div class="footer__actions reveal" data-delay="1">
       <a class="btn btn--primary" href="https://etexgroup.sharepoint.com/sites/corp.be.global-purchasing-support/OneP2P" data-hover>Start a sourcing request ›</a>
