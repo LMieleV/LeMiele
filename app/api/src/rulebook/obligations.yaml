@@ -1,0 +1,44 @@
+# Rulebook-as-code: versioned obligation library.
+# Each entry is PR-reviewed by a compliance expert; evaluators in evaluate.ts
+# decide status deterministically. LLMs never decide requirements.
+version: 2026.07
+obligations:
+  - id: aml-cdd-refresh-high
+    source: "AML Law 12 Nov 2004, Art. 3(2); CSSF Reg. 12-02"
+    title: "CDD refresh for high-risk relationships (annual)"
+    frequency: annual
+    appliesTo: [manco, aifm, admin]
+    evaluator: cdd_refresh
+    params: { riskRating: high, maxAgeDays: 365 }
+
+  - id: aml-cdd-refresh-medium
+    source: "AML Law 12 Nov 2004, Art. 3(2); CSSF Reg. 12-02"
+    title: "CDD refresh for medium-risk relationships (every 2 years)"
+    frequency: on_event
+    appliesTo: [manco, aifm, admin]
+    evaluator: cdd_refresh
+    params: { riskRating: medium, maxAgeDays: 730 }
+
+  - id: cssf-aml-survey
+    source: "CSSF annual AML/CFT survey (eDesk)"
+    title: "Annual AML/CFT questionnaire submission"
+    frequency: annual
+    appliesTo: [manco, aifm, admin, psf]
+    evaluator: calendar_filing
+    params: { month: 3 }
+
+  - id: rc-report
+    source: "CSSF Reg. 12-02 Art. 42; Circular 18/698"
+    title: "Annual RC (responsable du contrôle) report to the board"
+    frequency: annual
+    appliesTo: [manco, aifm]
+    evaluator: calendar_filing
+    params: { month: 4 }
+
+  - id: dora-ict-register
+    source: "DORA Art. 28(3)"
+    title: "Register of ICT third-party providers kept current"
+    frequency: continuous
+    appliesTo: [manco, aifm, admin, psf]
+    evaluator: register_current
+    params: { registerKind: ict_third_party }
