@@ -1,15 +1,21 @@
-# LLM Wiki — Schema & Workflow
+# LLM Wiki / Vault — Schema & Workflow
 
-This repository implements [Karpathy's LLM-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f): an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query.
+This repository implements [Karpathy's LLM-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) extended into a full personal vault: an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query, plus the productivity surfaces found in best-in-class vaults (Obsidian, Notion, Logseq): a pending-items tracker, an achievements vault, goals, a decision log, an ideas parking lot, a reading list, and a weekly-review ritual.
 
 ## Directory Layout
 
 ```
 raw/        ← immutable source documents (never modified by the LLM)
 wiki/       ← LLM-owned markdown knowledge base
-  index.md  ← content catalog, updated on every ingest
+  index.md  ← home dashboard + content catalog, updated on every change
   log.md    ← append-only chronological record
-  <topic>.md← one page per entity, concept, or summary
+  pending.md      ← pending items: inbox + triaged next actions (GTD-style)
+  achievements.md ← achievements vault: wins, milestones, shipped work
+  goals.md        ← goals & active projects the vault is serving
+  decisions.md    ← decision log (lightweight ADR pattern)
+  ideas.md        ← someday/maybe parking lot
+  reading-list.md ← queued sources and resources to ingest
+  <topic>.md      ← one page per entity, concept, or summary
 CLAUDE.md   ← this file; defines schema and workflows
 ```
 
@@ -45,6 +51,62 @@ Steps:
 2. Read those pages (do **not** re-read raw sources unless the wiki is missing critical detail).
 3. Synthesize an answer and cite the wiki pages used: `(→ wiki/<page>.md)`.
 4. If the answer is substantive and reusable, offer to file it as a new wiki page.
+
+### CAPTURE
+
+Trigger: "capture: <item>", "add pending item", "remind me to <x>", or any task/commitment surfacing mid-conversation
+
+Steps:
+1. Append the item to the **Inbox** section of `wiki/pending.md` using the pending-item format (see below). Capture first, organize later — never lose an item because triage felt like work.
+2. If the item clearly belongs to a project or topic, link it: `from: [[<page>]]`.
+3. Append to `wiki/log.md`: `[CAPTURE] YYYY-MM-DD — <item>`
+
+### TRIAGE
+
+Trigger: "triage the inbox" or automatically when the Inbox exceeds ~10 items
+
+Steps:
+1. Move each Inbox item into **Next actions**, **Waiting on**, **Scheduled**, or demote it to `wiki/ideas.md` (someday/maybe) or delete it (no longer relevant).
+2. Assign priority (`⏫ high / 🔼 normal / 🔽 low`) and a due date where one exists.
+3. Update the counts line at the top of `wiki/pending.md`.
+
+### COMPLETE
+
+Trigger: "done: <item>" or noticing an item was finished
+
+Steps:
+1. Check the box and move the item to the **Recently completed** section of `wiki/pending.md` with a completion date (`✅ YYYY-MM-DD`).
+2. If the item is a milestone worth remembering (shipped something, closed a goal, external recognition), also run **ACHIEVE**.
+3. Append to `wiki/log.md`: `[DONE] YYYY-MM-DD — <item>`
+4. During REVIEW, prune **Recently completed** entries older than 30 days (they survive in `log.md`).
+
+### ACHIEVE
+
+Trigger: "log achievement: <x>", COMPLETE of a milestone item, or a clear win surfacing in conversation
+
+Steps:
+1. Add an entry to `wiki/achievements.md` under the current year/month using the achievement format: what was achieved, why it mattered (impact), and links to related pages.
+2. Append to `wiki/log.md`: `[ACHIEVE] YYYY-MM-DD — <achievement>`
+
+### DECIDE
+
+Trigger: "log decision: <x>" or a significant choice being settled in conversation
+
+Steps:
+1. Add an entry to `wiki/decisions.md`: date, decision, context, options considered, rationale, and status (`accepted` / `superseded by <entry>`).
+2. Append to `wiki/log.md`: `[DECIDE] YYYY-MM-DD — <decision>`
+
+### REVIEW (weekly)
+
+Trigger: "weekly review" or "review the vault"
+
+Steps:
+1. **Sweep pending**: triage the Inbox to zero; flag overdue and stale (>30 days untouched) items; prune old **Recently completed** entries.
+2. **Check goals**: for each active goal in `wiki/goals.md`, note progress and confirm at least one next action exists in `wiki/pending.md`; park stalled goals explicitly.
+3. **Celebrate**: scan the week's `[DONE]` log entries and promote anything achievement-worthy to `wiki/achievements.md`.
+4. **Feed the queue**: check `wiki/reading-list.md` — anything read gets ingested, anything obsolete gets dropped.
+5. Run **LINT** (below).
+6. Append to `wiki/log.md`: `[REVIEW] YYYY-MM-DD — <one-line summary of the week>`
 
 ### LINT
 
@@ -84,9 +146,43 @@ Each `wiki/<topic>.md` follows this template:
 - `raw/<filename>` — <brief description of this source>
 ```
 
+## Pending Item Format (`wiki/pending.md`)
+
+One checkbox line per item, Obsidian-Tasks-style inline fields (only the ones that apply):
+
+```markdown
+- [ ] <action, starting with a verb> ⏫ 📅 2026-07-24 · from: [[<page>]] · waiting-on: <who>
+```
+
+- Priority: `⏫` high · `🔼` normal (default, may be omitted) · `🔽` low
+- `📅 YYYY-MM-DD` — due date; `✅ YYYY-MM-DD` — completion date (added on COMPLETE)
+- Sections in order: **Inbox** → **Next actions** → **Waiting on** → **Scheduled** → **Recently completed**
+
+## Achievement Format (`wiki/achievements.md`)
+
+Grouped by year, then month, newest first:
+
+```markdown
+### 🏆 <achievement title> — YYYY-MM-DD
+**What:** <one or two sentences on what was accomplished>
+**Impact:** <why it mattered — outcome, numbers, recognition>
+**Links:** [[<related page>]]
+```
+
+## Decision Format (`wiki/decisions.md`)
+
+```markdown
+### YYYY-MM-DD — <decision title>  `accepted`
+**Context:** <what forced the choice>
+**Options:** <alternatives considered>
+**Decision & rationale:** <what was chosen and why>
+```
+
+Status is `accepted` until superseded — never edit history; add a new entry and mark the old one `superseded by <new entry>`.
+
 ## Index Format (`wiki/index.md`)
 
-Organized by category. Each entry: `- [[<topic>]] — <one-line description>`
+Starts with a **Dashboard** section (links to pending, achievements, goals, decisions, ideas, reading list, plus a pending-items count), followed by the content catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`
 
 ## Log Format (`wiki/log.md`)
 
@@ -98,6 +194,11 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 | `[QUERY]` | A query was filed as a wiki page |
 | `[LINT]` | A lint run was completed |
 | `[UPDATE]` | An existing wiki page was revised |
+| `[CAPTURE]` | A pending item was added to the inbox |
+| `[DONE]` | A pending item was completed |
+| `[ACHIEVE]` | An achievement was recorded |
+| `[DECIDE]` | A decision was logged |
+| `[REVIEW]` | A weekly review was completed |
 
 ---
 
