@@ -1,3 +1,17 @@
+# LeMiele Ventures
+
+Two layers, one thesis: **proven US business models, re-smelted for Europe from
+Luxembourg.**
+
+1. **[Schmelz](studio/business-case.md)** — the replica-first venture studio: the
+   factory that enters every market through models already de-risked in the US
+   (full business case, scored [replica pipeline](studio/replica-pipeline.md),
+   [studio financial model](studio/financial-model.csv)).
+2. **Kloer** (below) — Venture #1 off the line: the Vanta-replica for the Luxembourg
+   fund industry, fully specified in this repository.
+
+---
+
 # Kloer — Compliance, kloer a simpel.
 
 > **The Vanta of the Luxembourg fund industry.** An AI-native, continuous-compliance

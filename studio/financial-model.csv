@@ -1,0 +1,19 @@
+section,metric,unit,Y1,Y2,Y3,Y4,Y5,Y6
+ventures,launched_cumulative,count,2,4,7,9,9,9
+ventures,killed_cumulative,count,0,1,2,3,3,4
+ventures,alive_cumulative,count,2,3,5,6,6,5
+ventures,external_seed_closed_cumulative,count,0,1,3,5,6,6
+ventures,series_a_quality_cumulative,count,0,0,1,2,4,5
+opco,people_cost,EUR,850000,1150000,1400000,1500000,1500000,1500000
+opco,platform_and_ops_cost,EUR,350000,450000,500000,500000,500000,500000
+opco,total_opco_cost,EUR,1200000,1600000,1900000,2000000,2000000,2000000
+opco,venture_service_fees,EUR,0,100000,250000,450000,600000,700000
+opco,secondary_proceeds,EUR,0,0,150000,450000,1000000,1700000
+opco,total_opco_income,EUR,0,100000,400000,900000,1600000,2400000
+opco,net_opco_burn,EUR,-1200000,-1500000,-1500000,-1100000,-400000,400000
+deployment,preseed_into_ventures,EUR,800000,1200000,1400000,1000000,0,0
+deployment,grants_captured_portfolio,EUR,300000,500000,600000,500000,300000,0
+vehicle,cumulative_cash_deployed,EUR,2900000,5900000,8000000,8000000,8000000,8000000
+holding,portfolio_nav_marked,EUR,3000000,9000000,22000000,38000000,55000000,70000000
+holding,studio_avg_stake_pct,pct,50,44,38,33,29,26
+notes,assumption,text,"Vehicle I EUR 8M: EUR 5M family offices/LBAN, EUR 2M Digital Tech Fund/LFF track, EUR 1M GPs. 9 ventures over 4 years; kill gates at Assay/Foundry keep failed-venture cost < EUR 300k each. Pre-seed EUR 300-500k per venture from vehicle; seed onward externally led. Grants: Fit4Start EUR 150k + RDI/YIE aid per venture company. NAV marks: externally-led round prices only, no internal markups. Secondaries: 5-10% stake sales at seed/A. Stake dilution: ~50% at creation to ~25% by Series A. Base rates from studio industry data (seed rate 72-84%, TVPI ~5.8x) haircut ~20% for conservatism.",,,,,
