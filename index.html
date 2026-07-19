@@ -1487,22 +1487,46 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
   }
   function inline(s){
     s = esc(s);
-    s = s.replace(/`([^`]+)`/g, function(_, c){ return "<code>"+c+"</code>"; });
+    /* stash finished HTML in tokens so later transforms can't corrupt it
+       (code spans, wikilinks, and link URLs must stay verbatim) */
+    var toks = [];
+    function stash(html){ toks.push(html); return "\u0000"+(toks.length-1)+"\u0000"; }
+    s = s.replace(/`([^`]+)`/g, function(_, c){ return stash("<code>"+c+"</code>"); });
     s = s.replace(/\[\[([^\]]+)\]\]/g, function(_, name){
       var key = name.trim().toLowerCase();
-      if (slugMap[key]) return '<a class="wl" href="#" data-wl="'+key+'">'+name+"</a>";
-      return '<span class="wl--dead">'+name+"</span>";
+      if (slugMap[key]) return stash('<a class="wl" href="#" data-wl="'+key+'">'+name+"</a>");
+      return stash('<span class="wl--dead">'+name+"</span>");
     });
     s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function(_, txt, url){
-      if (!/^https?:/.test(url)) return txt;
-      return '<a href="'+url+'" target="_blank" rel="noopener">'+txt+"</a>";
+      if (!/^https?:/.test(url)) return stash(txt);
+      return stash('<a href="'+url+'" target="_blank" rel="noopener">'+txt+"</a>");
     });
     s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
     s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+    s = s.replace(/\u0000(\d+)\u0000/g, function(_, i){ return toks[+i]; });
     return s;
   }
+  function stripComments(src){
+    /* remove HTML comments, but never touch fenced code blocks */
+    var lines = src.split(/\r?\n/), out = [], inFence = false, inComment = false;
+    for (var i = 0; i < lines.length; i++){
+      var l = lines[i];
+      if (!inComment && /^```/.test(l)){ inFence = !inFence; out.push(l); continue; }
+      if (inFence){ out.push(l); continue; }
+      if (inComment){
+        var endIdx = l.indexOf("-->");
+        if (endIdx === -1) continue;
+        l = l.slice(endIdx + 3); inComment = false;
+      }
+      l = l.replace(/<!--[\s\S]*?-->/g, "");
+      var openIdx = l.indexOf("<!--");
+      if (openIdx !== -1){ l = l.slice(0, openIdx); inComment = true; }
+      out.push(l);
+    }
+    return out.join("\n");
+  }
   function mdRender(src){
-    src = src.replace(/<!--[\s\S]*?-->/g, "");
+    src = stripComments(src);
     var lines = src.split(/\r?\n/);
     var out = [], i = 0;
     function isTableLine(l){ return /^\s*\|.*\|\s*$/.test(l); }
@@ -1537,9 +1561,13 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
         var hasHead = rows.length > 1 && /^\s*\|[\s:|-]+\|\s*$/.test(rows[1]);
         rows.forEach(function(r, ri){
           if (hasHead && ri === 1) return;
+          /* pipes inside `code` spans are cell content, not separators */
+          r = r.replace(/`[^`]*`/g, function(m){ return m.replace(/\|/g, "\u0001"); });
           var cells = r.replace(/^\s*\|/,"").replace(/\|\s*$/,"").split("|");
           var tag = (hasHead && ri === 0) ? "th" : "td";
-          html += "<tr>" + cells.map(function(c){ return "<"+tag+">"+inline(c.trim())+"</"+tag+">"; }).join("") + "</tr>";
+          html += "<tr>" + cells.map(function(c){
+            return "<"+tag+">"+inline(c.trim().replace(/\u0001/g, "|"))+"</"+tag+">";
+          }).join("") + "</tr>";
         });
         html += "</table>";
         out.push(html);
@@ -1574,7 +1602,7 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
       var para = [];
       while (i < lines.length && !/^\s*$/.test(lines[i]) &&
              !/^(#{1,6})\s|^```|^>\s?|^\s*[-*]\s+|^\s*\d+\.\s+/.test(lines[i]) &&
-             !isTableLine(lines[i]) && !/^\s*(-{3,})\s*$/.test(lines[i])){
+             !isTableLine(lines[i]) && !/^\s*(-{3,}|\*{3,})\s*$/.test(lines[i])){
         para.push(lines[i]); i++;
       }
       out.push("<p>"+inline(para.join(" "))+"</p>");
@@ -1586,8 +1614,9 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
   function section(text, heading){
     if (!text) return "";
     var parts = text.split(/^## +/m);
-    for (var k = 0; k < parts.length; k++){
-      if (parts[k].toLowerCase().indexOf(heading.toLowerCase()) === 0) return parts[k];
+    for (var k = 1; k < parts.length; k++){
+      var head = parts[k].split("\n")[0].trim().toLowerCase();
+      if (head === heading.toLowerCase()) return parts[k];
     }
     return "";
   }
@@ -1599,21 +1628,21 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
   function computeStats(){
     var p = store["wiki/pending.md"] || "";
     var s = {
-      open:    count(p, /^- \[ \]/gm),
-      inbox:   count(section(p, "Inbox"), /^- \[ \]/gm),
-      nextAct: count(section(p, "Next actions"), /^- \[ \]/gm),
+      open:    count(p, /^[ \t]*- \[ \]/gm),
+      inbox:   count(section(p, "Inbox"), /^[ \t]*- \[ \]/gm),
+      nextAct: count(section(p, "Next actions"), /^[ \t]*- \[ \]/gm),
       overdue: 0,
       wins:    count(store["wiki/achievements.md"] || "", /^### 🏆/gm),
       goals:   count(section(store["wiki/goals.md"] || "", "Active"), /^### /gm),
       decisions: count(store["wiki/decisions.md"] || "", /^### \d{4}/gm),
       ideas:   count((store["wiki/ideas.md"] || "").split(/^## +Cross/m)[0], /^- /gm),
-      reading: count(section(store["wiki/reading-list.md"] || "", "To read"), /^\| \d{4}/gm),
+      reading: count(section(store["wiki/reading-list.md"] || "", "To read / ingest"), /^\| \d{4}/gm),
       logEntries: count(store["wiki/log.md"] || "", /^\[[A-Z]+\]/gm),
       topics:  count(section(store["wiki/index.md"] || "", "Knowledge pages"), /^- \[\[/gm),
       lastEntry: null, lastReview: null
     };
     var today = todayStr();
-    var re = /^- \[ \].*?📅 (\d{4}-\d{2}-\d{2})/gm, m;
+    var re = /^[ \t]*- \[ \].*?📅 (\d{4}-\d{2}-\d{2})/gm, m;
     while ((m = re.exec(p))) if (m[1] < today) s.overdue++;
     function maxDate(list){
       if (!list || !list.length) return null;
