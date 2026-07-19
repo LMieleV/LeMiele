@@ -1214,6 +1214,7 @@ Append-only chronological record. Newest entries at the bottom.
 [ACHIEVE] 2026-07-17 — Personal vault upgraded to best-in-class feature set (see `achievements.md`).
 [DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see `decisions.md`).
 [UPDATE] 2026-07-19 — V.A.U.L.T site added at `index.html` (deck of clickable MD files, reader, "what's missing" panel); `README.md` guide added; `wiki/index.md` restructured around the five pillars.
+[ACHIEVE] 2026-06-05 — Vault initialized (backfilled 2026-07-19 to match `achievements.md`; entry was missing when the achievement was recorded).
 </script>
 <script type="text/markdown" data-file="CLAUDE.md">
 # V.A.U.L.T — Schema & Workflow
@@ -1414,7 +1415,7 @@ Status is `accepted` until superseded — never edit history; add a new entry an
 
 ## Index Format (`wiki/index.md`)
 
-Starts with a **Dashboard** section (links to pending, achievements, goals, decisions, ideas, reading list, plus a pending-items count), followed by the content catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`
+Starts with the **five-pillar map** (the V.A.U.L.T table linking goals, achievements, decisions, log, and pending), then a **Queues** section (ideas, reading list), then the **Knowledge pages** catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`. Ends with a `*Last updated: YYYY-MM-DD*` line.
 
 ## Log Format (`wiki/log.md`)
 
@@ -1614,10 +1615,13 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
     var today = todayStr();
     var re = /^- \[ \].*?📅 (\d{4}-\d{2}-\d{2})/gm, m;
     while ((m = re.exec(p))) if (m[1] < today) s.overdue++;
-    var dates = (store["wiki/log.md"] || "").match(/^\[[A-Z]+\] (\d{4}-\d{2}-\d{2})/gm);
-    if (dates && dates.length) s.lastEntry = dates[dates.length-1].replace(/^\[[A-Z]+\] /,"");
-    var rev = (store["wiki/log.md"] || "").match(/^\[REVIEW\] (\d{4}-\d{2}-\d{2})/gm);
-    if (rev && rev.length) s.lastReview = rev[rev.length-1].replace(/^\[REVIEW\] /,"");
+    function maxDate(list){
+      if (!list || !list.length) return null;
+      return list.map(function(x){ return x.replace(/^\[[A-Z]+\] /,""); })
+                 .sort().pop();
+    }
+    s.lastEntry  = maxDate((store["wiki/log.md"] || "").match(/^\[[A-Z]+\] (\d{4}-\d{2}-\d{2})/gm));
+    s.lastReview = maxDate((store["wiki/log.md"] || "").match(/^\[REVIEW\] (\d{4}-\d{2}-\d{2})/gm));
     return s;
   }
   function gapItem(kind, sym, html){

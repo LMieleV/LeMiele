@@ -196,7 +196,7 @@ Status is `accepted` until superseded — never edit history; add a new entry an
 
 ## Index Format (`wiki/index.md`)
 
-Starts with a **Dashboard** section (links to pending, achievements, goals, decisions, ideas, reading list, plus a pending-items count), followed by the content catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`
+Starts with the **five-pillar map** (the V.A.U.L.T table linking goals, achievements, decisions, log, and pending), then a **Queues** section (ideas, reading list), then the **Knowledge pages** catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`. Ends with a `*Last updated: YYYY-MM-DD*` line.
 
 ## Log Format (`wiki/log.md`)
 
