@@ -1,13 +1,27 @@
-# LLM Wiki / Vault — Schema & Workflow
+# V.A.U.L.T — Schema & Workflow
 
-This repository implements [Karpathy's LLM-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) extended into a full personal vault: an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query, plus the productivity surfaces found in best-in-class vaults (Obsidian, Notion, Logseq): a pending-items tracker, an achievements vault, goals, a decision log, an ideas parking lot, a reading list, and a weekly-review ritual.
+This repository implements [Karpathy's LLM-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) extended into a full personal vault: an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query, plus the productivity surfaces found in best-in-class vaults (Obsidian, Notion, Logseq).
+
+The vault is organized as **V.A.U.L.T — five pillars**, one file each:
+
+| Pillar | File | What lives there |
+|--------|------|------------------|
+| **V** — Vision | `wiki/goals.md` | Goals & active projects |
+| **A** — Achievements | `wiki/achievements.md` | Wins & milestones, by month |
+| **U** — Understanding | `wiki/index.md` + topic pages | Knowledge, one page per topic |
+| **L** — Log | `wiki/decisions.md` + `wiki/log.md` | Why (decisions) and when (history) |
+| **T** — Tasks | `wiki/pending.md` | Inbox, next actions, waiting, scheduled |
+
+Two queues feed the pillars: `wiki/ideas.md` (someday/maybe) and `wiki/reading-list.md` (sources to ingest). `index.html` at the repo root is the visual front door — a clickable deck where every markdown file opens in a reader.
 
 ## Directory Layout
 
 ```
+index.html  ← V.A.U.L.T site: clickable deck over the wiki (zero-dependency, single file)
+README.md   ← plain-language guide to using the vault
 raw/        ← immutable source documents (never modified by the LLM)
 wiki/       ← LLM-owned markdown knowledge base
-  index.md  ← home dashboard + content catalog, updated on every change
+  index.md  ← the Understanding pillar: pillar map + knowledge-page catalog
   log.md    ← append-only chronological record
   pending.md      ← pending items: inbox + triaged next actions (GTD-style)
   achievements.md ← achievements vault: wins, milestones, shipped work
@@ -210,3 +224,4 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 - Cross-references use `[[page-name]]` notation (filename without `.md`).
 - All dates use `YYYY-MM-DD` format.
 - Keep pages focused: one entity or concept per page. Use cross-references rather than duplicating content.
+- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots (the `<script type="text/markdown">` blocks) when opened from disk. After materially changing a wiki page, refresh its snapshot block in `index.html`; when a new topic page is created, add it to the `FILES` manifest and add a matching snapshot block.

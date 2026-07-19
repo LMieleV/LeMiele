@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="V.A.U.L.T — a personal vault made simple. Vision, Achievements, Understanding, Log, Tasks: five pillars in plain markdown. Click any card in the deck to read the file behind it.">
+<meta name="theme-color" content="#10161a">
+<meta property="og:title" content="V.A.U.L.T — your vault, made simple">
+<meta property="og:description" content="Five pillars in plain markdown — Vision, Achievements, Understanding, Log, Tasks. Every file is a clickable card.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7.4' stroke='%23f06d0c' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='10' cy='10' r='2.6' fill='%23f06d0c'/%3E%3Cpath d='M10 2.6 V6 M10 14 V17.4 M2.6 10 H6 M14 10 H17.4' stroke='%23f06d0c' stroke-width='1.8'/%3E%3C/svg%3E">
+<title>V.A.U.L.T — your vault, made simple</title>
+<style>
+/* ============================================================
+   V.A.U.L.T — Vision · Achievements · Understanding · Log · Tasks
+   Single-file, zero-dependency · same design language as the
+   Etex "Working with Procurement" site:
+   charcoal #151D21 · orange #F06D0C · slate #5A6770
+   mist #DDE1E4 · deep blue #00324B · green #80A45D
+   ============================================================ */
+
+:root{
+  --bg:        #10161a;
+  --bg-2:      #151d21;
+  --bg-3:      #1b252b;
+  --ink:       #edf1f4;
+  --ink-dim:   #c0c9cf;
+  --muted:     #7f8b94;
+  --accent:    #f06d0c;
+  --accent-soft:#ffb36b;
+  --accent-tint:#ffe1c3;
+  --green:     #80a45d;
+  --blue:      #0064a0;
+  --line:      rgba(221,225,228,.14);
+  --line-soft: rgba(221,225,228,.08);
+  --serif:     Georgia, "Times New Roman", "Palatino Linotype", serif;
+  --sans:      "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono:      "Cascadia Code", Consolas, "SF Mono", Menlo, monospace;
+  --ease-out:  cubic-bezier(.19,1,.22,1);
+  --ease-soft: cubic-bezier(.25,.46,.45,.94);
+}
+
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.reader-open{ overflow:hidden; }
+
+::selection{ background:var(--accent); color:#10161a; }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+
+html{ scrollbar-color:#2c3840 var(--bg); }
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:#2c3840; border-radius:99px; }
+::-webkit-scrollbar-thumb:hover{ background:#3a474f; }
+
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+ul{ list-style:none; }
+img,svg,canvas{ display:block; max-width:100%; }
+
+/* ---------- skip link ---------- */
+.skip-link{
+  position:fixed; top:-60px; left:16px; z-index:300;
+  background:var(--accent); color:#10161a;
+  padding:.6em 1.2em; font-size:.8rem; font-weight:600;
+  transition:top .2s;
+}
+.skip-link:focus{ top:16px; }
+
+/* ---------- film-grain overlay ---------- */
+.grain{
+  position:fixed; inset:-50%; z-index:120; pointer-events:none;
+  width:200%; height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity:.04;
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{ transform:translate(0,0); }
+  10%{ transform:translate(-4%,-6%); } 20%{ transform:translate(-8%,3%); }
+  30%{ transform:translate(5%,-8%); }  40%{ transform:translate(-3%,10%); }
+  50%{ transform:translate(-9%,-4%); } 60%{ transform:translate(8%,2%); }
+  70%{ transform:translate(2%,8%); }   80%{ transform:translate(-6%,4%); }
+  90%{ transform:translate(7%,-5%); }
+}
+
+/* ---------- scroll progress ---------- */
+.progress{
+  position:fixed; top:0; left:0; height:2px; width:100%;
+  z-index:210; transform-origin:0 50%; transform:scaleX(0);
+  background:linear-gradient(90deg,var(--accent),var(--accent-soft));
+}
+
+/* ---------- custom cursor ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed; top:0; left:0; z-index:250; pointer-events:none;
+  border-radius:50%; transform:translate(-50%,-50%);
+  opacity:0; transition:opacity .3s;
+}
+.cursor-dot{ width:6px; height:6px; background:var(--accent); }
+.cursor-ring{
+  width:36px; height:36px; border:1px solid rgba(240,109,12,.55);
+  transition:width .35s var(--ease-out), height .35s var(--ease-out),
+             border-color .35s, opacity .3s, background .35s;
+}
+body.cursor-on .cursor-dot, body.cursor-on .cursor-ring{ opacity:1; }
+body.cursor-hover .cursor-ring{
+  width:72px; height:72px;
+  border-color:rgba(240,109,12,.9);
+  background:rgba(240,109,12,.08);
+}
+@media (hover:none), (pointer:coarse){
+  .cursor-dot,.cursor-ring{ display:none; }
+}
+
+/* ---------- preloader ---------- */
+.preloader{
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 1s var(--ease-out);
+}
+.preloader__inner{ text-align:center; }
+.preloader__count{
+  font-family:var(--serif); font-size:clamp(4rem,12vw,9rem);
+  font-weight:400; letter-spacing:-.03em; line-height:1;
+  color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.preloader__label{
+  margin-top:1rem; font-size:.7rem; letter-spacing:.4em;
+  text-transform:uppercase; color:var(--muted);
+}
+.preloader__label b{ color:var(--accent); font-weight:600; }
+body.loaded .preloader{ transform:translateY(-100%); pointer-events:none; }
+
+/* ---------- wordmark ---------- */
+.wordmark{
+  font-family:var(--serif); font-size:1.05rem; letter-spacing:.16em;
+  color:var(--ink); white-space:nowrap;
+}
+.wordmark i{ font-style:normal; color:var(--accent); }
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed; top:0; left:0; right:0; z-index:150;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.5rem clamp(1.2rem,4vw,3.5rem);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(16,22,26,.78);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  padding-top:.9rem; padding-bottom:.9rem;
+  border-bottom-color:var(--line-soft);
+}
+.nav__logo{ display:flex; align-items:center; gap:.7rem; }
+.nav__division{
+  font-size:.68rem; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--muted); border-left:1px solid var(--line);
+  padding-left:.7rem; margin-left:.1rem;
+}
+.nav__links{ display:flex; gap:2rem; }
+.nav__links a{
+  font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink-dim); position:relative; padding:.3em 0;
+  transition:color .3s;
+}
+.nav__links a::after{
+  content:""; position:absolute; left:0; bottom:0; height:1px; width:100%;
+  background:var(--accent); transform:scaleX(0); transform-origin:100% 50%;
+  transition:transform .45s var(--ease-out);
+}
+.nav__links a:hover{ color:var(--ink); }
+.nav__links a:hover::after{ transform:scaleX(1); transform-origin:0 50%; }
+.nav__cta{
+  font-size:.7rem; letter-spacing:.2em; text-transform:uppercase;
+  border:1px solid var(--accent); color:var(--accent-tint);
+  padding:.75em 1.5em; border-radius:99px;
+  transition:background .35s, color .35s;
+}
+.nav__cta:hover{ background:var(--accent); color:#10161a; }
+@media (max-width:960px){ .nav__links{ display:none; } }
+@media (max-width:520px){ .nav__division{ display:none; } }
+
+.nav{ opacity:0; transform:translateY(-12px); transition:opacity .8s .2s, transform .8s .2s var(--ease-out), background .5s, padding .5s, border-color .5s; }
+body.loaded .nav{ opacity:1; transform:none; }
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; min-height:100svh;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:7rem clamp(1.2rem,4vw,3.5rem) 3rem;
+  overflow:hidden;
+}
+.hero__canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.hero::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 120%, transparent 40%, rgba(16,22,26,.65) 100%);
+}
+.hero__inner{ position:relative; z-index:2; max-width:1400px; margin:0 auto; width:100%; will-change:transform,opacity; }
+
+.hero__eyebrow{
+  display:flex; align-items:center; gap:1rem;
+  font-size:.72rem; letter-spacing:.35em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:clamp(1.5rem,3vh,2.6rem);
+}
+.hero__eyebrow::before{ content:""; width:3rem; height:1px; background:var(--accent); }
+
+.hero__title{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(2.7rem,7.6vw,7.2rem);
+  line-height:1.02; letter-spacing:-.025em;
+}
+.hero__title .italic{ font-style:italic; color:var(--accent-soft); }
+.line-mask{ display:block; overflow:hidden; padding-bottom:.06em; margin-bottom:-.06em; }
+.line-mask > span{
+  display:block; transform:translateY(115%);
+  transition:transform 1.2s var(--ease-out);
+}
+body.loaded .line-mask:nth-child(1) > span{ transition-delay:.55s; }
+body.loaded .line-mask:nth-child(2) > span{ transition-delay:.68s; }
+body.loaded .line-mask > span{ transform:translateY(0); }
+
+.hero__foot{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:2rem; margin-top:clamp(2rem,5vh,3.5rem);
+  opacity:0; transform:translateY(20px);
+  transition:opacity 1s 1.05s, transform 1s 1.05s var(--ease-out);
+}
+body.loaded .hero__foot{ opacity:1; transform:none; }
+.hero__desc{ max-width:460px; color:var(--ink-dim); font-size:.98rem; }
+.hero__scroll{
+  display:flex; align-items:center; gap:.8rem;
+  font-size:.68rem; letter-spacing:.3em; text-transform:uppercase; color:var(--muted);
+  white-space:nowrap;
+}
+.hero__scroll .tick{
+  width:1px; height:3.2rem; background:var(--line); position:relative; overflow:hidden;
+}
+.hero__scroll .tick::after{
+  content:""; position:absolute; top:-100%; left:0; width:100%; height:100%;
+  background:var(--accent); animation:scrolltick 2.2s var(--ease-soft) infinite;
+}
+@keyframes scrolltick{ 0%{ top:-100%; } 55%{ top:0; } 100%{ top:100%; } }
+
+.hero__meta{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--line-soft); border:1px solid var(--line-soft);
+  margin-top:clamp(2.2rem,5vh,3.5rem);
+  opacity:0; transform:translateY(20px);
+  transition:opacity 1s 1.25s, transform 1s 1.25s var(--ease-out);
+}
+body.loaded .hero__meta{ opacity:1; transform:none; }
+.hero__meta div{
+  background:rgba(21,29,33,.72); padding:1.1rem 1.3rem;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+}
+.hero__meta dt{
+  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.35rem;
+}
+.hero__meta dd{ font-size:.92rem; color:var(--ink-dim); }
+@media (max-width:820px){
+  .hero__meta{ grid-template-columns:repeat(2,1fr); }
+  .hero__foot{ flex-direction:column; align-items:flex-start; }
+}
+
+/* ---------- marquee ---------- */
+.marquee{
+  border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+  padding:1.3rem 0; overflow:hidden; white-space:nowrap;
+  background:var(--bg-2);
+}
+.marquee__track{ display:inline-flex; animation:marquee 34s linear infinite; }
+.marquee:hover .marquee__track{ animation-play-state:paused; }
+.marquee__item{
+  font-family:var(--serif); font-size:clamp(1.05rem,2.2vw,1.55rem);
+  letter-spacing:.03em; color:var(--ink-dim);
+  padding:0 1.5rem; display:inline-flex; align-items:center; gap:3rem;
+}
+.marquee__item::after{ content:"‹›"; color:var(--accent); font-size:.8em; letter-spacing:-.1em; }
+@keyframes marquee{ to{ transform:translateX(-50%); } }
+
+/* ---------- shared section chrome ---------- */
+.section{ padding:clamp(4.5rem,11vh,9rem) clamp(1.2rem,4vw,3.5rem); position:relative; }
+.section--alt{ background:var(--bg-2); }
+.section__inner{ max-width:1400px; margin:0 auto; }
+.section__head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:2rem; margin-bottom:clamp(2rem,5vh,3.5rem);
+  border-bottom:1px solid var(--line-soft); padding-bottom:1.3rem;
+}
+.section__label{ font-size:.72rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent); }
+.section__num{ font-family:var(--serif); font-style:italic; color:var(--muted); font-size:.95rem; white-space:nowrap; }
+.section__title{
+  text-wrap:balance;
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(2rem,4.6vw,3.8rem); line-height:1.08; letter-spacing:-.02em;
+  max-width:900px; margin-bottom:1.4rem;
+}
+.section__title em{ color:var(--accent-soft); }
+.section__intro{ color:var(--ink-dim); max-width:640px; font-size:1rem; margin-bottom:clamp(2rem,5vh,3.5rem); }
+
+/* reveal-on-scroll */
+.reveal{ opacity:0; transform:translateY(42px); transition:opacity 1s var(--ease-soft), transform 1s var(--ease-out); }
+.reveal.in-view{ opacity:1; transform:none; }
+.reveal[data-delay="1"]{ transition-delay:.12s; }
+.reveal[data-delay="2"]{ transition-delay:.24s; }
+.reveal[data-delay="3"]{ transition-delay:.36s; }
+
+/* ---------- manifesto ---------- */
+#manifestoText{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.6rem,4vw,3.2rem);
+  line-height:1.3; letter-spacing:-.01em; max-width:1150px;
+}
+.manifesto .w{ color:rgba(237,241,244,.15); transition:color .5s var(--ease-soft); }
+.manifesto .w.on{ color:var(--ink); }
+.manifesto .w.em{ font-style:italic; }
+.manifesto .w.em.on{ color:var(--accent-soft); }
+.manifesto__src{
+  margin-top:2rem; font-size:.68rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--muted);
+}
+
+/* ---------- pillars ---------- */
+.pillars{ display:grid; grid-template-columns:repeat(5,1fr); gap:clamp(.9rem,1.6vw,1.6rem); }
+.pillar{
+  border-top:1px solid var(--line); padding-top:1.3rem; position:relative;
+  text-align:left; display:block; width:100%;
+  transition:transform .5s var(--ease-out);
+}
+.pillar::before{
+  content:""; position:absolute; top:-1px; left:0; height:1px; width:0;
+  background:var(--accent); transition:width 1.1s var(--ease-out);
+}
+.pillar.in-view::before{ width:100%; }
+.pillar:hover{ transform:translateY(-4px); }
+.pillar__letter{
+  font-family:var(--serif); font-style:italic; color:var(--accent);
+  font-size:clamp(2.2rem,3.6vw,3.4rem); line-height:1; display:block; margin-bottom:1rem;
+}
+.pillar h3{
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.15rem,1.7vw,1.5rem);
+  letter-spacing:-.01em; margin-bottom:.6rem;
+}
+.pillar p{ color:var(--muted); font-size:.85rem; line-height:1.6; }
+.pillar__file{
+  display:inline-block; margin-top:1rem;
+  font-family:var(--mono); font-size:.7rem; color:var(--accent-soft);
+  border-bottom:1px solid rgba(240,109,12,.4); padding-bottom:.2em;
+  transition:color .3s;
+}
+.pillar:hover .pillar__file{ color:var(--accent-tint); }
+@media (max-width:1000px){ .pillars{ grid-template-columns:repeat(2,1fr); row-gap:2.6rem; } }
+@media (max-width:520px){ .pillars{ grid-template-columns:1fr; } }
+
+/* ---------- how it operates (3 moves) ---------- */
+.moves{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(.9rem,1.6vw,1.6rem); counter-reset:step; }
+.move{ border-top:1px solid var(--line); padding-top:1.3rem; position:relative; }
+.move::before{
+  content:""; position:absolute; top:-1px; left:0; height:1px; width:0;
+  background:var(--accent); transition:width 1.1s var(--ease-out);
+}
+.move.in-view::before{ width:100%; }
+.move__num{
+  font-family:var(--serif); font-style:italic; color:var(--accent);
+  font-size:.9rem; display:block; margin-bottom:1rem;
+}
+.move h3{
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.3rem,2vw,1.8rem);
+  letter-spacing:-.01em; margin-bottom:.6rem;
+}
+.move p{ color:var(--ink-dim); font-size:.92rem; line-height:1.65; }
+.move p code{ color:var(--accent-tint); font-family:var(--mono); font-size:.84em; background:rgba(240,109,12,.08); padding:.15em .45em; border-radius:3px; }
+@media (max-width:860px){ .moves{ grid-template-columns:1fr; row-gap:2.4rem; } }
+
+/* ---------- status: tiles + gaps ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(6,1fr); gap:1px;
+  background:var(--line-soft); border:1px solid var(--line-soft);
+}
+.stats div{ background:var(--bg-2); padding:1.5rem 1.6rem; }
+.section--alt .stats div{ background:var(--bg); }
+.stats dt{
+  font-size:.62rem; letter-spacing:.26em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:.55rem;
+}
+.stats dd{
+  font-family:var(--serif); font-size:clamp(1.8rem,3vw,2.6rem);
+  line-height:1; color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.stats div.hot dd{ color:var(--accent-soft); }
+@media (max-width:1000px){ .stats{ grid-template-columns:repeat(3,1fr); } }
+@media (max-width:560px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+
+.gaps{ margin-top:clamp(2rem,5vh,3rem); }
+.gaps li{
+  display:grid; grid-template-columns:2rem 1fr; gap:1rem; align-items:baseline;
+  padding:.9rem 0; border-bottom:1px solid var(--line-soft);
+  font-size:.95rem; color:var(--ink-dim);
+}
+.gaps li:last-child{ border-bottom:0; }
+.gaps .sym{ font-family:var(--serif); font-style:italic; text-align:center; }
+.gap--warn .sym{ color:var(--accent); }
+.gap--ok{ color:var(--muted); }
+.gap--ok .sym{ color:var(--green); }
+.gaps b{ color:var(--accent-tint); font-weight:600; }
+.gaps .gap--ok b{ color:var(--ink-dim); }
+.gaps button.gap-open{
+  color:var(--accent-soft); border-bottom:1px solid rgba(240,109,12,.4);
+  transition:color .3s;
+}
+.gaps button.gap-open:hover{ color:var(--accent-tint); }
+
+/* ---------- deck ---------- */
+.chips{ display:flex; gap:.6rem; flex-wrap:wrap; margin-bottom:clamp(1.6rem,3vh,2.4rem); }
+.chip{
+  font-size:.65rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-dim); border:1px solid var(--line);
+  padding:.55em 1.3em; border-radius:99px;
+  transition:border-color .3s, color .3s, background .3s;
+}
+.chip:hover{ border-color:rgba(240,109,12,.5); color:var(--ink); }
+.chip.on{ background:var(--accent); border-color:var(--accent); color:#10161a; font-weight:600; }
+
+.deck{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+.card{
+  background:var(--bg); padding:clamp(1.5rem,2.5vw,2.2rem);
+  transition:background .4s; position:relative; text-align:left;
+  display:flex; flex-direction:column; align-items:flex-start;
+}
+.section--alt .card{ background:var(--bg-2); }
+.card:hover{ background:var(--bg-3); }
+.card[hidden]{ display:none; }
+.card__mono{
+  font-family:var(--serif); font-style:italic; font-size:1rem;
+  color:var(--accent); border:1px solid rgba(240,109,12,.4);
+  width:2.9em; height:2.9em; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:1.2rem; transition:background .35s, color .35s;
+}
+.card:hover .card__mono{ background:var(--accent); color:#10161a; }
+.card h3{
+  font-family:var(--serif); font-weight:400; font-size:1.35rem;
+  letter-spacing:-.01em; margin-bottom:.2rem;
+}
+.card__path{ font-family:var(--mono); font-size:.68rem; color:var(--muted); margin-bottom:.7rem; }
+.card p{ color:var(--muted); font-size:.88rem; min-height:3.2em; }
+.card__badge{
+  display:inline-block; margin-top:1.1rem;
+  font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--ink-dim); border:1px solid var(--line);
+  padding:.45em 1em; border-radius:99px;
+}
+.card__arrow{
+  position:absolute; top:1.5rem; right:1.5rem;
+  font-family:var(--serif); color:var(--muted);
+  transition:transform .4s var(--ease-out), color .3s;
+}
+.card:hover .card__arrow{ transform:translate(3px,-3px) rotate(45deg); color:var(--accent); }
+@media (max-width:1000px){ .deck{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .deck{ grid-template-columns:1fr; } }
+
+.deck-mode{
+  margin-top:1.4rem; font-size:.65rem; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--muted);
+}
+.deck-mode b{ color:var(--green); font-weight:600; }
+
+/* ---------- cheat sheet (accordion) ---------- */
+.faq details{ border-bottom:1px solid var(--line-soft); }
+.faq details:first-of-type{ border-top:1px solid var(--line-soft); }
+.faq summary{
+  cursor:pointer; list-style:none;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:baseline;
+  gap:clamp(1rem,3vw,2.4rem);
+  padding:clamp(1.2rem,2.6vh,1.7rem) 0;
+  transition:color .3s;
+}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary:hover{ color:var(--accent-tint); }
+.faq .q-num{ font-family:var(--serif); font-style:italic; color:var(--accent); font-size:.9rem; }
+.faq .q-text{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(1.15rem,2.4vw,1.7rem); letter-spacing:-.01em;
+}
+.faq .q-text code{ font-family:var(--mono); font-size:.75em; color:var(--accent-soft); background:rgba(240,109,12,.08); padding:.2em .5em; border-radius:4px; }
+.faq .q-plus{
+  font-family:var(--serif); font-size:1.4rem; color:var(--muted);
+  transition:transform .4s var(--ease-out), color .3s;
+}
+.faq details[open] .q-plus{ transform:rotate(45deg); color:var(--accent); }
+.faq .a{
+  padding:0 0 1.7rem calc(.9rem + clamp(1rem,3vw,2.4rem));
+  color:var(--ink-dim); font-size:.95rem; max-width:820px;
+}
+.faq details[open] .a{ animation:faqIn .5s var(--ease-out); }
+@keyframes faqIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+.faq .a b{ color:var(--accent-tint); font-weight:600; }
+.faq .a .file-open{
+  color:var(--accent-soft); border-bottom:1px solid rgba(240,109,12,.4);
+  font-family:var(--mono); font-size:.85em;
+  transition:color .3s;
+}
+.faq .a .file-open:hover{ color:var(--accent-tint); }
+
+/* ---------- reader overlay ---------- */
+.reader{ position:fixed; inset:0; z-index:220; }
+.reader[hidden]{ display:none; }
+.reader__backdrop{
+  position:absolute; inset:0; background:rgba(10,14,17,.7);
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  animation:fadeIn .35s var(--ease-soft);
+}
+.reader__panel{
+  position:absolute; top:0; right:0; bottom:0;
+  width:min(780px,100%);
+  background:var(--bg-2); border-left:1px solid var(--line);
+  display:flex; flex-direction:column;
+  animation:slideIn .5s var(--ease-out);
+}
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes slideIn{ from{ transform:translateX(60px); opacity:0; } to{ transform:none; opacity:1; } }
+.reader__head{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:1.4rem clamp(1.4rem,3vw,2.4rem);
+  border-bottom:1px solid var(--line-soft);
+}
+.reader__path{ font-family:var(--mono); font-size:.68rem; color:var(--accent-soft); letter-spacing:.06em; margin-bottom:.15rem; }
+.reader__title{ font-family:var(--serif); font-weight:400; font-size:1.4rem; letter-spacing:-.01em; }
+.reader__actions{ display:flex; gap:.6rem; flex-shrink:0; }
+.reader__btn{
+  font-size:.62rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ink-dim); border:1px solid var(--line);
+  padding:.6em 1.2em; border-radius:99px;
+  transition:border-color .3s, color .3s, background .3s;
+}
+.reader__btn:hover{ border-color:rgba(240,109,12,.5); color:var(--ink); }
+.reader__btn.on{ background:var(--accent); border-color:var(--accent); color:#10161a; font-weight:600; }
+.reader__body{
+  flex:1; overflow-y:auto; padding:clamp(1.6rem,3.5vw,2.8rem);
+  overscroll-behavior:contain;
+  scrollbar-color:#2c3840 var(--bg-2);
+}
+.reader__foot{
+  display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:1rem clamp(1.4rem,3vw,2.4rem);
+  border-top:1px solid var(--line-soft);
+}
+.reader__nav{
+  font-size:.65rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ink-dim); transition:color .3s;
+}
+.reader__nav:hover{ color:var(--accent-soft); }
+.reader__hint{ font-size:.6rem; letter-spacing:.24em; text-transform:uppercase; color:var(--muted); text-align:center; }
+@media (max-width:560px){ .reader__hint{ display:none; } }
+
+/* ---------- rendered markdown ---------- */
+.md{ font-size:.95rem; color:var(--ink-dim); }
+.md > *+*{ margin-top:.9em; }
+.md h1{
+  font-family:var(--serif); font-weight:400; color:var(--ink);
+  font-size:clamp(1.7rem,3vw,2.3rem); letter-spacing:-.02em; line-height:1.15;
+}
+.md h2{
+  font-family:var(--serif); font-weight:400; color:var(--ink);
+  font-size:1.35rem; letter-spacing:-.01em;
+  margin-top:1.8em; padding-bottom:.45em;
+  border-bottom:1px solid var(--line-soft);
+}
+.md h3{ font-family:var(--serif); font-weight:400; color:var(--ink); font-size:1.12rem; margin-top:1.5em; }
+.md h4{ font-size:.7rem; letter-spacing:.26em; text-transform:uppercase; color:var(--accent); margin-top:1.6em; }
+.md p b, .md li b{ color:var(--ink); font-weight:600; }
+.md em{ color:var(--accent-soft); }
+.md ul,.md ol{ padding-left:1.3em; }
+.md ul{ list-style:none; }
+.md ol{ list-style:decimal; }
+.md ul li, .md ol li{ padding:.28em 0; position:relative; }
+.md ul li:not(.task)::before{
+  content:"›"; position:absolute; left:-1.15em; top:.28em;
+  color:var(--accent); font-family:var(--serif);
+}
+.md li.task{ list-style:none; display:flex; gap:.7em; align-items:baseline; }
+.md li.task::before{ display:none; }
+.md li.task .cb{
+  flex-shrink:0; width:.85em; height:.85em; transform:translateY(.08em);
+  border:1px solid var(--muted); border-radius:2px; display:inline-block; position:relative;
+}
+.md li.task.done{ color:var(--muted); }
+.md li.task.done .cb{ background:var(--green); border-color:var(--green); }
+.md li.task.done .cb::after{
+  content:"✓"; position:absolute; inset:0; color:#10161a;
+  font-size:.7em; line-height:1.2; text-align:center; font-weight:700;
+}
+.md code{ font-family:var(--mono); font-size:.85em; color:var(--accent-tint); background:rgba(240,109,12,.08); padding:.15em .45em; border-radius:3px; }
+.md pre{
+  background:var(--bg); border:1px solid var(--line-soft); border-radius:4px;
+  padding:1.1em 1.3em; overflow-x:auto; font-family:var(--mono); font-size:.8rem;
+  line-height:1.6; color:var(--ink-dim);
+}
+.md pre code{ background:none; padding:0; color:inherit; }
+.md table{ border-collapse:collapse; width:100%; font-size:.88rem; display:block; overflow-x:auto; }
+.md th{
+  text-align:left; font-size:.62rem; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--accent); font-weight:600; padding:.6em .9em;
+  border-bottom:1px solid var(--line);
+}
+.md td{ padding:.6em .9em; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+.md blockquote{
+  border-left:2px solid var(--accent); padding:.4em 0 .4em 1.2em;
+  background:rgba(240,109,12,.05); color:var(--ink-dim); font-style:italic;
+}
+.md hr{ border:0; border-top:1px solid var(--line-soft); margin:1.6em 0; }
+.md a{ color:var(--accent-soft); border-bottom:1px solid rgba(240,109,12,.4); transition:color .3s; }
+.md a:hover{ color:var(--accent-tint); }
+.md a.wl{ font-weight:600; }
+.md .wl--dead{ color:var(--muted); border-bottom:1px dashed var(--line); }
+.rawpre{
+  white-space:pre-wrap; word-break:break-word;
+  font-family:var(--mono); font-size:.78rem; line-height:1.7; color:var(--ink-dim);
+}
+
+/* ---------- footer ---------- */
+.footer{
+  border-top:1px solid var(--line-soft);
+  padding:clamp(4.5rem,11vh,8rem) clamp(1.2rem,4vw,3.5rem) 2.5rem;
+  position:relative; overflow:hidden;
+}
+.footer__inner{ max-width:1400px; margin:0 auto; position:relative; z-index:2; }
+.footer__quote{
+  font-family:var(--serif); font-size:clamp(1.2rem,2.4vw,1.7rem);
+  color:var(--ink-dim); max-width:760px; line-height:1.5; margin-bottom:clamp(2.5rem,6vh,4rem);
+}
+.footer__quote em{ color:var(--accent-soft); }
+.footer__cta{
+  display:block; font-family:var(--serif); font-weight:400;
+  font-size:clamp(2.5rem,8.4vw,7.5rem); letter-spacing:-.03em; line-height:1.04;
+}
+.footer__cta em{ font-style:italic; color:var(--accent-soft); }
+.footer__actions{ display:flex; gap:1rem; flex-wrap:wrap; margin-top:2.6rem; }
+.btn{
+  display:inline-flex; align-items:center; gap:.7rem;
+  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+  padding:1em 2em; border-radius:99px; border:1px solid var(--accent);
+  transition:background .35s, color .35s, transform .4s var(--ease-out);
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn--primary{ background:var(--accent); color:#10161a; font-weight:600; }
+.btn--primary:hover{ background:var(--accent-soft); border-color:var(--accent-soft); }
+.btn--ghost{ color:var(--accent-tint); }
+.btn--ghost:hover{ background:rgba(240,109,12,.12); }
+.footer__grid{
+  display:flex; justify-content:space-between; align-items:flex-end; gap:2rem;
+  margin-top:clamp(3rem,8vh,5.5rem); padding-top:2rem;
+  border-top:1px solid var(--line-soft);
+  font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
+  flex-wrap:wrap;
+}
+.footer__grid a{ transition:color .3s; }
+.footer__grid a:hover{ color:var(--accent); }
+.footer__brand{ display:flex; align-items:center; gap:.6rem; }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  .line-mask > span{ transform:none; }
+  .reveal{ opacity:1; transform:none; }
+  .manifesto .w{ color:var(--ink); }
+  .marquee__track{ animation:none; }
+  .grain{ animation:none; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<!-- preloader -->
+<div class="preloader" aria-hidden="true">
+  <div class="preloader__inner">
+    <div class="preloader__count" id="loadCount">0</div>
+    <div class="preloader__label"><b>v.a.u.l.t</b> · personal vault</div>
+  </div>
+</div>
+
+<!-- nav -->
+<header class="nav" id="nav">
+  <a class="nav__logo" href="#top" aria-label="V.A.U.L.T — home">
+    <span class="wordmark">V<i>.</i>A<i>.</i>U<i>.</i>L<i>.</i>T</span>
+    <span class="nav__division">Personal Vault</span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#pillars" data-hover>Pillars</a>
+    <a href="#how" data-hover>How it works</a>
+    <a href="#status" data-hover>What's missing</a>
+    <a href="#deck" data-hover>The deck</a>
+    <a href="#cheats" data-hover>Cheat sheet</a>
+  </nav>
+  <a class="nav__cta" href="#deck" data-hover>Open the deck</a>
+</header>
+
+<main id="main">
+
+<!-- hero -->
+<section class="hero" id="top">
+  <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="hero__inner">
+    <p class="hero__eyebrow">Vision · Achievements · Understanding · Log · Tasks</p>
+    <h1 class="hero__title" aria-label="Everything you know, one click away.">
+      <span class="line-mask" aria-hidden="true"><span>Everything you know,</span></span>
+      <span class="line-mask" aria-hidden="true"><span class="italic">one click away.</span></span>
+    </h1>
+    <div class="hero__foot">
+      <p class="hero__desc">
+        Five pillars in plain markdown, maintained for you by the vault.
+        Open any card in the deck to read the file behind it — live, rendered,
+        and cross-linked.
+      </p>
+      <div class="hero__scroll">
+        <span>Scroll</span>
+        <span class="tick" aria-hidden="true"></span>
+      </div>
+    </div>
+    <dl class="hero__meta">
+      <div><dt>Owner</dt><dd>Leander Miele</dd></div>
+      <div><dt>Pillars</dt><dd>5 — one file each</dd></div>
+      <div><dt>Open loops</dt><dd id="metaLoops">—</dd></div>
+      <div><dt>Last entry</dt><dd id="metaEntry">—</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marqueeTrack">
+    <span class="marquee__item">Nothing falls through</span>
+    <span class="marquee__item">Say it once</span>
+    <span class="marquee__item">Knowledge compounds</span>
+    <span class="marquee__item">Review weekly</span>
+    <span class="marquee__item">Plain markdown, forever</span>
+    <span class="marquee__item">Click any card</span>
+  </div>
+</div>
+
+<!-- manifesto -->
+<section class="section manifesto">
+  <div class="section__inner">
+    <p id="manifestoText">Say it once. The vault files it, links it, and never forgets — so you can <em>ask</em> instead of <em>search.</em></p>
+    <p class="manifesto__src">‹ how v.a.u.l.t works ›</p>
+  </div>
+</section>
+
+<!-- 01 · pillars -->
+<section class="section section--alt" id="pillars">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">The five pillars</span>
+      <span class="section__num">01 / 05</span>
+    </div>
+    <h2 class="section__title reveal">One letter, one file, <em>one home</em> for everything.</h2>
+    <p class="section__intro reveal">
+      Every thought you hand the vault lands in exactly one of five files.
+      No folders to invent, no app to learn — click a pillar to open its file.
+    </p>
+    <div class="pillars">
+      <button class="pillar" data-open="wiki/goals.md" data-hover>
+        <span class="pillar__letter" aria-hidden="true">V</span>
+        <h3>Vision</h3>
+        <p>Goals &amp; active projects — where all of this is heading, each with a definition of done.</p>
+        <span class="pillar__file">wiki/goals.md</span>
+      </button>
+      <button class="pillar" data-open="wiki/achievements.md" data-hover>
+        <span class="pillar__letter" aria-hidden="true">A</span>
+        <h3>Achievements</h3>
+        <p>Wins and milestones worth remembering — filed by month, with what, impact, and links.</p>
+        <span class="pillar__file">wiki/achievements.md</span>
+      </button>
+      <button class="pillar" data-open="wiki/index.md" data-hover>
+        <span class="pillar__letter" aria-hidden="true">U</span>
+        <h3>Understanding</h3>
+        <p>The knowledge base — one page per topic, compounding with every source you ingest.</p>
+        <span class="pillar__file">wiki/index.md</span>
+      </button>
+      <button class="pillar" data-open="wiki/decisions.md" data-hover>
+        <span class="pillar__letter" aria-hidden="true">L</span>
+        <h3>Log</h3>
+        <p>Why and when: the decision log and the append-only history — never rewritten, only superseded.</p>
+        <span class="pillar__file">wiki/decisions.md · log.md</span>
+      </button>
+      <button class="pillar" data-open="wiki/pending.md" data-hover>
+        <span class="pillar__letter" aria-hidden="true">T</span>
+        <h3>Tasks</h3>
+        <p>Pending items: inbox, next actions, waiting on, scheduled — every open loop in one place.</p>
+        <span class="pillar__file">wiki/pending.md</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 02 · how it operates -->
+<section class="section" id="how">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">How it operates</span>
+      <span class="section__num">02 / 05</span>
+    </div>
+    <h2 class="section__title reveal">Three moves. <em>No apps, no forms.</em></h2>
+    <p class="section__intro reveal">
+      The vault runs on conversation. You never open a file to write —
+      you talk, it files.
+    </p>
+    <div class="moves">
+      <div class="move">
+        <span class="move__num">— 1</span>
+        <h3>Say it</h3>
+        <p>Talk normally in any session: <code>capture: call the supplier</code>,
+        <code>done: send the report</code>, <code>log achievement: …</code> —
+        or just ask a question and it answers from what you already know.</p>
+      </div>
+      <div class="move">
+        <span class="move__num">— 2</span>
+        <h3>It's filed</h3>
+        <p>The vault writes it into the right pillar, cross-links it to related
+        pages, and appends a line to the history log. Nothing falls through.</p>
+      </div>
+      <div class="move">
+        <span class="move__num">— 3</span>
+        <h3>Review weekly</h3>
+        <p>Say <code>weekly review</code> — inbox to zero, goals checked for a
+        next action, wins celebrated, reading queue fed, and a lint pass over
+        the whole vault.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 · what's missing -->
+<section class="section section--alt" id="status">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">What's missing</span>
+      <span class="section__num">03 / 05</span>
+    </div>
+    <h2 class="section__title reveal">The gaps, <em>at a glance.</em></h2>
+    <p class="section__intro reveal">
+      Computed live from the markdown itself — no dashboard to maintain.
+      If something needs attention, it shows up here; if it's green, forget it.
+    </p>
+    <dl class="stats reveal" id="statTiles">
+      <div><dt>Open tasks</dt><dd id="stOpen">0</dd></div>
+      <div><dt>In inbox</dt><dd id="stInbox">0</dd></div>
+      <div class="hot"><dt>Overdue</dt><dd id="stOverdue">0</dd></div>
+      <div><dt>Wins</dt><dd id="stWins">0</dd></div>
+      <div><dt>Active goals</dt><dd id="stGoals">0</dd></div>
+      <div><dt>Queued reading</dt><dd id="stReading">0</dd></div>
+    </dl>
+    <ul class="gaps reveal" id="gapList" aria-live="polite"></ul>
+  </div>
+</section>
+
+<!-- 04 · the deck -->
+<section class="section" id="deck">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">The deck</span>
+      <span class="section__num">04 / 05</span>
+    </div>
+    <h2 class="section__title reveal">Every file is <em>a card.</em> Click to read.</h2>
+    <p class="section__intro reveal">
+      The whole vault, one card per markdown file. Open a card to read the
+      rendered file, flip to raw, and follow <b>[[wikilinks]]</b> between pages
+      without leaving the deck.
+    </p>
+    <div class="chips reveal" role="group" aria-label="Filter the deck">
+      <button class="chip on" data-filter="all" data-hover>All files</button>
+      <button class="chip" data-filter="pillar" data-hover>Pillars</button>
+      <button class="chip" data-filter="queue" data-hover>Queues</button>
+      <button class="chip" data-filter="system" data-hover>System</button>
+    </div>
+    <div class="deck reveal" id="deckGrid"></div>
+    <p class="deck-mode" id="dataMode">Reading embedded snapshot — serve this folder for live files</p>
+    <noscript>
+      <p style="margin-top:1.5rem;color:#c0c9cf">JavaScript is off — open the files directly:
+      <a href="wiki/pending.md">pending</a> · <a href="wiki/achievements.md">achievements</a> ·
+      <a href="wiki/goals.md">goals</a> · <a href="wiki/decisions.md">decisions</a> ·
+      <a href="wiki/index.md">index</a> · <a href="wiki/ideas.md">ideas</a> ·
+      <a href="wiki/reading-list.md">reading list</a> · <a href="wiki/log.md">log</a> ·
+      <a href="CLAUDE.md">schema</a></p>
+    </noscript>
+  </div>
+</section>
+
+<!-- 05 · cheat sheet -->
+<section class="section section--alt" id="cheats">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">Cheat sheet</span>
+      <span class="section__num">05 / 05</span>
+    </div>
+    <h2 class="section__title reveal">Six phrases run <em>the whole vault.</em></h2>
+    <div class="faq reveal">
+      <details>
+        <summary data-hover><span class="q-num">— 1</span><span class="q-text"><code>capture: &lt;anything&gt;</code></span><span class="q-plus">+</span></summary>
+        <p class="a">Lands in the <b>Tasks inbox</b> untriaged — capture first, organize later,
+        never lose an item because filing felt like work. Lives in
+        <button class="file-open" data-open="wiki/pending.md" data-hover>wiki/pending.md</button>.</p>
+      </details>
+      <details>
+        <summary data-hover><span class="q-num">— 2</span><span class="q-text"><code>done: &lt;item&gt;</code></span><span class="q-plus">+</span></summary>
+        <p class="a">The item is checked off and dated. <b>Milestones are promoted to
+        Achievements automatically</b> — shipped work never disappears into a checkbox.</p>
+      </details>
+      <details>
+        <summary data-hover><span class="q-num">— 3</span><span class="q-text"><code>log achievement: &lt;win&gt;</code></span><span class="q-plus">+</span></summary>
+        <p class="a">Filed under the current month in
+        <button class="file-open" data-open="wiki/achievements.md" data-hover>wiki/achievements.md</button>
+        with <b>what happened, why it mattered, and links</b> — ready for the next
+        performance review or bad day.</p>
+      </details>
+      <details>
+        <summary data-hover><span class="q-num">— 4</span><span class="q-text"><code>log decision: &lt;choice&gt;</code></span><span class="q-plus">+</span></summary>
+        <p class="a">Recorded in
+        <button class="file-open" data-open="wiki/decisions.md" data-hover>wiki/decisions.md</button>
+        with context, options, and rationale. <b>History is never rewritten</b> —
+        a changed mind adds a new entry and supersedes the old one.</p>
+      </details>
+      <details>
+        <summary data-hover><span class="q-num">— 5</span><span class="q-text"><code>ingest raw/&lt;file&gt;</code></span><span class="q-plus">+</span></summary>
+        <p class="a">The source's key points become a <b>knowledge page</b>, catalogued under
+        Understanding in
+        <button class="file-open" data-open="wiki/index.md" data-hover>wiki/index.md</button>.
+        Sources in <b>raw/</b> are immutable — the vault reads, never edits.</p>
+      </details>
+      <details>
+        <summary data-hover><span class="q-num">— 6</span><span class="q-text"><code>weekly review</code></span><span class="q-plus">+</span></summary>
+        <p class="a">The full ritual: <b>inbox to zero</b>, every active goal checked for a next
+        action, the week's wins celebrated, the reading queue fed, and a lint pass
+        for contradictions and broken links.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <p class="footer__quote reveal">
+      ‹ Five pillars, plain markdown, zero friction. Your knowledge,
+      <em>compounding quietly</em> in the background. ›
+    </p>
+    <a class="footer__cta reveal" href="#deck" data-hover>
+      Nothing falls <em>through.</em>
+    </a>
+    <div class="footer__actions reveal" data-delay="1">
+      <a class="btn btn--primary" href="#deck" data-hover>Open the deck ›</a>
+      <button class="btn btn--ghost" data-open="CLAUDE.md" data-hover>Read the schema</button>
+    </div>
+    <div class="footer__grid">
+      <span class="footer__brand">
+        <span class="wordmark" style="font-size:.85rem">V<i>.</i>A<i>.</i>U<i>.</i>L<i>.</i>T</span>
+        <span>Personal Vault</span>
+      </span>
+      <span>Last updated 2026-07-19 · Leander Miele</span>
+      <a class="top" href="#top" data-hover>Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<!-- reader overlay -->
+<div class="reader" id="reader" hidden>
+  <div class="reader__backdrop" data-close></div>
+  <aside class="reader__panel" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+    <header class="reader__head">
+      <div>
+        <p class="reader__path" id="readerPath"></p>
+        <h3 class="reader__title" id="readerTitle"></h3>
+      </div>
+      <div class="reader__actions">
+        <button class="reader__btn" id="rawToggle" data-hover aria-pressed="false">Raw</button>
+        <button class="reader__btn" id="readerClose" data-hover aria-label="Close reader">✕ Close</button>
+      </div>
+    </header>
+    <article class="reader__body md" id="readerBody" tabindex="0"></article>
+    <footer class="reader__foot">
+      <button class="reader__nav" id="prevFile" data-hover>‹ Previous file</button>
+      <span class="reader__hint">esc closes · [[wikilinks]] are clickable</span>
+      <button class="reader__nav" id="nextFile" data-hover>Next file ›</button>
+    </footer>
+  </aside>
+</div>
+
+<!-- ============================================================
+     Embedded snapshots — fallback when opened from disk (file://).
+     When served over HTTP the live wiki/*.md files are fetched
+     and take precedence. Keep in sync after wiki changes.
+     ============================================================ -->
+<script type="text/markdown" data-file="wiki/index.md">
+# Vault Index — Understanding
+
+The vault in one glance. Open `index.html` in a browser for the visual deck, or jump straight into a file below.
+
+## The five pillars — V.A.U.L.T
+
+| Pillar | File | What lives there |
+|--------|------|------------------|
+| **V** — Vision | [[goals]] | Goals & active projects |
+| **A** — Achievements | [[achievements]] | Wins & milestones, by month |
+| **U** — Understanding | this index | Knowledge pages, one per topic |
+| **L** — Log | [[decisions]] · [[log]] | Why (decisions) and when (history) |
+| **T** — Tasks | [[pending]] | Inbox, next actions, waiting, scheduled |
+
+## Queues
+
+- [[ideas]] — someday/maybe parking lot
+- [[reading-list]] — sources waiting to be ingested
+
+## Knowledge pages
+
+<!-- LLM: add new topic pages here under a category. Create a new category if none fits. -->
+
+*None yet — drop a source in `raw/` and say "ingest".*
+
+---
+
+*Last updated: 2026-07-19*
+</script>
+<script type="text/markdown" data-file="wiki/pending.md">
+# Pending Items
+
+Open loops live here — captured fast, triaged weekly, and never lost. See `CLAUDE.md` → CAPTURE / TRIAGE / COMPLETE for the workflow.
+
+**Open:** 0 · **Waiting:** 0 · **Overdue:** 0 · *Last triage: 2026-07-17*
+
+## Inbox
+
+<!-- Capture here first, unsorted. TRIAGE empties this section. -->
+
+*Empty — capture anything with "capture: <item>".*
+
+## Next actions
+
+<!-- Triaged, actionable now. Format: - [ ] <verb phrase> ⏫ 📅 YYYY-MM-DD · from: [[page]] -->
+
+*None yet.*
+
+## Waiting on
+
+<!-- Blocked on someone/something else. Note who: waiting-on: <who> -->
+
+*None yet.*
+
+## Scheduled
+
+<!-- Not actionable before a date. Sort by due date. -->
+
+*None yet.*
+
+## Recently completed
+
+<!-- Moved here on COMPLETE with ✅ YYYY-MM-DD; pruned after 30 days (history stays in log.md). -->
+
+*None yet.*
+
+## Cross-references
+- [[goals]] — every active goal should have at least one item here
+- [[ideas]] — where non-actionable "someday" items get demoted
+- [[achievements]] — where milestone completions get promoted
+</script>
+<script type="text/markdown" data-file="wiki/achievements.md">
+# Achievements Vault
+
+Wins, milestones, and shipped work — the trophy shelf of this vault. Reviewed during weekly REVIEW; feeds performance reviews, retros, and motivation on bad days.
+
+## 2026
+
+### July
+
+### 🏆 Personal vault upgraded to best-in-class feature set — 2026-07-17
+**What:** Extended the LLM-wiki into a full vault: pending-items tracker, this achievements vault, goals, decision log, ideas parking lot, reading list, and a weekly-review ritual.
+**Impact:** The vault now covers the core workflows of leading tools (Obsidian + Tasks, Notion, Logseq) while staying plain markdown — nothing captured here can silently fall through the cracks anymore.
+**Links:** [[pending]], [[goals]]
+
+### June
+
+### 🏆 Vault initialized — 2026-06-05
+**What:** Set up the LLM-wiki pattern: `raw/` sources, LLM-owned `wiki/`, schema in `CLAUDE.md`.
+**Impact:** Knowledge now compounds across sessions instead of being re-derived every time.
+**Links:** [[log]]
+
+## Cross-references
+- [[pending]] — milestone completions get promoted from there
+- [[goals]] — closed goals land here
+</script>
+<script type="text/markdown" data-file="wiki/goals.md">
+# Goals & Active Projects
+
+What the vault is working toward. Every **active** goal must have at least one next action in [[pending]] — checked during weekly REVIEW.
+
+## Active
+
+### Build a compounding personal knowledge vault
+- **Why:** Stop re-deriving the same knowledge every session; make work and wins visible over time.
+- **Done when:** The vault is used weekly (captures, reviews, ingests) for a full quarter.
+- **Next actions:** see [[pending]]
+- **Status notes:** 2026-07-17 — feature set complete; adoption is now the goal.
+
+## Parked
+
+*None.*
+
+## Completed
+
+*Closed goals move here with a date and a matching [[achievements]] entry.*
+
+## Cross-references
+- [[pending]] — next actions for each goal
+- [[achievements]] — where completed goals are celebrated
+</script>
+<script type="text/markdown" data-file="wiki/decisions.md">
+# Decision Log
+
+Significant choices, recorded so future-you knows *why* — not just *what*. Lightweight ADR pattern; never edit history, supersede instead.
+
+### 2026-07-17 — Extend the wiki into a full vault with plain-markdown features  `accepted`
+**Context:** The wiki had knowledge pages but no way to track open loops, wins, or goals — items raised in conversation were being lost between sessions.
+**Options:** (a) adopt an external tool (Obsidian/Notion) alongside the wiki; (b) extend the wiki itself with vault pages; (c) keep the wiki knowledge-only.
+**Decision & rationale:** (b) — everything stays in one git-versioned, LLM-operable markdown vault; the best-of-market features (pending items, achievements, reviews) are conventions, not software, so they port cleanly.
+
+### 2026-07-19 — Organize the vault as V.A.U.L.T with a clickable deck front-end  `accepted`
+**Context:** The vault's layout and operation weren't clear — many files, no obvious structure, and no way to browse them visually alongside the initial Etex website.
+**Options:** (a) keep the flat file list and improve docs only; (b) reorganize around a memorable five-pillar scheme (V.A.U.L.T) plus a single-file website in the style of the Etex procurement site.
+**Decision & rationale:** (b) — V.A.U.L.T (Vision, Achievements, Understanding, Log, Tasks) gives every file one obvious home, and `index.html` makes each file clickable and shows what's missing at a glance, in the same visual language as the initial website.
+
+## Cross-references
+- [[log]] — every decision also gets a `[DECIDE]` log line
+</script>
+<script type="text/markdown" data-file="wiki/ideas.md">
+# Ideas — Someday / Maybe
+
+The parking lot: things worth keeping but not worth an open loop. Demoted here from [[pending]] during TRIAGE, or captured directly. Scanned during weekly REVIEW — promote to [[pending]] when the time is right, delete when stale.
+
+## Vault
+- Add a `people/` section — one page per collaborator with context and open threads (Notion CRM pattern).
+- Auto-generate a monthly "highlights" digest from `[ACHIEVE]` and `[DONE]` log entries.
+- Add spaced-repetition prompts to key wiki pages (Anki/Obsidian-SR pattern) for knowledge that must stay fresh.
+
+## Other
+
+*Empty.*
+
+## Cross-references
+- [[pending]] — ideas get promoted there when they become actionable
+</script>
+<script type="text/markdown" data-file="wiki/reading-list.md">
+# Reading List
+
+Sources queued for ingestion and references worth keeping. Checked during weekly REVIEW: read → drop the file in `raw/` and run INGEST; obsolete → delete the row.
+
+## To read / ingest
+
+| Added | Source | Why it matters |
+|-------|--------|----------------|
+| 2026-07-17 | [Karpathy's LLM-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Origin of this vault's core pattern — re-read when evolving the schema |
+
+## Ingested
+
+*Rows move here with the ingest date and the resulting wiki page(s).*
+
+## Cross-references
+- [[index]] — ingested sources become catalog entries
+</script>
+<script type="text/markdown" data-file="wiki/log.md">
+# Wiki Log
+
+Append-only chronological record. Newest entries at the bottom.
+
+| Prefix | Meaning |
+|--------|---------|
+| `[INGEST]` | A new source was processed |
+| `[QUERY]` | A query was filed as a wiki page |
+| `[LINT]` | A lint run was completed |
+| `[UPDATE]` | An existing wiki page was revised |
+| `[CAPTURE]` | A pending item was added to the inbox |
+| `[DONE]` | A pending item was completed |
+| `[ACHIEVE]` | An achievement was recorded |
+| `[DECIDE]` | A decision was logged |
+| `[REVIEW]` | A weekly review was completed |
+
+---
+
+[INGEST] 2026-06-05 — Wiki initialized. Directory structure created: `raw/`, `wiki/`. Schema defined in `CLAUDE.md`.
+[UPDATE] 2026-07-17 — Vault features added: `pending.md`, `achievements.md`, `goals.md`, `decisions.md`, `ideas.md`, `reading-list.md`; new operations (CAPTURE, TRIAGE, COMPLETE, ACHIEVE, DECIDE, REVIEW) defined in `CLAUDE.md`; `index.md` upgraded to a dashboard.
+[DECIDE] 2026-07-17 — Extend the wiki into a full vault with plain-markdown features (see `decisions.md`).
+[ACHIEVE] 2026-07-17 — Personal vault upgraded to best-in-class feature set (see `achievements.md`).
+[DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see `decisions.md`).
+[UPDATE] 2026-07-19 — V.A.U.L.T site added at `index.html` (deck of clickable MD files, reader, "what's missing" panel); `README.md` guide added; `wiki/index.md` restructured around the five pillars.
+</script>
+<script type="text/markdown" data-file="CLAUDE.md">
+# V.A.U.L.T — Schema & Workflow
+
+This repository implements [Karpathy's LLM-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) extended into a full personal vault: an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query, plus the productivity surfaces found in best-in-class vaults (Obsidian, Notion, Logseq).
+
+The vault is organized as **V.A.U.L.T — five pillars**, one file each:
+
+| Pillar | File | What lives there |
+|--------|------|------------------|
+| **V** — Vision | `wiki/goals.md` | Goals & active projects |
+| **A** — Achievements | `wiki/achievements.md` | Wins & milestones, by month |
+| **U** — Understanding | `wiki/index.md` + topic pages | Knowledge, one page per topic |
+| **L** — Log | `wiki/decisions.md` + `wiki/log.md` | Why (decisions) and when (history) |
+| **T** — Tasks | `wiki/pending.md` | Inbox, next actions, waiting, scheduled |
+
+Two queues feed the pillars: `wiki/ideas.md` (someday/maybe) and `wiki/reading-list.md` (sources to ingest). `index.html` at the repo root is the visual front door — a clickable deck where every markdown file opens in a reader.
+
+## Directory Layout
+
+```
+index.html  ← V.A.U.L.T site: clickable deck over the wiki (zero-dependency, single file)
+README.md   ← plain-language guide to using the vault
+raw/        ← immutable source documents (never modified by the LLM)
+wiki/       ← LLM-owned markdown knowledge base
+  index.md  ← the Understanding pillar: pillar map + knowledge-page catalog
+  log.md    ← append-only chronological record
+  pending.md      ← pending items: inbox + triaged next actions (GTD-style)
+  achievements.md ← achievements vault: wins, milestones, shipped work
+  goals.md        ← goals & active projects the vault is serving
+  decisions.md    ← decision log (lightweight ADR pattern)
+  ideas.md        ← someday/maybe parking lot
+  reading-list.md ← queued sources and resources to ingest
+  <topic>.md      ← one page per entity, concept, or summary
+CLAUDE.md   ← this file; defines schema and workflows
+```
+
+## Core Operations
+
+### INGEST
+
+Trigger: "ingest `raw/<file>`" or "ingest all new sources"
+
+Steps:
+1. Read the source file(s) in `raw/`.
+2. Identify key entities, concepts, claims, and data points.
+3. Discuss the top 3–5 takeaways briefly.
+4. Create or update the relevant wiki page(s) in `wiki/`:
+   - Add a **Summary** section with a 2–4 sentence abstract.
+   - Add or update **Key Points** as a bullet list.
+   - Add **Cross-references** to other wiki pages that are related.
+   - Add **Source** citation at the bottom: `Source: raw/<filename>`.
+5. Update `wiki/index.md`:
+   - Add the new page under the appropriate category.
+   - If no category fits, create one.
+6. Append to `wiki/log.md`:
+   ```
+   [INGEST] YYYY-MM-DD — <source file> → <wiki page(s) created/updated>
+   ```
+
+### QUERY
+
+Trigger: any question asked against the knowledge base
+
+Steps:
+1. Identify which wiki pages are relevant to the question.
+2. Read those pages (do **not** re-read raw sources unless the wiki is missing critical detail).
+3. Synthesize an answer and cite the wiki pages used: `(→ wiki/<page>.md)`.
+4. If the answer is substantive and reusable, offer to file it as a new wiki page.
+
+### CAPTURE
+
+Trigger: "capture: <item>", "add pending item", "remind me to <x>", or any task/commitment surfacing mid-conversation
+
+Steps:
+1. Append the item to the **Inbox** section of `wiki/pending.md` using the pending-item format (see below). Capture first, organize later — never lose an item because triage felt like work.
+2. If the item clearly belongs to a project or topic, link it: `from: [[<page>]]`.
+3. Append to `wiki/log.md`: `[CAPTURE] YYYY-MM-DD — <item>`
+
+### TRIAGE
+
+Trigger: "triage the inbox" or automatically when the Inbox exceeds ~10 items
+
+Steps:
+1. Move each Inbox item into **Next actions**, **Waiting on**, **Scheduled**, or demote it to `wiki/ideas.md` (someday/maybe) or delete it (no longer relevant).
+2. Assign priority (`⏫ high / 🔼 normal / 🔽 low`) and a due date where one exists.
+3. Update the counts line at the top of `wiki/pending.md`.
+
+### COMPLETE
+
+Trigger: "done: <item>" or noticing an item was finished
+
+Steps:
+1. Check the box and move the item to the **Recently completed** section of `wiki/pending.md` with a completion date (`✅ YYYY-MM-DD`).
+2. If the item is a milestone worth remembering (shipped something, closed a goal, external recognition), also run **ACHIEVE**.
+3. Append to `wiki/log.md`: `[DONE] YYYY-MM-DD — <item>`
+4. During REVIEW, prune **Recently completed** entries older than 30 days (they survive in `log.md`).
+
+### ACHIEVE
+
+Trigger: "log achievement: <x>", COMPLETE of a milestone item, or a clear win surfacing in conversation
+
+Steps:
+1. Add an entry to `wiki/achievements.md` under the current year/month using the achievement format: what was achieved, why it mattered (impact), and links to related pages.
+2. Append to `wiki/log.md`: `[ACHIEVE] YYYY-MM-DD — <achievement>`
+
+### DECIDE
+
+Trigger: "log decision: <x>" or a significant choice being settled in conversation
+
+Steps:
+1. Add an entry to `wiki/decisions.md`: date, decision, context, options considered, rationale, and status (`accepted` / `superseded by <entry>`).
+2. Append to `wiki/log.md`: `[DECIDE] YYYY-MM-DD — <decision>`
+
+### REVIEW (weekly)
+
+Trigger: "weekly review" or "review the vault"
+
+Steps:
+1. **Sweep pending**: triage the Inbox to zero; flag overdue and stale (>30 days untouched) items; prune old **Recently completed** entries.
+2. **Check goals**: for each active goal in `wiki/goals.md`, note progress and confirm at least one next action exists in `wiki/pending.md`; park stalled goals explicitly.
+3. **Celebrate**: scan the week's `[DONE]` log entries and promote anything achievement-worthy to `wiki/achievements.md`.
+4. **Feed the queue**: check `wiki/reading-list.md` — anything read gets ingested, anything obsolete gets dropped.
+5. Run **LINT** (below).
+6. Append to `wiki/log.md`: `[REVIEW] YYYY-MM-DD — <one-line summary of the week>`
+
+### LINT
+
+Trigger: "lint the wiki" or periodic health check
+
+Steps:
+1. Read `wiki/index.md` and all wiki pages.
+2. Report:
+   - **Contradictions**: claims in different pages that conflict.
+   - **Orphan pages**: pages not linked from `index.md` or any cross-reference.
+   - **Broken cross-references**: links pointing to pages that don't exist.
+   - **Stale claims**: pages whose sources may have been superseded.
+   - **Data gaps**: topics mentioned in cross-references but lacking their own page.
+3. For each issue found, propose a fix and ask whether to apply it.
+
+---
+
+## Wiki Page Format
+
+Each `wiki/<topic>.md` follows this template:
+
+```markdown
+# <Topic Name>
+
+## Summary
+<2–4 sentence abstract of what this page covers>
+
+## Key Points
+- <point 1>
+- <point 2>
+- ...
+
+## Cross-references
+- [[<related topic>]] — <one-line reason for the link>
+
+## Sources
+- `raw/<filename>` — <brief description of this source>
+```
+
+## Pending Item Format (`wiki/pending.md`)
+
+One checkbox line per item, Obsidian-Tasks-style inline fields (only the ones that apply):
+
+```markdown
+- [ ] <action, starting with a verb> ⏫ 📅 2026-07-24 · from: [[<page>]] · waiting-on: <who>
+```
+
+- Priority: `⏫` high · `🔼` normal (default, may be omitted) · `🔽` low
+- `📅 YYYY-MM-DD` — due date; `✅ YYYY-MM-DD` — completion date (added on COMPLETE)
+- Sections in order: **Inbox** → **Next actions** → **Waiting on** → **Scheduled** → **Recently completed**
+
+## Achievement Format (`wiki/achievements.md`)
+
+Grouped by year, then month, newest first:
+
+```markdown
+### 🏆 <achievement title> — YYYY-MM-DD
+**What:** <one or two sentences on what was accomplished>
+**Impact:** <why it mattered — outcome, numbers, recognition>
+**Links:** [[<related page>]]
+```
+
+## Decision Format (`wiki/decisions.md`)
+
+```markdown
+### YYYY-MM-DD — <decision title>  `accepted`
+**Context:** <what forced the choice>
+**Options:** <alternatives considered>
+**Decision & rationale:** <what was chosen and why>
+```
+
+Status is `accepted` until superseded — never edit history; add a new entry and mark the old one `superseded by <new entry>`.
+
+## Index Format (`wiki/index.md`)
+
+Starts with a **Dashboard** section (links to pending, achievements, goals, decisions, ideas, reading list, plus a pending-items count), followed by the content catalog organized by category. Each catalog entry: `- [[<topic>]] — <one-line description>`
+
+## Log Format (`wiki/log.md`)
+
+Append-only. Newest entries at the bottom. Parseable prefixes:
+
+| Prefix | Meaning |
+|--------|---------|
+| `[INGEST]` | A new source was processed |
+| `[QUERY]` | A query was filed as a wiki page |
+| `[LINT]` | A lint run was completed |
+| `[UPDATE]` | An existing wiki page was revised |
+| `[CAPTURE]` | A pending item was added to the inbox |
+| `[DONE]` | A pending item was completed |
+| `[ACHIEVE]` | An achievement was recorded |
+| `[DECIDE]` | A decision was logged |
+| `[REVIEW]` | A weekly review was completed |
+
+---
+
+## Conventions
+
+- The LLM **reads** `raw/` but **never modifies** it.
+- The LLM **owns** `wiki/` entirely: creates, updates, and cross-links pages.
+- Humans **read** `wiki/` and **curate** `raw/`.
+- Cross-references use `[[page-name]]` notation (filename without `.md`).
+- All dates use `YYYY-MM-DD` format.
+- Keep pages focused: one entity or concept per page. Use cross-references rather than duplicating content.
+- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots (the `<script type="text/markdown">` blocks) when opened from disk. After materially changing a wiki page, refresh its snapshot block in `index.html`; when a new topic page is created, add it to the `FILES` manifest and add a matching snapshot block.
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ============================================================
+     THE DECK — manifest, content store, markdown renderer, reader
+     ============================================================ */
+
+  var FILES = [
+    { path:"wiki/pending.md",      title:"Tasks",              letter:"T", group:"pillar", desc:"Inbox, next actions, waiting on, scheduled — every open loop in one place." },
+    { path:"wiki/achievements.md", title:"Achievements",       letter:"A", group:"pillar", desc:"Wins and milestones worth remembering, filed by month with what, impact, links." },
+    { path:"wiki/goals.md",        title:"Vision",             letter:"V", group:"pillar", desc:"Goals & active projects — where all of this is heading." },
+    { path:"wiki/index.md",        title:"Understanding",      letter:"U", group:"pillar", desc:"The knowledge catalog — one page per topic, compounding with every ingest." },
+    { path:"wiki/decisions.md",    title:"Log · Decisions",    letter:"L", group:"pillar", desc:"Why choices were made — with context and options, never rewritten." },
+    { path:"wiki/log.md",          title:"Log · History",      letter:"L", group:"pillar", desc:"Append-only record of everything the vault has ever done." },
+    { path:"wiki/ideas.md",        title:"Ideas",              letter:"I", group:"queue",  desc:"Someday / maybe — parked without guilt, promoted when the time is right." },
+    { path:"wiki/reading-list.md", title:"Reading list",       letter:"R", group:"queue",  desc:"Sources queued for ingestion into Understanding." },
+    { path:"CLAUDE.md",            title:"Schema",             letter:"§", group:"system", desc:"The rulebook — operations, formats, and conventions the vault follows." }
+  ];
+  var GROUP_NAMES = { pillar:"Pillar", queue:"Queue", system:"System" };
+
+  var store = {};   /* path → markdown text */
+  var slugMap = {}; /* wikilink slug → path  */
+  FILES.forEach(function(f){
+    var slug = f.path.split("/").pop().replace(/\.md$/,"");
+    slugMap[slug.toLowerCase()] = f.path;
+  });
+
+  /* --- load embedded snapshots --- */
+  document.querySelectorAll('script[type="text/markdown"]').forEach(function(el){
+    var t = el.textContent.replace(/^\n+/,"").replace(/\s+$/,"") + "\n";
+    store[el.getAttribute("data-file")] = t;
+  });
+
+  /* ---------- tiny markdown renderer (escapes first, renders second) ---------- */
+  function esc(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, function(_, c){ return "<code>"+c+"</code>"; });
+    s = s.replace(/\[\[([^\]]+)\]\]/g, function(_, name){
+      var key = name.trim().toLowerCase();
+      if (slugMap[key]) return '<a class="wl" href="#" data-wl="'+key+'">'+name+"</a>";
+      return '<span class="wl--dead">'+name+"</span>";
+    });
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function(_, txt, url){
+      if (!/^https?:/.test(url)) return txt;
+      return '<a href="'+url+'" target="_blank" rel="noopener">'+txt+"</a>";
+    });
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    s = s.replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+    return s;
+  }
+  function mdRender(src){
+    src = src.replace(/<!--[\s\S]*?-->/g, "");
+    var lines = src.split(/\r?\n/);
+    var out = [], i = 0;
+    function isTableLine(l){ return /^\s*\|.*\|\s*$/.test(l); }
+    while (i < lines.length){
+      var line = lines[i];
+
+      if (/^```/.test(line)){
+        var code = [];
+        i++;
+        while (i < lines.length && !/^```/.test(lines[i])){ code.push(lines[i]); i++; }
+        i++;
+        out.push("<pre><code>"+esc(code.join("\n"))+"</code></pre>");
+        continue;
+      }
+      var h = line.match(/^(#{1,6})\s+(.*)$/);
+      if (h){
+        var lvl = Math.min(h[1].length, 4);
+        out.push("<h"+lvl+">"+inline(h[2])+"</h"+lvl+">");
+        i++; continue;
+      }
+      if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)){ out.push("<hr>"); i++; continue; }
+      if (/^>\s?/.test(line)){
+        var bq = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])){ bq.push(lines[i].replace(/^>\s?/,"")); i++; }
+        out.push("<blockquote>"+inline(bq.join(" "))+"</blockquote>");
+        continue;
+      }
+      if (isTableLine(line)){
+        var rows = [];
+        while (i < lines.length && isTableLine(lines[i])){ rows.push(lines[i]); i++; }
+        var html = "<table>";
+        var hasHead = rows.length > 1 && /^\s*\|[\s:|-]+\|\s*$/.test(rows[1]);
+        rows.forEach(function(r, ri){
+          if (hasHead && ri === 1) return;
+          var cells = r.replace(/^\s*\|/,"").replace(/\|\s*$/,"").split("|");
+          var tag = (hasHead && ri === 0) ? "th" : "td";
+          html += "<tr>" + cells.map(function(c){ return "<"+tag+">"+inline(c.trim())+"</"+tag+">"; }).join("") + "</tr>";
+        });
+        html += "</table>";
+        out.push(html);
+        continue;
+      }
+      if (/^\s*[-*]\s+/.test(line)){
+        var items = [];
+        while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])){
+          var body = lines[i].replace(/^\s*[-*]\s+/,"");
+          var task = body.match(/^\[( |x|X)\]\s*(.*)$/);
+          if (task){
+            var done = task[1].toLowerCase() === "x";
+            items.push('<li class="task'+(done?" done":"")+'"><span class="cb" aria-hidden="true"></span><span>'+inline(task[2])+"</span></li>");
+          } else {
+            items.push("<li>"+inline(body)+"</li>");
+          }
+          i++;
+        }
+        out.push("<ul>"+items.join("")+"</ul>");
+        continue;
+      }
+      if (/^\s*\d+\.\s+/.test(line)){
+        var oitems = [];
+        while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])){
+          oitems.push("<li>"+inline(lines[i].replace(/^\s*\d+\.\s+/,""))+"</li>");
+          i++;
+        }
+        out.push("<ol>"+oitems.join("")+"</ol>");
+        continue;
+      }
+      if (/^\s*$/.test(line)){ i++; continue; }
+      var para = [];
+      while (i < lines.length && !/^\s*$/.test(lines[i]) &&
+             !/^(#{1,6})\s|^```|^>\s?|^\s*[-*]\s+|^\s*\d+\.\s+/.test(lines[i]) &&
+             !isTableLine(lines[i]) && !/^\s*(-{3,})\s*$/.test(lines[i])){
+        para.push(lines[i]); i++;
+      }
+      out.push("<p>"+inline(para.join(" "))+"</p>");
+    }
+    return out.join("\n");
+  }
+
+  /* ---------- stats: computed from the markdown itself ---------- */
+  function section(text, heading){
+    if (!text) return "";
+    var parts = text.split(/^## +/m);
+    for (var k = 0; k < parts.length; k++){
+      if (parts[k].toLowerCase().indexOf(heading.toLowerCase()) === 0) return parts[k];
+    }
+    return "";
+  }
+  function count(text, re){ return text ? (text.match(re) || []).length : 0; }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function computeStats(){
+    var p = store["wiki/pending.md"] || "";
+    var s = {
+      open:    count(p, /^- \[ \]/gm),
+      inbox:   count(section(p, "Inbox"), /^- \[ \]/gm),
+      nextAct: count(section(p, "Next actions"), /^- \[ \]/gm),
+      overdue: 0,
+      wins:    count(store["wiki/achievements.md"] || "", /^### 🏆/gm),
+      goals:   count(section(store["wiki/goals.md"] || "", "Active"), /^### /gm),
+      decisions: count(store["wiki/decisions.md"] || "", /^### \d{4}/gm),
+      ideas:   count((store["wiki/ideas.md"] || "").split(/^## +Cross/m)[0], /^- /gm),
+      reading: count(section(store["wiki/reading-list.md"] || "", "To read"), /^\| \d{4}/gm),
+      logEntries: count(store["wiki/log.md"] || "", /^\[[A-Z]+\]/gm),
+      topics:  count(section(store["wiki/index.md"] || "", "Knowledge pages"), /^- \[\[/gm),
+      lastEntry: null, lastReview: null
+    };
+    var today = todayStr();
+    var re = /^- \[ \].*?📅 (\d{4}-\d{2}-\d{2})/gm, m;
+    while ((m = re.exec(p))) if (m[1] < today) s.overdue++;
+    var dates = (store["wiki/log.md"] || "").match(/^\[[A-Z]+\] (\d{4}-\d{2}-\d{2})/gm);
+    if (dates && dates.length) s.lastEntry = dates[dates.length-1].replace(/^\[[A-Z]+\] /,"");
+    var rev = (store["wiki/log.md"] || "").match(/^\[REVIEW\] (\d{4}-\d{2}-\d{2})/gm);
+    if (rev && rev.length) s.lastReview = rev[rev.length-1].replace(/^\[REVIEW\] /,"");
+    return s;
+  }
+  function gapItem(kind, sym, html){
+    return '<li class="gap gap--'+kind+'"><span class="sym" aria-hidden="true">'+sym+"</span><span>"+html+"</span></li>";
+  }
+  function renderStats(){
+    var s = computeStats();
+    document.getElementById("stOpen").textContent    = s.open;
+    document.getElementById("stInbox").textContent   = s.inbox;
+    document.getElementById("stOverdue").textContent = s.overdue;
+    document.getElementById("stWins").textContent    = s.wins;
+    document.getElementById("stGoals").textContent   = s.goals;
+    document.getElementById("stReading").textContent = s.reading;
+    document.getElementById("metaLoops").textContent = s.open + " open · " + s.inbox + " in inbox";
+    document.getElementById("metaEntry").textContent = s.lastEntry || "—";
+
+    var badges = {
+      "wiki/pending.md":      s.open + " open · " + s.inbox + " inbox",
+      "wiki/achievements.md": s.wins + (s.wins === 1 ? " win" : " wins"),
+      "wiki/goals.md":        s.goals + " active",
+      "wiki/index.md":        s.topics + (s.topics === 1 ? " topic page" : " topic pages"),
+      "wiki/decisions.md":    s.decisions + " logged",
+      "wiki/log.md":          s.logEntries + " entries",
+      "wiki/ideas.md":        s.ideas + " parked",
+      "wiki/reading-list.md": s.reading + " queued",
+      "CLAUDE.md":            "rulebook"
+    };
+    document.querySelectorAll("[data-badge]").forEach(function(el){
+      var b = badges[el.getAttribute("data-badge")];
+      if (b) el.textContent = b;
+    });
+
+    var warns = [], oks = [];
+    if (s.inbox > 0) warns.push(gapItem("warn","!","<b>"+s.inbox+" item"+(s.inbox>1?"s":"")+"</b> sitting in the inbox — say <b>“triage the inbox”</b>."));
+    else oks.push(gapItem("ok","✓","Inbox at zero — nothing waiting for triage."));
+    if (s.overdue > 0) warns.push(gapItem("warn","!","<b>"+s.overdue+" task"+(s.overdue>1?"s":"")+" overdue</b> — open <button class=\"gap-open\" data-open=\"wiki/pending.md\">Tasks</button> and reschedule or finish."));
+    else oks.push(gapItem("ok","✓","No overdue tasks."));
+    if (s.goals > 0 && s.nextAct === 0) warns.push(gapItem("warn","!","<b>"+s.goals+" active goal"+(s.goals>1?"s":"")+"</b> but <b>no next action</b> in Tasks — capture one so it can move."));
+    else if (s.goals > 0) oks.push(gapItem("ok","✓","Every active goal can move — next actions exist."));
+    else warns.push(gapItem("warn","!","<b>No active goals</b> — open <button class=\"gap-open\" data-open=\"wiki/goals.md\">Vision</button> and set one."));
+    if (s.reading > 0) warns.push(gapItem("warn","›","<b>"+s.reading+" source"+(s.reading>1?"s":"")+"</b> queued in the reading list — ingest or drop."));
+    else oks.push(gapItem("ok","✓","Reading queue clear."));
+    if (!s.lastReview) warns.push(gapItem("warn","!","<b>No weekly review yet</b> — say <b>“weekly review”</b> to run the first one."));
+    else {
+      var days = Math.round((new Date(todayStr()) - new Date(s.lastReview)) / 86400000);
+      if (days > 9) warns.push(gapItem("warn","!","Last weekly review was <b>"+s.lastReview+"</b> ("+days+" days ago) — due again."));
+      else oks.push(gapItem("ok","✓","Weekly review done "+s.lastReview+"."));
+    }
+    if (s.topics === 0) warns.push(gapItem("warn","›","<b>No knowledge pages yet</b> — drop a source in <b>raw/</b> and say <b>“ingest”</b>."));
+    else oks.push(gapItem("ok","✓",s.topics+" knowledge page"+(s.topics>1?"s":"")+" in the catalog."));
+    document.getElementById("gapList").innerHTML = warns.join("") + oks.join("");
+  }
+
+  /* ---------- deck rendering ---------- */
+  var deckGrid = document.getElementById("deckGrid");
+  FILES.forEach(function(f, idx){
+    var card = document.createElement("button");
+    card.className = "card";
+    card.setAttribute("data-group", f.group);
+    card.setAttribute("data-open", f.path);
+    card.setAttribute("data-idx", idx);
+    card.setAttribute("data-hover", "");
+    card.innerHTML =
+      '<span class="card__mono" aria-hidden="true">'+f.letter+'</span>' +
+      '<span class="card__arrow" aria-hidden="true">↗</span>' +
+      "<h3>"+f.title+"</h3>" +
+      '<span class="card__path">'+f.path+"</span>" +
+      "<p>"+f.desc+"</p>" +
+      '<span class="card__badge" data-badge="'+f.path+'">'+GROUP_NAMES[f.group]+"</span>";
+    deckGrid.appendChild(card);
+  });
+
+  /* filters */
+  document.querySelectorAll(".chip").forEach(function(chip){
+    chip.addEventListener("click", function(){
+      document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("on"); });
+      chip.classList.add("on");
+      var f = chip.getAttribute("data-filter");
+      document.querySelectorAll(".card").forEach(function(card){
+        card.hidden = (f !== "all" && card.getAttribute("data-group") !== f);
+      });
+    });
+  });
+
+  /* ---------- reader ---------- */
+  var reader     = document.getElementById("reader");
+  var readerBody = document.getElementById("readerBody");
+  var readerPath = document.getElementById("readerPath");
+  var readerTitle= document.getElementById("readerTitle");
+  var rawToggle  = document.getElementById("rawToggle");
+  var current    = -1, rawMode = false, lastTrigger = null;
+
+  function fileIdx(path){
+    for (var k = 0; k < FILES.length; k++) if (FILES[k].path === path) return k;
+    return -1;
+  }
+  function renderReader(){
+    var f = FILES[current];
+    var src = store[f.path] || "*File not available.*";
+    readerPath.textContent = f.path;
+    readerTitle.textContent = f.title;
+    rawToggle.classList.toggle("on", rawMode);
+    rawToggle.setAttribute("aria-pressed", rawMode ? "true" : "false");
+    readerBody.innerHTML = rawMode
+      ? '<pre class="rawpre">'+esc(src)+"</pre>"
+      : mdRender(src);
+    readerBody.scrollTop = 0;
+  }
+  function openReader(path, trigger){
+    var idx = fileIdx(path);
+    if (idx < 0) return;
+    current = idx; rawMode = false;
+    if (trigger) lastTrigger = trigger;
+    renderReader();
+    reader.hidden = false;
+    document.body.classList.add("reader-open");
+    document.getElementById("readerClose").focus();
+  }
+  function closeReader(){
+    reader.hidden = true;
+    document.body.classList.remove("reader-open");
+    if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+    lastTrigger = null;
+  }
+  function step(dir){
+    current = (current + dir + FILES.length) % FILES.length;
+    rawMode = false;
+    renderReader();
+  }
+
+  document.addEventListener("click", function(e){
+    var opener = e.target.closest("[data-open]");
+    if (opener){ e.preventDefault(); openReader(opener.getAttribute("data-open"), opener); return; }
+    if (e.target.closest("[data-close]")){ closeReader(); return; }
+    var wl = e.target.closest("a.wl");
+    if (wl){
+      e.preventDefault();
+      var path = slugMap[wl.getAttribute("data-wl")];
+      if (path) openReader(path, lastTrigger);
+    }
+  });
+  document.getElementById("readerClose").addEventListener("click", closeReader);
+  document.getElementById("prevFile").addEventListener("click", function(){ step(-1); });
+  document.getElementById("nextFile").addEventListener("click", function(){ step(1); });
+  rawToggle.addEventListener("click", function(){ rawMode = !rawMode; renderReader(); });
+  document.addEventListener("keydown", function(e){
+    if (reader.hidden) return;
+    if (e.key === "Escape") closeReader();
+    if (e.key === "ArrowLeft")  step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+
+  /* ---------- live fetch (when served over HTTP) ---------- */
+  renderStats();
+  if (/^https?:$/.test(location.protocol)){
+    Promise.allSettled(FILES.map(function(f){
+      return fetch(f.path, { cache:"no-store" })
+        .then(function(r){ if (!r.ok) throw 0; return r.text(); })
+        .then(function(t){ store[f.path] = t; return true; });
+    })).then(function(results){
+      var live = results.filter(function(r){ return r.status === "fulfilled"; }).length;
+      if (live > 0){
+        document.getElementById("dataMode").innerHTML =
+          "<b>Live</b> — reading " + live + "/" + FILES.length + " files straight from the repo";
+        renderStats();
+        if (!reader.hidden) renderReader();
+      }
+    });
+  }
+
+  /* ============================================================
+     SITE CHROME — same interaction set as the initial website
+     ============================================================ */
+
+  /* ---------- preloader (skipped on repeat visits this session) ---------- */
+  var countEl = document.getElementById("loadCount");
+  function finishLoad(){ document.body.classList.add("loaded"); }
+  var seen = false;
+  try{ seen = sessionStorage.getItem("vault-seen") === "1"; sessionStorage.setItem("vault-seen","1"); }catch(e){}
+  if (reduceMotion || seen){
+    countEl.textContent = "100";
+    finishLoad();
+  } else {
+    var t0 = null, DUR = 1100;
+    (function tickload(){
+      requestAnimationFrame(function frame(ts){
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / DUR, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        countEl.textContent = Math.round(eased * 100);
+        if (p < 1) requestAnimationFrame(frame);
+        else setTimeout(finishLoad, 250);
+      });
+    })();
+  }
+
+  /* ---------- nav + scroll progress ---------- */
+  var nav = document.getElementById("nav");
+  var progress = document.querySelector(".progress");
+  var heroInner = document.querySelector(".hero__inner");
+  var ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.scrollY || window.pageYOffset;
+      nav.classList.toggle("scrolled", y > 40);
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+      if (!reduceMotion && heroInner && y < window.innerHeight){
+        heroInner.style.transform = "translateY(" + (y * 0.22) + "px)";
+        heroInner.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.9));
+      }
+      updateManifesto();
+      ticking = false;
+    });
+  }
+  window.addEventListener("scroll", onScroll, { passive:true });
+
+  /* ---------- custom cursor ---------- */
+  var fine = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+  if (fine && !reduceMotion){
+    var dot = document.querySelector(".cursor-dot");
+    var ring = document.querySelector(".cursor-ring");
+    var mx = -100, my = -100, rx = -100, ry = -100, cursorOn = false;
+    document.addEventListener("mousemove", function(e){
+      mx = e.clientX; my = e.clientY;
+      if (!cursorOn){ cursorOn = true; document.body.classList.add("cursor-on"); }
+    });
+    document.addEventListener("mouseleave", function(){
+      cursorOn = false; document.body.classList.remove("cursor-on");
+    });
+    (function loop(){
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      dot.style.transform  = "translate(" + (mx - 3) + "px," + (my - 3) + "px)";
+      ring.style.transform = "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
+      requestAnimationFrame(loop);
+    })();
+    document.addEventListener("mouseover", function(e){
+      document.body.classList.toggle("cursor-hover", !!e.target.closest("[data-hover]"));
+    });
+  }
+
+  /* ---------- marquee: duplicate track for seamless loop ---------- */
+  var track = document.getElementById("marqueeTrack");
+  track.innerHTML += track.innerHTML;
+
+  /* ---------- reveal on scroll ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        en.target.classList.add("in-view");
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold:0.15, rootMargin:"0px 0px -6% 0px" });
+  document.querySelectorAll(".reveal, .pillar, .move").forEach(function(el){ io.observe(el); });
+
+  /* ---------- manifesto word-by-word reveal ---------- */
+  var mani = document.getElementById("manifestoText");
+  var words = [];
+  (function splitWords(){
+    var nodes = Array.prototype.slice.call(mani.childNodes);
+    mani.textContent = "";
+    nodes.forEach(function(node){
+      var em = node.nodeType === 1 && node.tagName === "EM";
+      var text = node.textContent;
+      text.split(/\s+/).forEach(function(w){
+        if (!w) return;
+        var span = document.createElement("span");
+        span.className = "w" + (em ? " em" : "");
+        span.textContent = w;
+        mani.appendChild(span);
+        mani.appendChild(document.createTextNode(" "));
+        words.push(span);
+      });
+    });
+  })();
+  function updateManifesto(){
+    if (reduceMotion || !words.length) return;
+    var rect = mani.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var start = vh * 0.85, end = vh * 0.45;
+    var p = (start - rect.top) / (start - end + rect.height);
+    p = Math.max(0, Math.min(1, p));
+    var n = Math.round(p * words.length);
+    words.forEach(function(w, i){ w.classList.toggle("on", i < n); });
+  }
+
+  /* ---------- hero canvas: drifting brand orbs + linked particles ---------- */
+  var canvas = document.getElementById("heroCanvas");
+  var ctx = canvas.getContext("2d");
+  var W, H, DPR, orbs = [], parts = [];
+  var PART_N = 70, LINK_D = 130;
+
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", function(){ resize(); if (reduceMotion) draw(0); });
+
+  function rnd(a, b){ return a + Math.random() * (b - a); }
+
+  var HUES = ["240,109,12", "0,80,130", "90,103,112"];
+  var ALPHAS = [0.10, 0.08, 0.07];
+  for (var i = 0; i < 3; i++){
+    orbs.push({
+      x: rnd(0.15, 0.85), y: rnd(0.2, 0.8),
+      r: rnd(0.28, 0.5),
+      dx: rnd(-0.00006, 0.00006), dy: rnd(-0.00005, 0.00005),
+      hue: HUES[i], alpha: ALPHAS[i],
+      ph: rnd(0, Math.PI * 2)
+    });
+  }
+  for (var j = 0; j < PART_N; j++){
+    parts.push({
+      x: Math.random(), y: Math.random(),
+      vx: rnd(-0.00008, 0.00008), vy: rnd(-0.00006, 0.00006),
+      s: rnd(0.6, 1.8)
+    });
+  }
+
+  function draw(t){
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach(function(o){
+      var ox = (o.x + Math.sin(t * 0.0001 + o.ph) * 0.04) * W;
+      var oy = (o.y + Math.cos(t * 0.00013 + o.ph) * 0.05) * H;
+      var r = o.r * Math.min(W, H) * (1 + Math.sin(t * 0.0002 + o.ph) * 0.08);
+      var g = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
+      g.addColorStop(0, "rgba(" + o.hue + "," + o.alpha + ")");
+      g.addColorStop(1, "rgba(" + o.hue + ",0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(ox - r, oy - r, r * 2, r * 2);
+      o.x += o.dx; o.y += o.dy;
+      if (o.x < 0.05 || o.x > 0.95) o.dx *= -1;
+      if (o.y < 0.05 || o.y > 0.95) o.dy *= -1;
+    });
+    ctx.lineWidth = 0.5;
+    for (var a = 0; a < PART_N; a++){
+      var p = parts[a];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > 1) p.vx *= -1;
+      if (p.y < 0 || p.y > 1) p.vy *= -1;
+      var px = p.x * W, py = p.y * H;
+      ctx.fillStyle = "rgba(237,241,244,0.32)";
+      ctx.beginPath();
+      ctx.arc(px, py, p.s * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      for (var b = a + 1; b < PART_N; b++){
+        var q = parts[b];
+        var dx = (q.x - p.x) * W, dy = (q.y - p.y) * H;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_D){
+          ctx.strokeStyle = "rgba(240,109,12," + (0.13 * (1 - d / LINK_D)) + ")";
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(q.x * W, q.y * H);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  if (reduceMotion){
+    draw(0);
+  } else {
+    var heroVisible = true;
+    new IntersectionObserver(function(entries){
+      heroVisible = entries[0].isIntersecting;
+    }).observe(canvas);
+    (function animate(t){
+      if (heroVisible) draw(t);
+      requestAnimationFrame(animate);
+    })(0);
+  }
+
+  onScroll();
+})();
+</script>
+</body>
+</html>

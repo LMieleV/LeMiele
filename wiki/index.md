@@ -1,33 +1,28 @@
-# Wiki Index
+# Vault Index — Understanding
 
-Home dashboard + content catalog — updated on every change.
+The vault in one glance. Open `index.html` in a browser for the visual deck, or jump straight into a file below.
 
-## Dashboard
+## The five pillars — V.A.U.L.T
 
-| | | |
-|---|---|---|
-| 📥 [[pending]] — **0 open** · 0 waiting · 0 overdue | 🏆 [[achievements]] — 2 recorded | 🎯 [[goals]] — 1 active |
-| 📋 [[decisions]] — 1 logged | 💡 [[ideas]] — 3 parked | 📚 [[reading-list]] — 1 queued |
+| Pillar | File | What lives there |
+|--------|------|------------------|
+| **V** — Vision | [[goals]] | Goals & active projects |
+| **A** — Achievements | [[achievements]] | Wins & milestones, by month |
+| **U** — Understanding | this index | Knowledge pages, one per topic |
+| **L** — Log | [[decisions]] · [[log]] | Why (decisions) and when (history) |
+| **T** — Tasks | [[pending]] | Inbox, next actions, waiting, scheduled |
 
-*Last weekly review: never — say "weekly review" to run the first one.*
+## Queues
 
-## Content Catalog
+- [[ideas]] — someday/maybe parking lot
+- [[reading-list]] — sources waiting to be ingested
 
-<!-- LLM: add new pages here under the appropriate category. Create a new category if none fits. -->
+## Knowledge pages
 
-### Getting Started
+<!-- LLM: add new topic pages here under a category. Create a new category if none fits. -->
 
-- [[log]] — Chronological record of all wiki operations
-
-### Vault
-
-- [[pending]] — Pending items: inbox, next actions, waiting-on, scheduled
-- [[achievements]] — Achievements vault: wins, milestones, shipped work
-- [[goals]] — Goals & active projects with definition-of-done
-- [[decisions]] — Decision log (lightweight ADR pattern)
-- [[ideas]] — Someday/maybe parking lot
-- [[reading-list]] — Sources queued for ingestion
+*None yet — drop a source in `raw/` and say "ingest".*
 
 ---
 
-*Last updated: 2026-07-17*
+*Last updated: 2026-07-19*

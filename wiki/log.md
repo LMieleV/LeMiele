@@ -20,3 +20,5 @@ Append-only chronological record. Newest entries at the bottom.
 [UPDATE] 2026-07-17 — Vault features added: `pending.md`, `achievements.md`, `goals.md`, `decisions.md`, `ideas.md`, `reading-list.md`; new operations (CAPTURE, TRIAGE, COMPLETE, ACHIEVE, DECIDE, REVIEW) defined in `CLAUDE.md`; `index.md` upgraded to a dashboard.
 [DECIDE] 2026-07-17 — Extend the wiki into a full vault with plain-markdown features (see `decisions.md`).
 [ACHIEVE] 2026-07-17 — Personal vault upgraded to best-in-class feature set (see `achievements.md`).
+[DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see `decisions.md`).
+[UPDATE] 2026-07-19 — V.A.U.L.T site added at `index.html` (deck of clickable MD files, reader, "what's missing" panel); `README.md` guide added; `wiki/index.md` restructured around the five pillars.
