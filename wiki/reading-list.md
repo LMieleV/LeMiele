@@ -2,6 +2,8 @@
 
 Sources queued for ingestion and references worth keeping. Checked during weekly REVIEW: read → drop the file in `raw/` and run INGEST; obsolete → delete the row.
 
+#reading #sources #vault/queue
+
 ## To read / ingest
 
 | Added | Source | Why it matters |

@@ -2,6 +2,8 @@
 
 What the vault is working toward. Every **active** goal must have at least one next action in [[pending]] — checked during weekly REVIEW.
 
+#goals #vision #vault/pillar
+
 ## Active
 
 ### Build a compounding personal knowledge vault

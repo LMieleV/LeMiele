@@ -29,14 +29,24 @@ Two queues feed the pillars: `wiki/ideas.md` (someday/maybe) and
    goals are checked for next actions, wins are celebrated, the reading
    queue is fed, and the vault lints itself.
 
-## The visual deck
+## The visual deck — `index.html`
 
-Open `index.html` in a browser — it's the whole vault as a clickable deck in
-the style of the Etex site. Every card is a markdown file; click it to read
-the rendered file, toggle raw view, and follow `[[wikilinks]]` between pages.
-A **"What's missing"** panel shows, at a glance, what needs attention:
-inbox items to triage, overdue tasks, goals without a next action, queued
-reading, and when the next weekly review is due.
+Open `index.html` in a browser: the whole vault as a clickable deck, with the
+Obsidian moves you'd expect, minus the app.
+
+- **Every card is a file** — click to read it rendered, toggle raw markdown,
+  step through files with ← →.
+- **Quick search (⌘K / Ctrl-K)** — Obsidian's quick switcher: type anything and
+  it searches every file, task, win and decision, with matching lines in
+  context. ↑↓ to move, Enter to open.
+- **Graph view** — every page a node, every `[[wikilink]]` an edge. Drag nodes,
+  hover to spotlight a page's neighbours, click to read.
+- **Linked mentions** — each page shows its backlinks: who points here, and the
+  line they said it in.
+- **Tags** — `#tags` written anywhere in a page become filter chips over the deck
+  (hierarchies like `#vault/pillar` work too).
+- **"What's missing"** — computed live from the markdown: inbox to triage,
+  overdue tasks, goals without a next action, queued reading, review due.
 
 For live data, serve the folder (otherwise the page uses its embedded
 snapshots):
@@ -45,6 +55,24 @@ snapshots):
 python3 -m http.server
 # → http://localhost:8000
 ```
+
+## The weekly digest — `weekly.html`
+
+A dated, self-contained snapshot of **everything you have**: the week's
+activity from the log, every open loop, and the full text of every page —
+one file, no server, prints cleanly, safe to mail to yourself.
+
+It rebuilds automatically every Monday (and on every push that touches the
+vault) via `.github/workflows/weekly-vault.yml`. To rebuild it yourself:
+
+```
+python3 tools/build_vault.py            # rebuild weekly.html + index.html
+python3 tools/build_vault.py --check    # CI mode: fail if out of date
+```
+
+The same script regenerates `index.html`'s file manifest and offline
+snapshots, so a new topic page shows up in the deck on its own — never edit
+those regions by hand.
 
 ## Rules of the house
 

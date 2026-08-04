@@ -2,6 +2,8 @@
 
 Append-only chronological record. Newest entries at the bottom.
 
+#log #history #vault/pillar
+
 | Prefix | Meaning |
 |--------|---------|
 | `[INGEST]` | A new source was processed |
@@ -23,3 +25,8 @@ Append-only chronological record. Newest entries at the bottom.
 [DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see `decisions.md`).
 [UPDATE] 2026-07-19 — V.A.U.L.T site added at `index.html` (deck of clickable MD files, reader, "what's missing" panel); `README.md` guide added; `wiki/index.md` restructured around the five pillars.
 [ACHIEVE] 2026-06-05 — Vault initialized (backfilled 2026-07-19 to match `achievements.md`; entry was missing when the achievement was recorded).
+[DECIDE] 2026-08-04 — Generate the site and a weekly digest from the markdown with a dependency-free build script (see `decisions.md`).
+[DECIDE] 2026-08-04 — Mirror Obsidian's core reflexes (quick switcher, graph, backlinks, tags) in the site rather than requiring the app (see `decisions.md`).
+[UPDATE] 2026-08-04 — Site gained quick search (⌘K), graph view, linked mentions, and tag filters; `#tags` added to every vault page.
+[BUILD] 2026-08-04 — `tools/build_vault.py` added: regenerates `index.html`'s manifest/snapshots and `weekly.html`; weekly GitHub Actions cron wired up.
+[ACHIEVE] 2026-08-04 — Vault became self-maintaining and Obsidian-grade (see `achievements.md`).

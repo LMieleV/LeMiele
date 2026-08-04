@@ -673,6 +673,117 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
 .footer__grid a:hover{ color:var(--accent); }
 .footer__brand{ display:flex; align-items:center; gap:.6rem; }
 
+/* ---------- graph view (Obsidian-style link map) ---------- */
+.graph{
+  position:relative; border:1px solid var(--line-soft); background:var(--bg-2);
+  height:clamp(340px,52vh,560px); overflow:hidden;
+}
+.section--alt .graph{ background:var(--bg); }
+.graph canvas{ width:100%; height:100%; cursor:grab; }
+.graph canvas:active{ cursor:grabbing; }
+.graph__hint{
+  position:absolute; left:1.2rem; bottom:1rem;
+  font-size:.6rem; letter-spacing:.24em; text-transform:uppercase; color:var(--muted);
+  pointer-events:none;
+  background:rgba(16,22,26,.82); padding:.45em .9em; border:1px solid var(--line-soft);
+}
+.graph__legend{
+  position:absolute; right:1.2rem; top:1rem; display:flex; flex-direction:column; gap:.5rem;
+  font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted);
+  pointer-events:none;
+  background:rgba(16,22,26,.82); padding:.7em 1em; border:1px solid var(--line-soft);
+}
+.graph__legend span{ display:flex; align-items:center; gap:.5rem; }
+.graph__legend i{ width:.6rem; height:.6rem; border-radius:50%; display:inline-block; }
+.graph__tip{
+  position:absolute; z-index:3; pointer-events:none; opacity:0;
+  background:rgba(16,22,26,.94); border:1px solid var(--line);
+  padding:.5em .9em; font-size:.75rem; color:var(--ink); white-space:nowrap;
+  transition:opacity .2s; transform:translate(-50%,-150%);
+}
+.graph__tip.on{ opacity:1; }
+.graph__tip b{ color:var(--accent-soft); font-weight:600; }
+
+/* ---------- quick search (Obsidian quick switcher) ---------- */
+.qs{ position:fixed; inset:0; z-index:240; }
+.qs[hidden]{ display:none; }
+.qs__backdrop{ position:absolute; inset:0; background:rgba(10,14,17,.72); animation:fadeIn .25s var(--ease-soft); }
+.qs__panel{
+  position:relative; margin:clamp(3rem,12vh,8rem) auto 0; width:min(680px,92vw);
+  background:var(--bg-2); border:1px solid var(--line);
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  animation:qsIn .35s var(--ease-out);
+}
+@keyframes qsIn{ from{ opacity:0; transform:translateY(-14px); } to{ opacity:1; transform:none; } }
+.qs__inputwrap{ display:flex; align-items:center; gap:.9rem; padding:1.1rem 1.4rem; border-bottom:1px solid var(--line-soft); }
+.qs__mark{ font-family:var(--serif); font-style:italic; color:var(--accent); font-size:1.1rem; }
+.qs__input{
+  flex:1; background:none; border:0; outline:none;
+  color:var(--ink); font-family:var(--sans); font-size:1.05rem;
+}
+.qs__input::placeholder{ color:var(--muted); }
+.qs__kbd{
+  font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; color:var(--muted);
+  border:1px solid var(--line); border-radius:4px; padding:.35em .6em;
+}
+.qs__results{ max-height:min(52vh,440px); overflow-y:auto; overscroll-behavior:contain; }
+.qs__item{
+  display:block; width:100%; text-align:left;
+  padding:.85rem 1.4rem; border-bottom:1px solid var(--line-soft);
+  transition:background .2s;
+}
+.qs__item:last-child{ border-bottom:0; }
+.qs__item.on, .qs__item:hover{ background:var(--bg-3); }
+.qs__item.on{ box-shadow:inset 2px 0 0 var(--accent); }
+.qs__title{ font-family:var(--serif); font-size:1.05rem; color:var(--ink); }
+.qs__where{ font-family:var(--mono); font-size:.62rem; color:var(--muted); margin-left:.6rem; }
+.qs__snippet{ font-size:.82rem; color:var(--ink-dim); margin-top:.25rem; }
+.qs__snippet mark{ background:rgba(240,109,12,.22); color:var(--accent-tint); padding:0 .15em; }
+.qs__empty{ padding:1.4rem; color:var(--muted); font-size:.9rem; }
+
+/* ---------- reader meta: tags, backlinks, outline ---------- */
+.reader__meta{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-top:.6rem; }
+.tag{
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.06em;
+  color:var(--accent-soft); border:1px solid rgba(240,109,12,.35);
+  padding:.3em .8em; border-radius:99px;
+  transition:background .3s, color .3s;
+}
+button.tag:hover{ background:rgba(240,109,12,.14); color:var(--accent-tint); }
+.reader__count{ font-size:.6rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+.backlinks{
+  margin-top:2.4rem; padding-top:1.3rem; border-top:1px solid var(--line-soft);
+}
+.backlinks h4{
+  font-size:.65rem; letter-spacing:.26em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.9rem;
+}
+.backlinks li{ padding:.5rem 0; border-bottom:1px solid var(--line-soft); font-size:.88rem; }
+.backlinks li:last-child{ border-bottom:0; }
+.backlinks button{
+  color:var(--accent-soft); font-weight:600;
+  border-bottom:1px solid rgba(240,109,12,.4); transition:color .3s;
+}
+.backlinks button:hover{ color:var(--accent-tint); }
+.backlinks .ctx{ display:block; color:var(--muted); font-size:.8rem; margin-top:.25rem; }
+.backlinks .none{ color:var(--muted); font-size:.85rem; font-style:italic; }
+
+/* ---------- tag row in the deck ---------- */
+.tagrow{ display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin-bottom:clamp(1.2rem,2.4vh,1.8rem); }
+.tagrow__label{ font-size:.6rem; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); margin-right:.3rem; }
+.tagrow .tag.on{ background:var(--accent); border-color:var(--accent); color:#10161a; font-weight:600; }
+
+/* ---------- weekly digest callout ---------- */
+.weekly{
+  display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center;
+  border:1px solid rgba(240,109,12,.35); background:rgba(240,109,12,.06);
+  padding:clamp(1.6rem,3vw,2.4rem);
+}
+.weekly h3{ font-family:var(--serif); font-weight:400; font-size:clamp(1.3rem,2.4vw,1.9rem); margin-bottom:.5rem; }
+.weekly p{ color:var(--ink-dim); font-size:.92rem; max-width:60ch; }
+.weekly p code{ font-family:var(--mono); font-size:.85em; color:var(--accent-tint); background:rgba(240,109,12,.1); padding:.15em .45em; border-radius:3px; }
+@media (max-width:760px){ .weekly{ grid-template-columns:1fr; gap:1.4rem; } }
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
@@ -709,12 +820,12 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   </a>
   <nav class="nav__links" aria-label="Primary">
     <a href="#pillars" data-hover>Pillars</a>
-    <a href="#how" data-hover>How it works</a>
     <a href="#status" data-hover>What's missing</a>
     <a href="#deck" data-hover>The deck</a>
+    <a href="#graph" data-hover>Graph</a>
     <a href="#cheats" data-hover>Cheat sheet</a>
   </nav>
-  <a class="nav__cta" href="#deck" data-hover>Open the deck</a>
+  <button class="nav__cta" id="searchOpen" data-hover>Search ⌘K</button>
 </header>
 
 <main id="main">
@@ -773,7 +884,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">The five pillars</span>
-      <span class="section__num">01 / 05</span>
+      <span class="section__num">01 / 06</span>
     </div>
     <h2 class="section__title reveal">One letter, one file, <em>one home</em> for everything.</h2>
     <p class="section__intro reveal">
@@ -820,7 +931,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">How it operates</span>
-      <span class="section__num">02 / 05</span>
+      <span class="section__num">02 / 06</span>
     </div>
     <h2 class="section__title reveal">Three moves. <em>No apps, no forms.</em></h2>
     <p class="section__intro reveal">
@@ -857,7 +968,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">What's missing</span>
-      <span class="section__num">03 / 05</span>
+      <span class="section__num">03 / 06</span>
     </div>
     <h2 class="section__title reveal">The gaps, <em>at a glance.</em></h2>
     <p class="section__intro reveal">
@@ -873,6 +984,16 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       <div><dt>Queued reading</dt><dd id="stReading">0</dd></div>
     </dl>
     <ul class="gaps reveal" id="gapList" aria-live="polite"></ul>
+    <div class="weekly reveal" style="margin-top:clamp(2.4rem,6vh,3.6rem)">
+      <div>
+        <h3>The weekly digest</h3>
+        <p>Every Monday the vault rebuilds <code>weekly.html</code> — a dated, self-contained
+        snapshot of <b>everything you have</b>: the week's activity, every open loop, and the full
+        text of all five pillars. Print it, mail it, or read it offline. Run it yourself any time
+        with <code>python3 tools/build_vault.py</code>.</p>
+      </div>
+      <a class="btn btn--primary" href="weekly.html" data-hover>Open this week's digest ›</a>
+    </div>
   </div>
 </section>
 
@@ -881,7 +1002,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">The deck</span>
-      <span class="section__num">04 / 05</span>
+      <span class="section__num">04 / 06</span>
     </div>
     <h2 class="section__title reveal">Every file is <em>a card.</em> Click to read.</h2>
     <p class="section__intro reveal">
@@ -893,8 +1014,10 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       <button class="chip on" data-filter="all" data-hover>All files</button>
       <button class="chip" data-filter="pillar" data-hover>Pillars</button>
       <button class="chip" data-filter="queue" data-hover>Queues</button>
+      <button class="chip" data-filter="topic" data-hover>Topics</button>
       <button class="chip" data-filter="system" data-hover>System</button>
     </div>
+    <div class="tagrow reveal" id="tagRow" role="group" aria-label="Filter by tag"></div>
     <div class="deck reveal" id="deckGrid"></div>
     <p class="deck-mode" id="dataMode">Reading embedded snapshot — serve this folder for live files</p>
     <noscript>
@@ -908,12 +1031,39 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
   </div>
 </section>
 
-<!-- 05 · cheat sheet -->
-<section class="section section--alt" id="cheats">
+<!-- 05 · graph view -->
+<section class="section section--alt" id="graph">
+  <div class="section__inner">
+    <div class="section__head">
+      <span class="section__label">The graph</span>
+      <span class="section__num">05 / 06</span>
+    </div>
+    <h2 class="section__title reveal">Your vault, <em>as a map.</em></h2>
+    <p class="section__intro reveal">
+      Every page is a node, every <b>[[wikilink]]</b> an edge — the same picture Obsidian
+      draws. Drag to explore, hover to highlight a page's neighbours, click a node to read it.
+      Isolated nodes are pages nothing links to yet.
+    </p>
+    <div class="graph reveal">
+      <canvas id="graphCanvas"></canvas>
+      <div class="graph__legend" aria-hidden="true">
+        <span><i style="background:#f06d0c"></i> Pillar</span>
+        <span><i style="background:#0064a0"></i> Queue</span>
+        <span><i style="background:#80a45d"></i> Topic</span>
+        <span><i style="background:#5a6770"></i> System</span>
+      </div>
+      <p class="graph__hint">Drag a node · click to open</p>
+      <div class="graph__tip" id="graphTip" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · cheat sheet -->
+<section class="section" id="cheats">
   <div class="section__inner">
     <div class="section__head">
       <span class="section__label">Cheat sheet</span>
-      <span class="section__num">05 / 05</span>
+      <span class="section__num">06 / 06</span>
     </div>
     <h2 class="section__title reveal">Six phrases run <em>the whole vault.</em></h2>
     <div class="faq reveal">
@@ -994,6 +1144,7 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
       <div>
         <p class="reader__path" id="readerPath"></p>
         <h3 class="reader__title" id="readerTitle"></h3>
+        <div class="reader__meta" id="readerMeta"></div>
       </div>
       <div class="reader__actions">
         <button class="reader__btn" id="rawToggle" data-hover aria-pressed="false">Raw</button>
@@ -1003,51 +1154,39 @@ body.loaded .hero__meta{ opacity:1; transform:none; }
     <article class="reader__body md" id="readerBody" tabindex="0"></article>
     <footer class="reader__foot">
       <button class="reader__nav" id="prevFile" data-hover>‹ Previous file</button>
-      <span class="reader__hint">esc closes · [[wikilinks]] are clickable</span>
+      <span class="reader__hint">esc closes · ← → files · ⌘K search · [[wikilinks]] clickable</span>
       <button class="reader__nav" id="nextFile" data-hover>Next file ›</button>
     </footer>
   </aside>
 </div>
 
+<!-- quick search — Obsidian-style quick switcher -->
+<div class="qs" id="qs" hidden>
+  <div class="qs__backdrop" data-close></div>
+  <div class="qs__panel" role="dialog" aria-modal="true" aria-label="Search the vault">
+    <div class="qs__inputwrap">
+      <span class="qs__mark" aria-hidden="true">⌕</span>
+      <input class="qs__input" id="qsInput" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Search every file, task, win and decision…" aria-label="Search the vault">
+      <span class="qs__kbd" aria-hidden="true">ESC</span>
+    </div>
+    <div class="qs__results" id="qsResults" role="listbox" aria-label="Search results"></div>
+  </div>
+</div>
+
 <!-- ============================================================
      Embedded snapshots — fallback when opened from disk (file://).
      When served over HTTP the live wiki/*.md files are fetched
-     and take precedence. Keep in sync after wiki changes.
+     and take precedence.
+     GENERATED — run `python3 tools/build_vault.py` after wiki edits.
      ============================================================ -->
-<script type="text/markdown" data-file="wiki/index.md">
-# Vault Index — Understanding
-
-The vault in one glance. Open `index.html` in a browser for the visual deck, or jump straight into a file below.
-
-## The five pillars — V.A.U.L.T
-
-| Pillar | File | What lives there |
-|--------|------|------------------|
-| **V** — Vision | [[goals]] | Goals & active projects |
-| **A** — Achievements | [[achievements]] | Wins & milestones, by month |
-| **U** — Understanding | this index | Knowledge pages, one per topic |
-| **L** — Log | [[decisions]] · [[log]] | Why (decisions) and when (history) |
-| **T** — Tasks | [[pending]] | Inbox, next actions, waiting, scheduled |
-
-## Queues
-
-- [[ideas]] — someday/maybe parking lot
-- [[reading-list]] — sources waiting to be ingested
-
-## Knowledge pages
-
-<!-- LLM: add new topic pages here under a category. Create a new category if none fits. -->
-
-*None yet — drop a source in `raw/` and say "ingest".*
-
----
-
-*Last updated: 2026-07-19*
-</script>
+<!-- BUILD:SNAPSHOTS:START -->
 <script type="text/markdown" data-file="wiki/pending.md">
 # Pending Items
 
 Open loops live here — captured fast, triaged weekly, and never lost. See `CLAUDE.md` → CAPTURE / TRIAGE / COMPLETE for the workflow.
+
+#tasks #gtd #vault/pillar
 
 **Open:** 0 · **Waiting:** 0 · **Overdue:** 0 · *Last triage: 2026-07-17*
 
@@ -1091,7 +1230,16 @@ Open loops live here — captured fast, triaged weekly, and never lost. See `CLA
 
 Wins, milestones, and shipped work — the trophy shelf of this vault. Reviewed during weekly REVIEW; feeds performance reviews, retros, and motivation on bad days.
 
+#achievements #wins #vault/pillar
+
 ## 2026
+
+### August
+
+### 🏆 Vault became self-maintaining and Obsidian-grade — 2026-08-04
+**What:** Added a dependency-free build script that regenerates the site and a weekly `weekly.html` digest of the entire vault, wired to a Monday cron; brought Obsidian's core reflexes into the site — quick search (⌘K), graph view, linked mentions, and tag filters.
+**Impact:** The vault now maintains its own front-end (no hand-edited snapshots to drift) and produces a printable weekly snapshot of everything, while matching the daily-driver moves of the tool it's modelled on — without needing that tool installed.
+**Links:** [[decisions]], [[index]]
 
 ### July
 
@@ -1116,6 +1264,8 @@ Wins, milestones, and shipped work — the trophy shelf of this vault. Reviewed 
 
 What the vault is working toward. Every **active** goal must have at least one next action in [[pending]] — checked during weekly REVIEW.
 
+#goals #vision #vault/pillar
+
 ## Active
 
 ### Build a compounding personal knowledge vault
@@ -1136,10 +1286,44 @@ What the vault is working toward. Every **active** goal must have at least one n
 - [[pending]] — next actions for each goal
 - [[achievements]] — where completed goals are celebrated
 </script>
+<script type="text/markdown" data-file="wiki/index.md">
+# Vault Index — Understanding
+
+The vault in one glance. Open `index.html` in a browser for the visual deck, or jump straight into a file below.
+
+#knowledge #map #vault/pillar
+
+## The five pillars — V.A.U.L.T
+
+| Pillar | File | What lives there |
+|--------|------|------------------|
+| **V** — Vision | [[goals]] | Goals & active projects |
+| **A** — Achievements | [[achievements]] | Wins & milestones, by month |
+| **U** — Understanding | this index | Knowledge pages, one per topic |
+| **L** — Log | [[decisions]] · [[log]] | Why (decisions) and when (history) |
+| **T** — Tasks | [[pending]] | Inbox, next actions, waiting, scheduled |
+
+## Queues
+
+- [[ideas]] — someday/maybe parking lot
+- [[reading-list]] — sources waiting to be ingested
+
+## Knowledge pages
+
+<!-- LLM: add new topic pages here under a category. Create a new category if none fits. -->
+
+*None yet — drop a source in `raw/` and say "ingest".*
+
+---
+
+*Last updated: 2026-07-19*
+</script>
 <script type="text/markdown" data-file="wiki/decisions.md">
 # Decision Log
 
 Significant choices, recorded so future-you knows *why* — not just *what*. Lightweight ADR pattern; never edit history, supersede instead.
+
+#decisions #adr #vault/pillar
 
 ### 2026-07-17 — Extend the wiki into a full vault with plain-markdown features  `accepted`
 **Context:** The wiki had knowledge pages but no way to track open loops, wins, or goals — items raised in conversation were being lost between sessions.
@@ -1151,48 +1335,25 @@ Significant choices, recorded so future-you knows *why* — not just *what*. Lig
 **Options:** (a) keep the flat file list and improve docs only; (b) reorganize around a memorable five-pillar scheme (V.A.U.L.T) plus a single-file website in the style of the Etex procurement site.
 **Decision & rationale:** (b) — V.A.U.L.T (Vision, Achievements, Understanding, Log, Tasks) gives every file one obvious home, and `index.html` makes each file clickable and shows what's missing at a glance, in the same visual language as the initial website.
 
+### 2026-08-04 — Generate the site and a weekly digest from the markdown  `accepted`
+**Context:** Two gaps: the site's offline snapshots and file manifest had to be hand-maintained (they drift), and there was no periodic snapshot of the vault as a whole — nothing to read, print, or mail once a week.
+**Options:** (a) keep hand-editing `index.html` and skip the digest; (b) adopt a static-site generator (Eleventy/Hugo) and a Node toolchain; (c) one dependency-free Python script that regenerates the generated regions of `index.html` plus a standalone `weekly.html`, run on a weekly GitHub Actions cron.
+**Decision & rationale:** (c) — keeps the zero-dependency, single-file character of the vault (nothing to install, works offline), removes the drift risk by construction, and the weekly cron makes the digest a rhythm rather than a chore. A generator would have bought templating we don't need at the price of a toolchain.
+
+### 2026-08-04 — Mirror Obsidian's core reflexes in the site  `accepted`
+**Context:** The vault holds Obsidian-shaped content (wikilinks, tags, tasks) but the site only browsed files — none of the moves that make Obsidian fast.
+**Options:** (a) tell people to open the folder in Obsidian; (b) rebuild the vault inside Obsidian's format (plugins, config, `.obsidian/`); (c) implement the four reflexes that matter — quick switcher, graph view, backlinks, tag filters — directly in the page.
+**Decision & rationale:** (c) — the vault stays plain markdown that Obsidian can still open, while the site works for anyone with a browser and no app installed. Backlinks and the graph fall out of the `[[wikilink]]` data we already keep, so they cost no new schema.
+
 ## Cross-references
 - [[log]] — every decision also gets a `[DECIDE]` log line
-</script>
-<script type="text/markdown" data-file="wiki/ideas.md">
-# Ideas — Someday / Maybe
-
-The parking lot: things worth keeping but not worth an open loop. Demoted here from [[pending]] during TRIAGE, or captured directly. Scanned during weekly REVIEW — promote to [[pending]] when the time is right, delete when stale.
-
-## Vault
-- Add a `people/` section — one page per collaborator with context and open threads (Notion CRM pattern).
-- Auto-generate a monthly "highlights" digest from `[ACHIEVE]` and `[DONE]` log entries.
-- Add spaced-repetition prompts to key wiki pages (Anki/Obsidian-SR pattern) for knowledge that must stay fresh.
-
-## Other
-
-*Empty.*
-
-## Cross-references
-- [[pending]] — ideas get promoted there when they become actionable
-</script>
-<script type="text/markdown" data-file="wiki/reading-list.md">
-# Reading List
-
-Sources queued for ingestion and references worth keeping. Checked during weekly REVIEW: read → drop the file in `raw/` and run INGEST; obsolete → delete the row.
-
-## To read / ingest
-
-| Added | Source | Why it matters |
-|-------|--------|----------------|
-| 2026-07-17 | [Karpathy's LLM-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Origin of this vault's core pattern — re-read when evolving the schema |
-
-## Ingested
-
-*Rows move here with the ingest date and the resulting wiki page(s).*
-
-## Cross-references
-- [[index]] — ingested sources become catalog entries
 </script>
 <script type="text/markdown" data-file="wiki/log.md">
 # Wiki Log
 
 Append-only chronological record. Newest entries at the bottom.
+
+#log #history #vault/pillar
 
 | Prefix | Meaning |
 |--------|---------|
@@ -1215,6 +1376,50 @@ Append-only chronological record. Newest entries at the bottom.
 [DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see `decisions.md`).
 [UPDATE] 2026-07-19 — V.A.U.L.T site added at `index.html` (deck of clickable MD files, reader, "what's missing" panel); `README.md` guide added; `wiki/index.md` restructured around the five pillars.
 [ACHIEVE] 2026-06-05 — Vault initialized (backfilled 2026-07-19 to match `achievements.md`; entry was missing when the achievement was recorded).
+[DECIDE] 2026-08-04 — Generate the site and a weekly digest from the markdown with a dependency-free build script (see `decisions.md`).
+[DECIDE] 2026-08-04 — Mirror Obsidian's core reflexes (quick switcher, graph, backlinks, tags) in the site rather than requiring the app (see `decisions.md`).
+[UPDATE] 2026-08-04 — Site gained quick search (⌘K), graph view, linked mentions, and tag filters; `#tags` added to every vault page.
+[BUILD] 2026-08-04 — `tools/build_vault.py` added: regenerates `index.html`'s manifest/snapshots and `weekly.html`; weekly GitHub Actions cron wired up.
+[ACHIEVE] 2026-08-04 — Vault became self-maintaining and Obsidian-grade (see `achievements.md`).
+</script>
+<script type="text/markdown" data-file="wiki/ideas.md">
+# Ideas — Someday / Maybe
+
+The parking lot: things worth keeping but not worth an open loop. Demoted here from [[pending]] during TRIAGE, or captured directly. Scanned during weekly REVIEW — promote to [[pending]] when the time is right, delete when stale.
+
+#ideas #someday #vault/queue
+
+## Vault
+- Add a `people/` section — one page per collaborator with context and open threads (Notion CRM pattern).
+- Auto-generate a monthly "highlights" digest from `[ACHIEVE]` and `[DONE]` log entries.
+- Add spaced-repetition prompts to key wiki pages (Anki/Obsidian-SR pattern) for knowledge that must stay fresh.
+
+## Other
+
+*Empty.*
+
+## Cross-references
+- [[pending]] — ideas get promoted there when they become actionable
+</script>
+<script type="text/markdown" data-file="wiki/reading-list.md">
+# Reading List
+
+Sources queued for ingestion and references worth keeping. Checked during weekly REVIEW: read → drop the file in `raw/` and run INGEST; obsolete → delete the row.
+
+#reading #sources #vault/queue
+
+## To read / ingest
+
+| Added | Source | Why it matters |
+|-------|--------|----------------|
+| 2026-07-17 | [Karpathy's LLM-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Origin of this vault's core pattern — re-read when evolving the schema |
+
+## Ingested
+
+*Rows move here with the ingest date and the resulting wiki page(s).*
+
+## Cross-references
+- [[index]] — ingested sources become catalog entries
 </script>
 <script type="text/markdown" data-file="CLAUDE.md">
 # V.A.U.L.T — Schema & Workflow
@@ -1237,6 +1442,9 @@ Two queues feed the pillars: `wiki/ideas.md` (someday/maybe) and `wiki/reading-l
 
 ```
 index.html  ← V.A.U.L.T site: clickable deck over the wiki (zero-dependency, single file)
+weekly.html ← GENERATED weekly digest: the whole vault as of the last build
+tools/build_vault.py ← rebuilds index.html's manifest/snapshots and weekly.html
+.github/workflows/weekly-vault.yml ← runs the build every Monday and commits
 README.md   ← plain-language guide to using the vault
 raw/        ← immutable source documents (never modified by the LLM)
 wiki/       ← LLM-owned markdown knowledge base
@@ -1340,6 +1548,20 @@ Steps:
 4. **Feed the queue**: check `wiki/reading-list.md` — anything read gets ingested, anything obsolete gets dropped.
 5. Run **LINT** (below).
 6. Append to `wiki/log.md`: `[REVIEW] YYYY-MM-DD — <one-line summary of the week>`
+7. Run **BUILD** (below) so `weekly.html` captures the reviewed state.
+
+### BUILD
+
+Trigger: after any wiki change, at the end of REVIEW, or "rebuild the site"
+
+Steps:
+1. Run `python3 tools/build_vault.py` (no dependencies). It regenerates:
+   - the `FILES` manifest and embedded snapshot blocks in `index.html` — new topic pages
+     appear in the deck automatically, with title and description derived from the page itself;
+   - `weekly.html` — a dated, self-contained digest of the whole vault.
+2. Never hand-edit the regions marked `BUILD:FILES` or `BUILD:SNAPSHOTS` in `index.html`,
+   or `weekly.html` at all — the next build overwrites them.
+3. `python3 tools/build_vault.py --check` exits non-zero when outputs are stale (used by CI).
 
 ### LINT
 
@@ -1432,6 +1654,7 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 | `[ACHIEVE]` | An achievement was recorded |
 | `[DECIDE]` | A decision was logged |
 | `[REVIEW]` | A weekly review was completed |
+| `[BUILD]` | The site and weekly digest were rebuilt |
 
 ---
 
@@ -1440,11 +1663,13 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 - The LLM **reads** `raw/` but **never modifies** it.
 - The LLM **owns** `wiki/` entirely: creates, updates, and cross-links pages.
 - Humans **read** `wiki/` and **curate** `raw/`.
-- Cross-references use `[[page-name]]` notation (filename without `.md`).
+- Cross-references use `[[page-name]]` notation (filename without `.md`). These are the edges in the site's graph view and drive its "Linked mentions" (backlinks) panel — link generously.
+- Tags are Obsidian-style inline `#tag` words (hierarchies allowed: `#vault/pillar`). Put them on their own line under the page intro. They become filter chips in the deck.
 - All dates use `YYYY-MM-DD` format.
 - Keep pages focused: one entity or concept per page. Use cross-references rather than duplicating content.
-- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots (the `<script type="text/markdown">` blocks) when opened from disk. After materially changing a wiki page, refresh its snapshot block in `index.html`; when a new topic page is created, add it to the `FILES` manifest and add a matching snapshot block.
+- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots when opened from disk. **Never hand-edit those snapshots or the `FILES` manifest** — run **BUILD** (`python3 tools/build_vault.py`) after any wiki change and it regenerates both, plus `weekly.html`.
 </script>
+<!-- BUILD:SNAPSHOTS:END -->
 
 <script>
 (function(){
@@ -1455,18 +1680,20 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
      THE DECK — manifest, content store, markdown renderer, reader
      ============================================================ */
 
+  /* BUILD:FILES:START — generated by tools/build_vault.py */
   var FILES = [
-    { path:"wiki/pending.md",      title:"Tasks",              letter:"T", group:"pillar", desc:"Inbox, next actions, waiting on, scheduled — every open loop in one place." },
-    { path:"wiki/achievements.md", title:"Achievements",       letter:"A", group:"pillar", desc:"Wins and milestones worth remembering, filed by month with what, impact, links." },
-    { path:"wiki/goals.md",        title:"Vision",             letter:"V", group:"pillar", desc:"Goals & active projects — where all of this is heading." },
-    { path:"wiki/index.md",        title:"Understanding",      letter:"U", group:"pillar", desc:"The knowledge catalog — one page per topic, compounding with every ingest." },
-    { path:"wiki/decisions.md",    title:"Log · Decisions",    letter:"L", group:"pillar", desc:"Why choices were made — with context and options, never rewritten." },
-    { path:"wiki/log.md",          title:"Log · History",      letter:"L", group:"pillar", desc:"Append-only record of everything the vault has ever done." },
-    { path:"wiki/ideas.md",        title:"Ideas",              letter:"I", group:"queue",  desc:"Someday / maybe — parked without guilt, promoted when the time is right." },
-    { path:"wiki/reading-list.md", title:"Reading list",       letter:"R", group:"queue",  desc:"Sources queued for ingestion into Understanding." },
-    { path:"CLAUDE.md",            title:"Schema",             letter:"§", group:"system", desc:"The rulebook — operations, formats, and conventions the vault follows." }
+    { path:"wiki/pending.md",       title:"Tasks",            letter:"T", group:"pillar", desc:"Inbox, next actions, waiting on, scheduled — every open loop in one place." },
+    { path:"wiki/achievements.md",  title:"Achievements",     letter:"A", group:"pillar", desc:"Wins and milestones worth remembering, filed by month with what, impact, links." },
+    { path:"wiki/goals.md",         title:"Vision",           letter:"V", group:"pillar", desc:"Goals & active projects — where all of this is heading." },
+    { path:"wiki/index.md",         title:"Understanding",    letter:"U", group:"pillar", desc:"The knowledge catalog — one page per topic, compounding with every ingest." },
+    { path:"wiki/decisions.md",     title:"Log · Decisions",  letter:"L", group:"pillar", desc:"Why choices were made — with context and options, never rewritten." },
+    { path:"wiki/log.md",           title:"Log · History",    letter:"L", group:"pillar", desc:"Append-only record of everything the vault has ever done." },
+    { path:"wiki/ideas.md",         title:"Ideas",            letter:"I", group:"queue", desc:"Someday / maybe — parked without guilt, promoted when the time is right." },
+    { path:"wiki/reading-list.md",  title:"Reading list",     letter:"R", group:"queue", desc:"Sources queued for ingestion into Understanding." },
+    { path:"CLAUDE.md",             title:"Schema",           letter:"§", group:"system", desc:"The rulebook — operations, formats, and conventions the vault follows." }
   ];
-  var GROUP_NAMES = { pillar:"Pillar", queue:"Queue", system:"System" };
+  /* BUILD:FILES:END */
+  var GROUP_NAMES = { pillar:"Pillar", queue:"Queue", system:"System", topic:"Topic" };
 
   var store = {};   /* path → markdown text */
   var slugMap = {}; /* wikilink slug → path  */
@@ -1599,6 +1826,8 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
         continue;
       }
       if (/^\s*$/.test(line)){ i++; continue; }
+      /* a line of nothing but #tags — shown as chips in the reader header */
+      if (/^\s*#[A-Za-z0-9][\w/-]*(\s+#[A-Za-z0-9][\w/-]*)*\s*$/.test(line)){ i++; continue; }
       var para = [];
       while (i < lines.length && !/^\s*$/.test(lines[i]) &&
              !/^(#{1,6})\s|^```|^>\s?|^\s*[-*]\s+|^\s*\d+\.\s+/.test(lines[i]) &&
@@ -1723,17 +1952,50 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
     deckGrid.appendChild(card);
   });
 
-  /* filters */
+  /* filters — group chips and tag chips are mutually exclusive */
+  var activeGroup = "all", activeTag = null;
+  function applyFilter(){
+    document.querySelectorAll(".card").forEach(function(card){
+      var path = card.getAttribute("data-open");
+      var byGroup = (activeGroup === "all" || card.getAttribute("data-group") === activeGroup);
+      var byTag = (!activeTag || tagsOf(path).indexOf(activeTag) !== -1);
+      card.hidden = !(byGroup && byTag);
+    });
+  }
   document.querySelectorAll(".chip").forEach(function(chip){
     chip.addEventListener("click", function(){
       document.querySelectorAll(".chip").forEach(function(c){ c.classList.remove("on"); });
       chip.classList.add("on");
-      var f = chip.getAttribute("data-filter");
-      document.querySelectorAll(".card").forEach(function(card){
-        card.hidden = (f !== "all" && card.getAttribute("data-group") !== f);
-      });
+      activeGroup = chip.getAttribute("data-filter");
+      applyFilter();
     });
   });
+
+  /* tag row — every #tag used anywhere in the vault */
+  function renderTagRow(){
+    var counts = {};
+    FILES.forEach(function(f){
+      tagsOf(f.path).forEach(function(t){ counts[t] = (counts[t] || 0) + 1; });
+    });
+    var tags = Object.keys(counts).sort(function(a, b){
+      return counts[b] - counts[a] || a.localeCompare(b);
+    });
+    var row = document.getElementById("tagRow");
+    if (!tags.length){ row.innerHTML = ""; return; }
+    row.innerHTML = '<span class="tagrow__label">Tags</span>' +
+      tags.map(function(t){
+        return '<button class="tag'+(activeTag === t ? " on" : "")+'" data-tag="'+t+'" data-hover>#'+
+               t+" <span style=\"opacity:.6\">"+counts[t]+"</span></button>";
+      }).join("");
+  }
+  function toggleTag(t){
+    activeTag = (activeTag === t ? null : t);
+    renderTagRow();
+    applyFilter();
+    if (activeTag){
+      document.getElementById("deck").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+    }
+  }
 
   /* ---------- reader ---------- */
   var reader     = document.getElementById("reader");
@@ -1747,6 +2009,74 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
     for (var k = 0; k < FILES.length; k++) if (FILES[k].path === path) return k;
     return -1;
   }
+  /* ---------- tags, links, backlinks (Obsidian reflexes) ---------- */
+  function stripCode(src){
+    return src.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "");
+  }
+  function tagsOf(path){
+    var out = [], seen = {};
+    var re = /(^|[\s(])#([a-z0-9][a-z0-9_-]*(?:\/[a-z0-9_-]+)*)/gi, m;
+    var src = stripCode(store[path] || "");
+    while ((m = re.exec(src))){
+      var t = m[2].toLowerCase();
+      if (!seen[t]){ seen[t] = 1; out.push(t); }
+    }
+    return out;
+  }
+  function linksOf(path){
+    var out = [], seen = {};
+    var re = /\[\[([^\]]+)\]\]/g, m;
+    var src = stripCode(store[path] || "");
+    while ((m = re.exec(src))){
+      var target = slugMap[m[1].trim().toLowerCase()];
+      if (target && target !== path && !seen[target]){ seen[target] = 1; out.push(target); }
+    }
+    return out;
+  }
+  function backlinksOf(path){
+    var slug = path.split("/").pop().replace(/\.md$/,"").toLowerCase();
+    var hits = [];
+    FILES.forEach(function(f){
+      if (f.path === path) return;
+      var lines = (store[f.path] || "").split(/\r?\n/);
+      lines.forEach(function(l){
+        var re = /\[\[([^\]]+)\]\]/g, m;
+        while ((m = re.exec(l))){
+          if (m[1].trim().toLowerCase() === slug){
+            hits.push({ path:f.path, title:f.title, ctx:l.replace(/^[\s>*-]+/,"").trim() });
+            return;
+          }
+        }
+      });
+    });
+    return hits;
+  }
+  function renderMeta(f){
+    var src = store[f.path] || "";
+    var words = (src.replace(/[#*`>|\-]/g," ").match(/\b[\w''-]+\b/g) || []).length;
+    var tags = tagsOf(f.path);
+    var html = tags.map(function(t){
+      return '<button class="tag" data-tag="'+t+'" data-hover>#'+t+"</button>";
+    }).join("");
+    html += '<span class="reader__count">'+words+" words · "+
+            linksOf(f.path).length+" links out · "+backlinksOf(f.path).length+" in</span>";
+    document.getElementById("readerMeta").innerHTML = html;
+  }
+  function renderBacklinks(f){
+    var hits = backlinksOf(f.path);
+    var html = '<div class="backlinks"><h4>Linked mentions — '+hits.length+"</h4>";
+    if (!hits.length){
+      html += '<p class="none">Nothing links here yet. Add a [['+
+              f.path.split("/").pop().replace(/\.md$/,"")+']] reference from a related page.</p>';
+    } else {
+      html += "<ul>" + hits.map(function(h){
+        return "<li><button data-open=\""+h.path+"\">"+h.title+
+               '</button><span class="ctx">'+esc(h.ctx).slice(0,180)+"</span></li>";
+      }).join("") + "</ul>";
+    }
+    return html + "</div>";
+  }
+
   function renderReader(){
     var f = FILES[current];
     var src = store[f.path] || "*File not available.*";
@@ -1754,9 +2084,10 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
     readerTitle.textContent = f.title;
     rawToggle.classList.toggle("on", rawMode);
     rawToggle.setAttribute("aria-pressed", rawMode ? "true" : "false");
+    renderMeta(f);
     readerBody.innerHTML = rawMode
       ? '<pre class="rawpre">'+esc(src)+"</pre>"
-      : mdRender(src);
+      : mdRender(src) + renderBacklinks(f);
     readerBody.scrollTop = 0;
   }
   function openReader(path, trigger){
@@ -1782,9 +2113,16 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
   }
 
   document.addEventListener("click", function(e){
+    var tagBtn = e.target.closest("[data-tag]");
+    if (tagBtn){
+      e.preventDefault();
+      if (!reader.hidden) closeReader();
+      toggleTag(tagBtn.getAttribute("data-tag"));
+      return;
+    }
     var opener = e.target.closest("[data-open]");
     if (opener){ e.preventDefault(); openReader(opener.getAttribute("data-open"), opener); return; }
-    if (e.target.closest("[data-close]")){ closeReader(); return; }
+    if (e.target.closest("[data-close]")){ closeQs(); closeReader(); return; }
     var wl = e.target.closest("a.wl");
     if (wl){
       e.preventDefault();
@@ -1792,18 +2130,272 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
       if (path) openReader(path, lastTrigger);
     }
   });
+
+  /* ---------- quick search (⌘K / Ctrl-K) ---------- */
+  var qs = document.getElementById("qs");
+  var qsInput = document.getElementById("qsInput");
+  var qsResults = document.getElementById("qsResults");
+  var qsHits = [], qsSel = 0;
+
+  function qsSearch(q){
+    q = q.trim().toLowerCase();
+    var hits = [];
+    if (!q){
+      FILES.forEach(function(f){ hits.push({ path:f.path, title:f.title, where:f.path, snippet:f.desc }); });
+      return hits;
+    }
+    FILES.forEach(function(f){
+      var titleHit = f.title.toLowerCase().indexOf(q) !== -1 || f.path.toLowerCase().indexOf(q) !== -1;
+      var lines = (store[f.path] || "").split(/\r?\n/);
+      var found = 0;
+      for (var i = 0; i < lines.length && found < 3; i++){
+        var l = lines[i], idx = l.toLowerCase().indexOf(q);
+        if (idx === -1 || !l.trim()) continue;
+        var from = Math.max(0, idx - 34);
+        var snip = (from > 0 ? "…" : "") + l.slice(from, idx) +
+                   "\u0002" + l.slice(idx, idx + q.length) + "\u0003" +
+                   l.slice(idx + q.length, idx + q.length + 60);
+        hits.push({ path:f.path, title:f.title, where:"line " + (i + 1), snippet:snip.trim() });
+        found++;
+      }
+      if (titleHit && !found) hits.push({ path:f.path, title:f.title, where:f.path, snippet:f.desc });
+    });
+    return hits.slice(0, 40);
+  }
+  function qsRender(){
+    if (!qsHits.length){
+      qsResults.innerHTML = '<p class="qs__empty">Nothing in the vault matches that — yet.</p>';
+      return;
+    }
+    qsResults.innerHTML = qsHits.map(function(h, i){
+      var snip = esc(h.snippet || "").replace(/\u0002/g, "<mark>").replace(/\u0003/g, "</mark>");
+      return '<button class="qs__item'+(i === qsSel ? " on" : "")+'" data-qs="'+i+'" role="option">' +
+             '<span class="qs__title">'+esc(h.title)+'</span>' +
+             '<span class="qs__where">'+esc(h.where)+"</span>" +
+             '<span class="qs__snippet">'+snip+"</span></button>";
+    }).join("");
+    var on = qsResults.querySelector(".qs__item.on");
+    if (on && on.scrollIntoView) on.scrollIntoView({ block:"nearest" });
+  }
+  function openQs(){
+    qs.hidden = false;
+    document.body.classList.add("reader-open");
+    qsInput.value = ""; qsHits = qsSearch(""); qsSel = 0; qsRender();
+    qsInput.focus();
+  }
+  function closeQs(){
+    if (qs.hidden) return;
+    qs.hidden = true;
+    if (reader.hidden) document.body.classList.remove("reader-open");
+  }
+  function qsOpenSel(){
+    var h = qsHits[qsSel];
+    if (!h) return;
+    closeQs();
+    openReader(h.path, document.getElementById("searchOpen"));
+  }
+  document.getElementById("searchOpen").addEventListener("click", openQs);
+  qsInput.addEventListener("input", function(){
+    qsHits = qsSearch(qsInput.value); qsSel = 0; qsRender();
+  });
+  qsResults.addEventListener("click", function(e){
+    var item = e.target.closest("[data-qs]");
+    if (item){ qsSel = +item.getAttribute("data-qs"); qsOpenSel(); }
+  });
+  document.addEventListener("keydown", function(e){
+    var k = e.key.toLowerCase();
+    if ((e.metaKey || e.ctrlKey) && (k === "k" || k === "p")){
+      e.preventDefault();
+      qs.hidden ? openQs() : closeQs();
+      return;
+    }
+    if (qs.hidden) return;
+    if (e.key === "Escape"){ e.preventDefault(); closeQs(); }
+    else if (e.key === "ArrowDown"){ e.preventDefault(); qsSel = Math.min(qsSel + 1, qsHits.length - 1); qsRender(); }
+    else if (e.key === "ArrowUp"){ e.preventDefault(); qsSel = Math.max(qsSel - 1, 0); qsRender(); }
+    else if (e.key === "Enter"){ e.preventDefault(); qsOpenSel(); }
+  });
   document.getElementById("readerClose").addEventListener("click", closeReader);
   document.getElementById("prevFile").addEventListener("click", function(){ step(-1); });
   document.getElementById("nextFile").addEventListener("click", function(){ step(1); });
   rawToggle.addEventListener("click", function(){ rawMode = !rawMode; renderReader(); });
   document.addEventListener("keydown", function(e){
-    if (reader.hidden) return;
+    if (reader.hidden || !document.getElementById("qs").hidden) return;
     if (e.key === "Escape") closeReader();
     if (e.key === "ArrowLeft")  step(-1);
     if (e.key === "ArrowRight") step(1);
   });
 
+  /* ============================================================
+     GRAPH VIEW — pages as nodes, [[wikilinks]] as edges
+     ============================================================ */
+  var gCanvas = document.getElementById("graphCanvas");
+  var gCtx = gCanvas.getContext("2d");
+  var gTip = document.getElementById("graphTip");
+  var GCOL = { pillar:"#f06d0c", queue:"#0064a0", topic:"#80a45d", system:"#5a6770" };
+  var nodes = [], edges = [], gW = 0, gH = 0, gDPR = 1;
+  var gHover = null, gDrag = null, gAlpha = 1;
+
+  function buildGraph(){
+    nodes = FILES.map(function(f, i){
+      var ang = (i / FILES.length) * Math.PI * 2;
+      return {
+        path:f.path, title:f.title, group:f.group, deg:0,
+        x:0.5 + Math.cos(ang) * 0.28, y:0.5 + Math.sin(ang) * 0.28, vx:0, vy:0
+      };
+    });
+    var byPath = {};
+    nodes.forEach(function(n){ byPath[n.path] = n; });
+    edges = [];
+    FILES.forEach(function(f){
+      linksOf(f.path).forEach(function(t){
+        if (!byPath[t]) return;
+        edges.push({ a:byPath[f.path], b:byPath[t] });
+        byPath[f.path].deg++; byPath[t].deg++;
+      });
+    });
+    gAlpha = 1;
+  }
+  function gResize(){
+    gDPR = Math.min(window.devicePixelRatio || 1, 2);
+    gW = gCanvas.offsetWidth; gH = gCanvas.offsetHeight;
+    gCanvas.width = gW * gDPR; gCanvas.height = gH * gDPR;
+    gCtx.setTransform(gDPR, 0, 0, gDPR, 0, 0);
+  }
+  function gStep(){
+    /* light force-directed relaxation in normalized space */
+    var k = 0.055;
+    for (var i = 0; i < nodes.length; i++){
+      var n = nodes[i];
+      for (var j = i + 1; j < nodes.length; j++){
+        var m = nodes[j];
+        var dx = m.x - n.x, dy = m.y - n.y;
+        var d2 = dx * dx + dy * dy + 0.0004;
+        var rep = 0.0016 / d2;
+        var d = Math.sqrt(d2);
+        n.vx -= (dx / d) * rep; n.vy -= (dy / d) * rep;
+        m.vx += (dx / d) * rep; m.vy += (dy / d) * rep;
+      }
+      /* pull to centre */
+      n.vx += (0.5 - n.x) * 0.004; n.vy += (0.5 - n.y) * 0.004;
+    }
+    edges.forEach(function(e){
+      var dx = e.b.x - e.a.x, dy = e.b.y - e.a.y;
+      var d = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+      var f = (d - 0.19) * k;
+      e.a.vx += (dx / d) * f; e.a.vy += (dy / d) * f;
+      e.b.vx -= (dx / d) * f; e.b.vy -= (dy / d) * f;
+    });
+    nodes.forEach(function(n){
+      if (n === gDrag) { n.vx = n.vy = 0; return; }
+      n.x += n.vx * gAlpha; n.y += n.vy * gAlpha;
+      n.vx *= 0.82; n.vy *= 0.82;
+      n.x = Math.max(0.08, Math.min(0.88, n.x));
+      n.y = Math.max(0.12, Math.min(0.86, n.y));
+    });
+    if (gAlpha > 0.12) gAlpha *= 0.994;
+  }
+  function nodeR(n){ return 5 + Math.min(n.deg, 6) * 1.5; }
+  function gDraw(){
+    gCtx.clearRect(0, 0, gW, gH);
+    var near = {};
+    if (gHover){
+      near[gHover.path] = 1;
+      edges.forEach(function(e){
+        if (e.a === gHover) near[e.b.path] = 1;
+        if (e.b === gHover) near[e.a.path] = 1;
+      });
+    }
+    edges.forEach(function(e){
+      var hot = gHover && (e.a === gHover || e.b === gHover);
+      gCtx.strokeStyle = hot ? "rgba(240,109,12,.75)" : "rgba(221,225,228,.16)";
+      gCtx.lineWidth = hot ? 1.4 : 0.8;
+      gCtx.beginPath();
+      gCtx.moveTo(e.a.x * gW, e.a.y * gH);
+      gCtx.lineTo(e.b.x * gW, e.b.y * gH);
+      gCtx.stroke();
+    });
+    nodes.forEach(function(n){
+      var dim = gHover && !near[n.path];
+      var x = n.x * gW, y = n.y * gH, r = nodeR(n);
+      gCtx.globalAlpha = dim ? 0.28 : 1;
+      gCtx.fillStyle = GCOL[n.group] || GCOL.system;
+      gCtx.beginPath(); gCtx.arc(x, y, r, 0, Math.PI * 2); gCtx.fill();
+      if (n === gHover){
+        gCtx.strokeStyle = "rgba(255,225,195,.9)"; gCtx.lineWidth = 2;
+        gCtx.beginPath(); gCtx.arc(x, y, r + 5, 0, Math.PI * 2); gCtx.stroke();
+      }
+      gCtx.fillStyle = dim ? "rgba(192,201,207,.35)" : "rgba(237,241,244,.86)";
+      gCtx.font = '11px "Segoe UI", system-ui, sans-serif';
+      gCtx.textAlign = "center";
+      gCtx.fillText(n.title, x, y + r + 13);
+      gCtx.globalAlpha = 1;
+    });
+  }
+  function gPick(mx, my){
+    for (var i = nodes.length - 1; i >= 0; i--){
+      var n = nodes[i], dx = mx - n.x * gW, dy = my - n.y * gH;
+      if (dx * dx + dy * dy < Math.pow(nodeR(n) + 8, 2)) return n;
+    }
+    return null;
+  }
+  function gPos(e){
+    var r = gCanvas.getBoundingClientRect();
+    var pt = e.touches ? e.touches[0] : e;
+    return { x:pt.clientX - r.left, y:pt.clientY - r.top };
+  }
+  gCanvas.addEventListener("mousemove", function(e){
+    var p = gPos(e);
+    if (gDrag){
+      gDrag.x = Math.max(0.08, Math.min(0.88, p.x / gW));
+      gDrag.y = Math.max(0.12, Math.min(0.86, p.y / gH));
+      gAlpha = Math.max(gAlpha, 0.5);
+      return;
+    }
+    var hit = gPick(p.x, p.y);
+    if (hit !== gHover){
+      gHover = hit;
+      gCanvas.style.cursor = hit ? "pointer" : "grab";
+      if (hit){
+        gTip.innerHTML = "<b>" + esc(hit.title) + "</b> · " + esc(hit.path) +
+                         " · " + hit.deg + " link" + (hit.deg === 1 ? "" : "s");
+        gTip.style.left = (hit.x * gW) + "px";
+        gTip.style.top  = (hit.y * gH) + "px";
+        gTip.classList.add("on");
+      } else {
+        gTip.classList.remove("on");
+      }
+    }
+  });
+  gCanvas.addEventListener("mousedown", function(e){
+    var p = gPos(e); gDrag = gPick(p.x, p.y);
+  });
+  window.addEventListener("mouseup", function(){ gDrag = null; });
+  gCanvas.addEventListener("mouseleave", function(){
+    gHover = null; gDrag = null; gTip.classList.remove("on");
+  });
+  gCanvas.addEventListener("click", function(e){
+    var p = gPos(e), hit = gPick(p.x, p.y);
+    if (hit) openReader(hit.path, gCanvas);
+  });
+  window.addEventListener("resize", gResize);
+
+  buildGraph();
+  gResize();
+  if (reduceMotion){
+    for (var gi = 0; gi < 400; gi++) gStep();
+    gDraw();
+  } else {
+    var gVisible = false;
+    new IntersectionObserver(function(en){ gVisible = en[0].isIntersecting; }).observe(gCanvas);
+    (function gLoop(){
+      if (gVisible){ gStep(); gDraw(); }
+      requestAnimationFrame(gLoop);
+    })();
+  }
+
   /* ---------- live fetch (when served over HTTP) ---------- */
+  renderTagRow();
   renderStats();
   if (/^https?:$/.test(location.protocol)){
     Promise.allSettled(FILES.map(function(f){
@@ -1815,8 +2407,15 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
       if (live > 0){
         document.getElementById("dataMode").innerHTML =
           "<b>Live</b> — reading " + live + "/" + FILES.length + " files straight from the repo";
+        renderTagRow();
         renderStats();
-        if (!reader.hidden) renderReader();
+        buildGraph();
+        applyFilter();
+        if (!reader.hidden){
+          var keepScroll = readerBody.scrollTop;
+          renderReader();
+          readerBody.scrollTop = keepScroll;
+        }
       }
     });
   }

@@ -18,6 +18,9 @@ Two queues feed the pillars: `wiki/ideas.md` (someday/maybe) and `wiki/reading-l
 
 ```
 index.html  ← V.A.U.L.T site: clickable deck over the wiki (zero-dependency, single file)
+weekly.html ← GENERATED weekly digest: the whole vault as of the last build
+tools/build_vault.py ← rebuilds index.html's manifest/snapshots and weekly.html
+.github/workflows/weekly-vault.yml ← runs the build every Monday and commits
 README.md   ← plain-language guide to using the vault
 raw/        ← immutable source documents (never modified by the LLM)
 wiki/       ← LLM-owned markdown knowledge base
@@ -121,6 +124,20 @@ Steps:
 4. **Feed the queue**: check `wiki/reading-list.md` — anything read gets ingested, anything obsolete gets dropped.
 5. Run **LINT** (below).
 6. Append to `wiki/log.md`: `[REVIEW] YYYY-MM-DD — <one-line summary of the week>`
+7. Run **BUILD** (below) so `weekly.html` captures the reviewed state.
+
+### BUILD
+
+Trigger: after any wiki change, at the end of REVIEW, or "rebuild the site"
+
+Steps:
+1. Run `python3 tools/build_vault.py` (no dependencies). It regenerates:
+   - the `FILES` manifest and embedded snapshot blocks in `index.html` — new topic pages
+     appear in the deck automatically, with title and description derived from the page itself;
+   - `weekly.html` — a dated, self-contained digest of the whole vault.
+2. Never hand-edit the regions marked `BUILD:FILES` or `BUILD:SNAPSHOTS` in `index.html`,
+   or `weekly.html` at all — the next build overwrites them.
+3. `python3 tools/build_vault.py --check` exits non-zero when outputs are stale (used by CI).
 
 ### LINT
 
@@ -213,6 +230,7 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 | `[ACHIEVE]` | An achievement was recorded |
 | `[DECIDE]` | A decision was logged |
 | `[REVIEW]` | A weekly review was completed |
+| `[BUILD]` | The site and weekly digest were rebuilt |
 
 ---
 
@@ -221,7 +239,8 @@ Append-only. Newest entries at the bottom. Parseable prefixes:
 - The LLM **reads** `raw/` but **never modifies** it.
 - The LLM **owns** `wiki/` entirely: creates, updates, and cross-links pages.
 - Humans **read** `wiki/` and **curate** `raw/`.
-- Cross-references use `[[page-name]]` notation (filename without `.md`).
+- Cross-references use `[[page-name]]` notation (filename without `.md`). These are the edges in the site's graph view and drive its "Linked mentions" (backlinks) panel — link generously.
+- Tags are Obsidian-style inline `#tag` words (hierarchies allowed: `#vault/pillar`). Put them on their own line under the page intro. They become filter chips in the deck.
 - All dates use `YYYY-MM-DD` format.
 - Keep pages focused: one entity or concept per page. Use cross-references rather than duplicating content.
-- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots (the `<script type="text/markdown">` blocks) when opened from disk. After materially changing a wiki page, refresh its snapshot block in `index.html`; when a new topic page is created, add it to the `FILES` manifest and add a matching snapshot block.
+- `index.html` reads the live `wiki/*.md` files when served over HTTP and falls back to embedded snapshots when opened from disk. **Never hand-edit those snapshots or the `FILES` manifest** — run **BUILD** (`python3 tools/build_vault.py`) after any wiki change and it regenerates both, plus `weekly.html`.

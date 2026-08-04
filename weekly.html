@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="V.A.U.L.T weekly digest — 2026-08-04. Everything in the vault: the week's activity, every open loop, and the full text of all pages.">
+<meta name="theme-color" content="#10161a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='7.4' stroke='%23f06d0c' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='10' cy='10' r='2.6' fill='%23f06d0c'/%3E%3C/svg%3E">
+<title>V.A.U.L.T — weekly digest 2026-08-04</title>
+<style>
+:root{
+  --bg:#10161a; --bg-2:#151d21; --bg-3:#1b252b;
+  --ink:#edf1f4; --ink-dim:#c0c9cf; --muted:#7f8b94;
+  --accent:#f06d0c; --accent-soft:#ffb36b; --accent-tint:#ffe1c3;
+  --green:#80a45d; --blue:#0064a0;
+  --line:rgba(221,225,228,.14); --line-soft:rgba(221,225,228,.08);
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+  --mono:"Cascadia Code",Consolas,"SF Mono",Menlo,monospace;
+}
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+body{ background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+::selection{ background:var(--accent); color:#10161a; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
+.wrap{ max-width:1100px; margin:0 auto; padding:0 clamp(1.2rem,4vw,3rem); }
+
+.masthead{ border-bottom:1px solid var(--line-soft); padding:clamp(3rem,9vh,6rem) 0 clamp(2rem,5vh,3rem); }
+.brand{ font-family:var(--serif); font-size:1.05rem; letter-spacing:.16em; }
+.brand i{ font-style:normal; color:var(--accent); }
+.eyebrow{ display:flex; align-items:center; gap:1rem; font-size:.72rem; letter-spacing:.35em; text-transform:uppercase; color:var(--accent); margin:2.2rem 0 1.4rem; }
+.eyebrow::before{ content:""; width:3rem; height:1px; background:var(--accent); }
+h1{ font-family:var(--serif); font-weight:400; font-size:clamp(2.2rem,6vw,4.6rem); line-height:1.04; letter-spacing:-.025em; }
+h1 em{ font-style:italic; color:var(--accent-soft); }
+.dek{ color:var(--ink-dim); max-width:60ch; margin-top:1.4rem; }
+.dek b{ color:var(--ink); font-weight:600; }
+
+.stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:clamp(2.4rem,6vh,3.4rem); }
+.stats div{ background:var(--bg-2); padding:1.3rem 1.4rem; }
+.stats dt{ font-size:.6rem; letter-spacing:.26em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+.stats dd{ font-family:var(--serif); font-size:clamp(1.7rem,3vw,2.4rem); line-height:1; font-variant-numeric:tabular-nums; }
+.stats div.hot dd{ color:var(--accent-soft); }
+@media (max-width:860px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+
+section.block{ padding:clamp(3rem,7vh,5rem) 0; border-bottom:1px solid var(--line-soft); }
+.block__head{ display:flex; align-items:baseline; justify-content:space-between; gap:2rem; border-bottom:1px solid var(--line-soft); padding-bottom:1.1rem; margin-bottom:2rem; }
+.label{ font-size:.7rem; letter-spacing:.32em; text-transform:uppercase; color:var(--accent); }
+.num{ font-family:var(--serif); font-style:italic; color:var(--muted); font-size:.9rem; }
+h2.block__title{ font-family:var(--serif); font-weight:400; font-size:clamp(1.7rem,3.4vw,2.6rem); letter-spacing:-.02em; margin-bottom:1.4rem; }
+h2.block__title em{ color:var(--accent-soft); }
+.quiet{ color:var(--muted); font-style:italic; }
+
+.activity li{ display:grid; grid-template-columns:9.5rem 6.5rem 1fr; gap:1.2rem; align-items:baseline; padding:.75rem 0; border-bottom:1px solid var(--line-soft); font-size:.94rem; color:var(--ink-dim); }
+.activity li:last-child{ border-bottom:0; }
+.kind{ font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-dim); border:1px solid var(--line); padding:.35em .8em; border-radius:99px; text-align:center; }
+.kind--achieve,.kind--done{ color:var(--green); border-color:rgba(128,164,93,.4); }
+.kind--decide{ color:var(--accent-soft); border-color:rgba(240,109,12,.4); }
+.kind--review{ color:var(--accent-tint); border-color:rgba(240,109,12,.55); }
+.when{ font-family:var(--mono); font-size:.75rem; color:var(--muted); }
+@media (max-width:700px){ .activity li{ grid-template-columns:1fr; gap:.3rem; } .kind{ justify-self:start; } }
+
+.toc{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+.toc li a{ display:block; background:var(--bg-2); padding:1.1rem 1.3rem; transition:background .3s; }
+.toc li a:hover{ background:var(--bg-3); }
+.toc li span{ display:block; font-family:var(--mono); font-size:.65rem; color:var(--muted); margin-top:.25rem; }
+@media (max-width:860px){ .toc{ grid-template-columns:1fr 1fr; } }
+@media (max-width:520px){ .toc{ grid-template-columns:1fr; } }
+
+.page{ padding:clamp(2.6rem,6vh,4rem) 0; border-bottom:1px solid var(--line-soft); }
+.page__head{ margin-bottom:1.6rem; }
+.page__path{ font-family:var(--mono); font-size:.68rem; color:var(--accent-soft); }
+.page__head h2{ font-family:var(--serif); font-weight:400; font-size:clamp(1.6rem,3vw,2.2rem); letter-spacing:-.02em; margin-top:.2rem; }
+.page__tags{ display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.7rem; }
+.tag{ font-family:var(--mono); font-size:.62rem; color:var(--accent-soft); border:1px solid rgba(240,109,12,.35); padding:.25em .7em; border-radius:99px; }
+
+.md{ font-size:.95rem; color:var(--ink-dim); }
+.md > *+*{ margin-top:.9em; }
+.md h1{ font-family:var(--serif); font-weight:400; color:var(--ink); font-size:1.6rem; letter-spacing:-.02em; }
+.md h2{ font-family:var(--serif); font-weight:400; color:var(--ink); font-size:1.3rem; margin-top:1.7em; padding-bottom:.4em; border-bottom:1px solid var(--line-soft); }
+.md h3{ font-family:var(--serif); font-weight:400; color:var(--ink); font-size:1.1rem; margin-top:1.4em; }
+.md h4{ font-size:.7rem; letter-spacing:.26em; text-transform:uppercase; color:var(--accent); margin-top:1.5em; }
+.md b{ color:var(--ink); font-weight:600; }
+.md em{ color:var(--accent-soft); }
+.md ul,.md ol{ padding-left:1.3em; }
+.md ol{ list-style:decimal; }
+.md ul li,.md ol li{ padding:.26em 0; position:relative; }
+.md ul li:not(.task)::before{ content:"›"; position:absolute; left:-1.15em; color:var(--accent); font-family:var(--serif); }
+.md li.task{ display:flex; gap:.7em; align-items:baseline; }
+.md li.task::before{ display:none; }
+.md li.task .cb{ flex-shrink:0; width:.85em; height:.85em; transform:translateY(.08em); border:1px solid var(--muted); border-radius:2px; display:inline-block; position:relative; }
+.md li.task.done{ color:var(--muted); }
+.md li.task.done .cb{ background:var(--green); border-color:var(--green); }
+.md li.task.done .cb::after{ content:"✓"; position:absolute; inset:0; color:#10161a; font-size:.7em; line-height:1.2; text-align:center; font-weight:700; }
+.md code{ font-family:var(--mono); font-size:.85em; color:var(--accent-tint); background:rgba(240,109,12,.08); padding:.15em .45em; border-radius:3px; }
+.md pre{ background:var(--bg); border:1px solid var(--line-soft); border-radius:4px; padding:1.1em 1.3em; overflow-x:auto; font-family:var(--mono); font-size:.8rem; line-height:1.6; }
+.md pre code{ background:none; padding:0; color:inherit; }
+.md table{ border-collapse:collapse; width:100%; font-size:.88rem; display:block; overflow-x:auto; }
+.md th{ text-align:left; font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); padding:.55em .9em; border-bottom:1px solid var(--line); }
+.md td{ padding:.55em .9em; border-bottom:1px solid var(--line-soft); vertical-align:top; }
+.md blockquote{ border-left:2px solid var(--accent); padding:.4em 0 .4em 1.2em; background:rgba(240,109,12,.05); font-style:italic; }
+.md hr{ border:0; border-top:1px solid var(--line-soft); margin:1.5em 0; }
+.md a{ color:var(--accent-soft); border-bottom:1px solid rgba(240,109,12,.4); }
+.md .wl{ font-weight:600; }
+.md .wl--dead{ color:var(--muted); border-bottom:1px dashed var(--line); }
+
+footer{ padding:clamp(2.5rem,6vh,4rem) 0 3rem; color:var(--muted); font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; display:flex; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+footer a{ color:var(--accent-soft); }
+
+@media print{
+  body{ background:#fff; color:#111; }
+  .masthead,.block,.page{ break-inside:avoid; }
+  .stats div,.toc li a{ background:#fff; }
+  .md,.dek,.activity li{ color:#222; }
+  h1,.md h1,.md h2,.md h3,.page__head h2{ color:#000; }
+  a{ color:#000; }
+  .toc{ display:none; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="brand">V<i>.</i>A<i>.</i>U<i>.</i>L<i>.</i>T</p>
+    <p class="eyebrow">Weekly digest · 2026-07-29 → 2026-08-04</p>
+    <h1>Week 32, <em>2026.</em></h1>
+    <p class="dek">Everything in the vault, as of <b>2026-08-04</b> — the week's activity, every open
+    loop, and the full text of all <b>9 files</b>. Self-contained: no server, no
+    dependencies, prints cleanly. No weekly review logged yet — say “weekly review” to run the first one.</p>
+    <dl class="stats"><div><dt>Open tasks</dt><dd>0</dd></div><div><dt>In inbox</dt><dd>0</dd></div><div><dt>Overdue</dt><dd>0</dd></div><div><dt>Waiting on</dt><dd>0</dd></div><div><dt>Wins</dt><dd>3</dd></div><div><dt>Active goals</dt><dd>1</dd></div><div><dt>Decisions</dt><dd>4</dd></div><div><dt>Queued reading</dt><dd>1</dd></div></dl>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="block">
+  <div class="block__head"><span class="label">This week</span><span class="num">01 / 03</span></div>
+  <h2 class="block__title">What <em>happened.</em></h2>
+  <ul class="activity"><li><span class="kind kind--decide">Decision</span><span class="when">2026-08-04</span><span class="what">Generate the site and a weekly digest from the markdown with a dependency-free build script (see <code>decisions.md</code>).</span></li><li><span class="kind kind--decide">Decision</span><span class="when">2026-08-04</span><span class="what">Mirror Obsidian&#x27;s core reflexes (quick switcher, graph, backlinks, tags) in the site rather than requiring the app (see <code>decisions.md</code>).</span></li><li><span class="kind kind--update">Updated</span><span class="when">2026-08-04</span><span class="what">Site gained quick search (⌘K), graph view, linked mentions, and tag filters; <code>#tags</code> added to every vault page.</span></li><li><span class="kind kind--build">BUILD</span><span class="when">2026-08-04</span><span class="what"><code>tools/build_vault.py</code> added: regenerates <code>index.html</code>&#x27;s manifest/snapshots and <code>weekly.html</code>; weekly GitHub Actions cron wired up.</span></li><li><span class="kind kind--achieve">Achievement</span><span class="when">2026-08-04</span><span class="what">Vault became self-maintaining and Obsidian-grade (see <code>achievements.md</code>).</span></li></ul>
+</section>
+
+<section class="block">
+  <div class="block__head"><span class="label">Open loops</span><span class="num">02 / 03</span></div>
+  <h2 class="block__title">What's <em>still open.</em></h2>
+  <div class="md"><p class="quiet">No open loops. Inbox at zero.</p></div>
+</section>
+
+<section class="block">
+  <div class="block__head"><span class="label">Contents</span><span class="num">03 / 03</span></div>
+  <h2 class="block__title">Everything <em>you have.</em></h2>
+  <ul class="toc"><li><a href="#file-pending">Tasks<span>wiki/pending.md</span></a></li><li><a href="#file-achievements">Achievements<span>wiki/achievements.md</span></a></li><li><a href="#file-goals">Vision<span>wiki/goals.md</span></a></li><li><a href="#file-index">Understanding<span>wiki/index.md</span></a></li><li><a href="#file-decisions">Log · Decisions<span>wiki/decisions.md</span></a></li><li><a href="#file-log">Log · History<span>wiki/log.md</span></a></li><li><a href="#file-ideas">Ideas<span>wiki/ideas.md</span></a></li><li><a href="#file-reading-list">Reading list<span>wiki/reading-list.md</span></a></li><li><a href="#file-claude">Schema<span>CLAUDE.md</span></a></li></ul>
+</section>
+
+<section class="page" id="file-pending"><header class="page__head"><p class="page__path">wiki/pending.md</p><h2>Tasks</h2><div class="page__tags"><span class="tag">#tasks</span><span class="tag">#gtd</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Pending Items</h1>
+<p>Open loops live here — captured fast, triaged weekly, and never lost. See <code>CLAUDE.md</code> → CAPTURE / TRIAGE / COMPLETE for the workflow.</p>
+<p><b>Open:</b> 0 · <b>Waiting:</b> 0 · <b>Overdue:</b> 0 · <em>Last triage: 2026-07-17</em></p>
+<h2>Inbox</h2>
+<p><em>Empty — capture anything with &quot;capture: &lt;item&gt;&quot;.</em></p>
+<h2>Next actions</h2>
+<p><em>None yet.</em></p>
+<h2>Waiting on</h2>
+<p><em>None yet.</em></p>
+<h2>Scheduled</h2>
+<p><em>None yet.</em></p>
+<h2>Recently completed</h2>
+<p><em>None yet.</em></p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-goals">goals</a> — every active goal should have at least one item here</li><li><a class="wl" href="#file-ideas">ideas</a> — where non-actionable &quot;someday&quot; items get demoted</li><li><a class="wl" href="#file-achievements">achievements</a> — where milestone completions get promoted</li></ul></div></section><section class="page" id="file-achievements"><header class="page__head"><p class="page__path">wiki/achievements.md</p><h2>Achievements</h2><div class="page__tags"><span class="tag">#achievements</span><span class="tag">#wins</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Achievements Vault</h1>
+<p>Wins, milestones, and shipped work — the trophy shelf of this vault. Reviewed during weekly REVIEW; feeds performance reviews, retros, and motivation on bad days.</p>
+<h2>2026</h2>
+<h3>August</h3>
+<h3>🏆 Vault became self-maintaining and Obsidian-grade — 2026-08-04</h3>
+<p><b>What:</b> Added a dependency-free build script that regenerates the site and a weekly <code>weekly.html</code> digest of the entire vault, wired to a Monday cron; brought Obsidian&#x27;s core reflexes into the site — quick search (⌘K), graph view, linked mentions, and tag filters. <b>Impact:</b> The vault now maintains its own front-end (no hand-edited snapshots to drift) and produces a printable weekly snapshot of everything, while matching the daily-driver moves of the tool it&#x27;s modelled on — without needing that tool installed. <b>Links:</b> <a class="wl" href="#file-decisions">decisions</a>, <a class="wl" href="#file-index">index</a></p>
+<h3>July</h3>
+<h3>🏆 Personal vault upgraded to best-in-class feature set — 2026-07-17</h3>
+<p><b>What:</b> Extended the LLM-wiki into a full vault: pending-items tracker, this achievements vault, goals, decision log, ideas parking lot, reading list, and a weekly-review ritual. <b>Impact:</b> The vault now covers the core workflows of leading tools (Obsidian + Tasks, Notion, Logseq) while staying plain markdown — nothing captured here can silently fall through the cracks anymore. <b>Links:</b> <a class="wl" href="#file-pending">pending</a>, <a class="wl" href="#file-goals">goals</a></p>
+<h3>June</h3>
+<h3>🏆 Vault initialized — 2026-06-05</h3>
+<p><b>What:</b> Set up the LLM-wiki pattern: <code>raw/</code> sources, LLM-owned <code>wiki/</code>, schema in <code>CLAUDE.md</code>. <b>Impact:</b> Knowledge now compounds across sessions instead of being re-derived every time. <b>Links:</b> <a class="wl" href="#file-log">log</a></p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-pending">pending</a> — milestone completions get promoted from there</li><li><a class="wl" href="#file-goals">goals</a> — closed goals land here</li></ul></div></section><section class="page" id="file-goals"><header class="page__head"><p class="page__path">wiki/goals.md</p><h2>Vision</h2><div class="page__tags"><span class="tag">#goals</span><span class="tag">#vision</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Goals &amp; Active Projects</h1>
+<p>What the vault is working toward. Every <b>active</b> goal must have at least one next action in <a class="wl" href="#file-pending">pending</a> — checked during weekly REVIEW.</p>
+<h2>Active</h2>
+<h3>Build a compounding personal knowledge vault</h3>
+<ul><li><b>Why:</b> Stop re-deriving the same knowledge every session; make work and wins visible over time.</li><li><b>Done when:</b> The vault is used weekly (captures, reviews, ingests) for a full quarter.</li><li><b>Next actions:</b> see <a class="wl" href="#file-pending">pending</a></li><li><b>Status notes:</b> 2026-07-17 — feature set complete; adoption is now the goal.</li></ul>
+<h2>Parked</h2>
+<p><em>None.</em></p>
+<h2>Completed</h2>
+<p><em>Closed goals move here with a date and a matching <a class="wl" href="#file-achievements">achievements</a> entry.</em></p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-pending">pending</a> — next actions for each goal</li><li><a class="wl" href="#file-achievements">achievements</a> — where completed goals are celebrated</li></ul></div></section><section class="page" id="file-index"><header class="page__head"><p class="page__path">wiki/index.md</p><h2>Understanding</h2><div class="page__tags"><span class="tag">#knowledge</span><span class="tag">#map</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Vault Index — Understanding</h1>
+<p>The vault in one glance. Open <code>index.html</code> in a browser for the visual deck, or jump straight into a file below.</p>
+<h2>The five pillars — V.A.U.L.T</h2>
+<table><tr><th>Pillar</th><th>File</th><th>What lives there</th></tr><tr><td><b>V</b> — Vision</td><td><a class="wl" href="#file-goals">goals</a></td><td>Goals &amp; active projects</td></tr><tr><td><b>A</b> — Achievements</td><td><a class="wl" href="#file-achievements">achievements</a></td><td>Wins &amp; milestones, by month</td></tr><tr><td><b>U</b> — Understanding</td><td>this index</td><td>Knowledge pages, one per topic</td></tr><tr><td><b>L</b> — Log</td><td><a class="wl" href="#file-decisions">decisions</a> · <a class="wl" href="#file-log">log</a></td><td>Why (decisions) and when (history)</td></tr><tr><td><b>T</b> — Tasks</td><td><a class="wl" href="#file-pending">pending</a></td><td>Inbox, next actions, waiting, scheduled</td></tr></table>
+<h2>Queues</h2>
+<ul><li><a class="wl" href="#file-ideas">ideas</a> — someday/maybe parking lot</li><li><a class="wl" href="#file-reading-list">reading-list</a> — sources waiting to be ingested</li></ul>
+<h2>Knowledge pages</h2>
+<p><em>None yet — drop a source in <code>raw/</code> and say &quot;ingest&quot;.</em></p>
+<hr>
+<p><em>Last updated: 2026-07-19</em></p></div></section><section class="page" id="file-decisions"><header class="page__head"><p class="page__path">wiki/decisions.md</p><h2>Log · Decisions</h2><div class="page__tags"><span class="tag">#decisions</span><span class="tag">#adr</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Decision Log</h1>
+<p>Significant choices, recorded so future-you knows <em>why</em> — not just <em>what</em>. Lightweight ADR pattern; never edit history, supersede instead.</p>
+<h3>2026-07-17 — Extend the wiki into a full vault with plain-markdown features  <code>accepted</code></h3>
+<p><b>Context:</b> The wiki had knowledge pages but no way to track open loops, wins, or goals — items raised in conversation were being lost between sessions. <b>Options:</b> (a) adopt an external tool (Obsidian/Notion) alongside the wiki; (b) extend the wiki itself with vault pages; (c) keep the wiki knowledge-only. <b>Decision &amp; rationale:</b> (b) — everything stays in one git-versioned, LLM-operable markdown vault; the best-of-market features (pending items, achievements, reviews) are conventions, not software, so they port cleanly.</p>
+<h3>2026-07-19 — Organize the vault as V.A.U.L.T with a clickable deck front-end  <code>accepted</code></h3>
+<p><b>Context:</b> The vault&#x27;s layout and operation weren&#x27;t clear — many files, no obvious structure, and no way to browse them visually alongside the initial Etex website. <b>Options:</b> (a) keep the flat file list and improve docs only; (b) reorganize around a memorable five-pillar scheme (V.A.U.L.T) plus a single-file website in the style of the Etex procurement site. <b>Decision &amp; rationale:</b> (b) — V.A.U.L.T (Vision, Achievements, Understanding, Log, Tasks) gives every file one obvious home, and <code>index.html</code> makes each file clickable and shows what&#x27;s missing at a glance, in the same visual language as the initial website.</p>
+<h3>2026-08-04 — Generate the site and a weekly digest from the markdown  <code>accepted</code></h3>
+<p><b>Context:</b> Two gaps: the site&#x27;s offline snapshots and file manifest had to be hand-maintained (they drift), and there was no periodic snapshot of the vault as a whole — nothing to read, print, or mail once a week. <b>Options:</b> (a) keep hand-editing <code>index.html</code> and skip the digest; (b) adopt a static-site generator (Eleventy/Hugo) and a Node toolchain; (c) one dependency-free Python script that regenerates the generated regions of <code>index.html</code> plus a standalone <code>weekly.html</code>, run on a weekly GitHub Actions cron. <b>Decision &amp; rationale:</b> (c) — keeps the zero-dependency, single-file character of the vault (nothing to install, works offline), removes the drift risk by construction, and the weekly cron makes the digest a rhythm rather than a chore. A generator would have bought templating we don&#x27;t need at the price of a toolchain.</p>
+<h3>2026-08-04 — Mirror Obsidian&#x27;s core reflexes in the site  <code>accepted</code></h3>
+<p><b>Context:</b> The vault holds Obsidian-shaped content (wikilinks, tags, tasks) but the site only browsed files — none of the moves that make Obsidian fast. <b>Options:</b> (a) tell people to open the folder in Obsidian; (b) rebuild the vault inside Obsidian&#x27;s format (plugins, config, <code>.obsidian/</code>); (c) implement the four reflexes that matter — quick switcher, graph view, backlinks, tag filters — directly in the page. <b>Decision &amp; rationale:</b> (c) — the vault stays plain markdown that Obsidian can still open, while the site works for anyone with a browser and no app installed. Backlinks and the graph fall out of the <code>[[wikilink]]</code> data we already keep, so they cost no new schema.</p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-log">log</a> — every decision also gets a <code>[DECIDE]</code> log line</li></ul></div></section><section class="page" id="file-log"><header class="page__head"><p class="page__path">wiki/log.md</p><h2>Log · History</h2><div class="page__tags"><span class="tag">#log</span><span class="tag">#history</span><span class="tag">#vault/pillar</span></div></header><div class="md"><h1>Wiki Log</h1>
+<p>Append-only chronological record. Newest entries at the bottom.</p>
+<table><tr><th>Prefix</th><th>Meaning</th></tr><tr><td><code>[INGEST]</code></td><td>A new source was processed</td></tr><tr><td><code>[QUERY]</code></td><td>A query was filed as a wiki page</td></tr><tr><td><code>[LINT]</code></td><td>A lint run was completed</td></tr><tr><td><code>[UPDATE]</code></td><td>An existing wiki page was revised</td></tr><tr><td><code>[CAPTURE]</code></td><td>A pending item was added to the inbox</td></tr><tr><td><code>[DONE]</code></td><td>A pending item was completed</td></tr><tr><td><code>[ACHIEVE]</code></td><td>An achievement was recorded</td></tr><tr><td><code>[DECIDE]</code></td><td>A decision was logged</td></tr><tr><td><code>[REVIEW]</code></td><td>A weekly review was completed</td></tr></table>
+<hr>
+<p>[INGEST] 2026-06-05 — Wiki initialized. Directory structure created: <code>raw/</code>, <code>wiki/</code>. Schema defined in <code>CLAUDE.md</code>. [UPDATE] 2026-07-17 — Vault features added: <code>pending.md</code>, <code>achievements.md</code>, <code>goals.md</code>, <code>decisions.md</code>, <code>ideas.md</code>, <code>reading-list.md</code>; new operations (CAPTURE, TRIAGE, COMPLETE, ACHIEVE, DECIDE, REVIEW) defined in <code>CLAUDE.md</code>; <code>index.md</code> upgraded to a dashboard. [DECIDE] 2026-07-17 — Extend the wiki into a full vault with plain-markdown features (see <code>decisions.md</code>). [ACHIEVE] 2026-07-17 — Personal vault upgraded to best-in-class feature set (see <code>achievements.md</code>). [DECIDE] 2026-07-19 — Organize the vault as V.A.U.L.T: five pillars (Vision, Achievements, Understanding, Log, Tasks) with a clickable deck front-end (see <code>decisions.md</code>). [UPDATE] 2026-07-19 — V.A.U.L.T site added at <code>index.html</code> (deck of clickable MD files, reader, &quot;what&#x27;s missing&quot; panel); <code>README.md</code> guide added; <code>wiki/index.md</code> restructured around the five pillars. [ACHIEVE] 2026-06-05 — Vault initialized (backfilled 2026-07-19 to match <code>achievements.md</code>; entry was missing when the achievement was recorded). [DECIDE] 2026-08-04 — Generate the site and a weekly digest from the markdown with a dependency-free build script (see <code>decisions.md</code>). [DECIDE] 2026-08-04 — Mirror Obsidian&#x27;s core reflexes (quick switcher, graph, backlinks, tags) in the site rather than requiring the app (see <code>decisions.md</code>). [UPDATE] 2026-08-04 — Site gained quick search (⌘K), graph view, linked mentions, and tag filters; <code>#tags</code> added to every vault page. [BUILD] 2026-08-04 — <code>tools/build_vault.py</code> added: regenerates <code>index.html</code>&#x27;s manifest/snapshots and <code>weekly.html</code>; weekly GitHub Actions cron wired up. [ACHIEVE] 2026-08-04 — Vault became self-maintaining and Obsidian-grade (see <code>achievements.md</code>).</p></div></section><section class="page" id="file-ideas"><header class="page__head"><p class="page__path">wiki/ideas.md</p><h2>Ideas</h2><div class="page__tags"><span class="tag">#ideas</span><span class="tag">#someday</span><span class="tag">#vault/queue</span></div></header><div class="md"><h1>Ideas — Someday / Maybe</h1>
+<p>The parking lot: things worth keeping but not worth an open loop. Demoted here from <a class="wl" href="#file-pending">pending</a> during TRIAGE, or captured directly. Scanned during weekly REVIEW — promote to <a class="wl" href="#file-pending">pending</a> when the time is right, delete when stale.</p>
+<h2>Vault</h2>
+<ul><li>Add a <code>people/</code> section — one page per collaborator with context and open threads (Notion CRM pattern).</li><li>Auto-generate a monthly &quot;highlights&quot; digest from <code>[ACHIEVE]</code> and <code>[DONE]</code> log entries.</li><li>Add spaced-repetition prompts to key wiki pages (Anki/Obsidian-SR pattern) for knowledge that must stay fresh.</li></ul>
+<h2>Other</h2>
+<p><em>Empty.</em></p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-pending">pending</a> — ideas get promoted there when they become actionable</li></ul></div></section><section class="page" id="file-reading-list"><header class="page__head"><p class="page__path">wiki/reading-list.md</p><h2>Reading list</h2><div class="page__tags"><span class="tag">#reading</span><span class="tag">#sources</span><span class="tag">#vault/queue</span></div></header><div class="md"><h1>Reading List</h1>
+<p>Sources queued for ingestion and references worth keeping. Checked during weekly REVIEW: read → drop the file in <code>raw/</code> and run INGEST; obsolete → delete the row.</p>
+<h2>To read / ingest</h2>
+<table><tr><th>Added</th><th>Source</th><th>Why it matters</th></tr><tr><td>2026-07-17</td><td><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">Karpathy&#x27;s LLM-wiki gist</a></td><td>Origin of this vault&#x27;s core pattern — re-read when evolving the schema</td></tr></table>
+<h2>Ingested</h2>
+<p><em>Rows move here with the ingest date and the resulting wiki page(s).</em></p>
+<h2>Cross-references</h2>
+<ul><li><a class="wl" href="#file-index">index</a> — ingested sources become catalog entries</li></ul></div></section><section class="page" id="file-claude"><header class="page__head"><p class="page__path">CLAUDE.md</p><h2>Schema</h2><div class="page__tags"></div></header><div class="md"><h1>V.A.U.L.T — Schema &amp; Workflow</h1>
+<p>This repository implements <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">Karpathy&#x27;s LLM-wiki pattern</a> extended into a full personal vault: an LLM-maintained knowledge base that compounds over time instead of re-processing raw sources on every query, plus the productivity surfaces found in best-in-class vaults (Obsidian, Notion, Logseq).</p>
+<p>The vault is organized as <b>V.A.U.L.T — five pillars</b>, one file each:</p>
+<table><tr><th>Pillar</th><th>File</th><th>What lives there</th></tr><tr><td><b>V</b> — Vision</td><td><code>wiki/goals.md</code></td><td>Goals &amp; active projects</td></tr><tr><td><b>A</b> — Achievements</td><td><code>wiki/achievements.md</code></td><td>Wins &amp; milestones, by month</td></tr><tr><td><b>U</b> — Understanding</td><td><code>wiki/index.md</code> + topic pages</td><td>Knowledge, one page per topic</td></tr><tr><td><b>L</b> — Log</td><td><code>wiki/decisions.md</code> + <code>wiki/log.md</code></td><td>Why (decisions) and when (history)</td></tr><tr><td><b>T</b> — Tasks</td><td><code>wiki/pending.md</code></td><td>Inbox, next actions, waiting, scheduled</td></tr></table>
+<p>Two queues feed the pillars: <code>wiki/ideas.md</code> (someday/maybe) and <code>wiki/reading-list.md</code> (sources to ingest). <code>index.html</code> at the repo root is the visual front door — a clickable deck where every markdown file opens in a reader.</p>
+<h2>Directory Layout</h2>
+<pre><code>index.html  ← V.A.U.L.T site: clickable deck over the wiki (zero-dependency, single file)
+weekly.html ← GENERATED weekly digest: the whole vault as of the last build
+tools/build_vault.py ← rebuilds index.html&#x27;s manifest/snapshots and weekly.html
+.github/workflows/weekly-vault.yml ← runs the build every Monday and commits
+README.md   ← plain-language guide to using the vault
+raw/        ← immutable source documents (never modified by the LLM)
+wiki/       ← LLM-owned markdown knowledge base
+  index.md  ← the Understanding pillar: pillar map + knowledge-page catalog
+  log.md    ← append-only chronological record
+  pending.md      ← pending items: inbox + triaged next actions (GTD-style)
+  achievements.md ← achievements vault: wins, milestones, shipped work
+  goals.md        ← goals &amp; active projects the vault is serving
+  decisions.md    ← decision log (lightweight ADR pattern)
+  ideas.md        ← someday/maybe parking lot
+  reading-list.md ← queued sources and resources to ingest
+  &lt;topic&gt;.md      ← one page per entity, concept, or summary
+CLAUDE.md   ← this file; defines schema and workflows</code></pre>
+<h2>Core Operations</h2>
+<h3>INGEST</h3>
+<p>Trigger: &quot;ingest <code>raw/&lt;file&gt;</code>&quot; or &quot;ingest all new sources&quot;</p>
+<p>Steps:</p>
+<ol><li>Read the source file(s) in <code>raw/</code>.</li><li>Identify key entities, concepts, claims, and data points.</li><li>Discuss the top 3–5 takeaways briefly.</li><li>Create or update the relevant wiki page(s) in <code>wiki/</code>:</li></ol>
+<ul><li>Add a <b>Summary</b> section with a 2–4 sentence abstract.</li><li>Add or update <b>Key Points</b> as a bullet list.</li><li>Add <b>Cross-references</b> to other wiki pages that are related.</li><li>Add <b>Source</b> citation at the bottom: <code>Source: raw/&lt;filename&gt;</code>.</li></ul>
+<ol><li>Update <code>wiki/index.md</code>:</li></ol>
+<ul><li>Add the new page under the appropriate category.</li><li>If no category fits, create one.</li></ul>
+<ol><li>Append to <code>wiki/log.md</code>:</li></ol>
+<p>   ``<code>    [INGEST] YYYY-MM-DD — &lt;source file&gt; → &lt;wiki page(s) created/updated&gt;    </code>``</p>
+<h3>QUERY</h3>
+<p>Trigger: any question asked against the knowledge base</p>
+<p>Steps:</p>
+<ol><li>Identify which wiki pages are relevant to the question.</li><li>Read those pages (do <b>not</b> re-read raw sources unless the wiki is missing critical detail).</li><li>Synthesize an answer and cite the wiki pages used: <code>(→ wiki/&lt;page&gt;.md)</code>.</li><li>If the answer is substantive and reusable, offer to file it as a new wiki page.</li></ol>
+<h3>CAPTURE</h3>
+<p>Trigger: &quot;capture: &lt;item&gt;&quot;, &quot;add pending item&quot;, &quot;remind me to &lt;x&gt;&quot;, or any task/commitment surfacing mid-conversation</p>
+<p>Steps:</p>
+<ol><li>Append the item to the <b>Inbox</b> section of <code>wiki/pending.md</code> using the pending-item format (see below). Capture first, organize later — never lose an item because triage felt like work.</li><li>If the item clearly belongs to a project or topic, link it: <code>from: [[&lt;page&gt;]]</code>.</li><li>Append to <code>wiki/log.md</code>: <code>[CAPTURE] YYYY-MM-DD — &lt;item&gt;</code></li></ol>
+<h3>TRIAGE</h3>
+<p>Trigger: &quot;triage the inbox&quot; or automatically when the Inbox exceeds ~10 items</p>
+<p>Steps:</p>
+<ol><li>Move each Inbox item into <b>Next actions</b>, <b>Waiting on</b>, <b>Scheduled</b>, or demote it to <code>wiki/ideas.md</code> (someday/maybe) or delete it (no longer relevant).</li><li>Assign priority (<code>⏫ high / 🔼 normal / 🔽 low</code>) and a due date where one exists.</li><li>Update the counts line at the top of <code>wiki/pending.md</code>.</li></ol>
+<h3>COMPLETE</h3>
+<p>Trigger: &quot;done: &lt;item&gt;&quot; or noticing an item was finished</p>
+<p>Steps:</p>
+<ol><li>Check the box and move the item to the <b>Recently completed</b> section of <code>wiki/pending.md</code> with a completion date (<code>✅ YYYY-MM-DD</code>).</li><li>If the item is a milestone worth remembering (shipped something, closed a goal, external recognition), also run <b>ACHIEVE</b>.</li><li>Append to <code>wiki/log.md</code>: <code>[DONE] YYYY-MM-DD — &lt;item&gt;</code></li><li>During REVIEW, prune <b>Recently completed</b> entries older than 30 days (they survive in <code>log.md</code>).</li></ol>
+<h3>ACHIEVE</h3>
+<p>Trigger: &quot;log achievement: &lt;x&gt;&quot;, COMPLETE of a milestone item, or a clear win surfacing in conversation</p>
+<p>Steps:</p>
+<ol><li>Add an entry to <code>wiki/achievements.md</code> under the current year/month using the achievement format: what was achieved, why it mattered (impact), and links to related pages.</li><li>Append to <code>wiki/log.md</code>: <code>[ACHIEVE] YYYY-MM-DD — &lt;achievement&gt;</code></li></ol>
+<h3>DECIDE</h3>
+<p>Trigger: &quot;log decision: &lt;x&gt;&quot; or a significant choice being settled in conversation</p>
+<p>Steps:</p>
+<ol><li>Add an entry to <code>wiki/decisions.md</code>: date, decision, context, options considered, rationale, and status (<code>accepted</code> / <code>superseded by &lt;entry&gt;</code>).</li><li>Append to <code>wiki/log.md</code>: <code>[DECIDE] YYYY-MM-DD — &lt;decision&gt;</code></li></ol>
+<h3>REVIEW (weekly)</h3>
+<p>Trigger: &quot;weekly review&quot; or &quot;review the vault&quot;</p>
+<p>Steps:</p>
+<ol><li><b>Sweep pending</b>: triage the Inbox to zero; flag overdue and stale (&gt;30 days untouched) items; prune old <b>Recently completed</b> entries.</li><li><b>Check goals</b>: for each active goal in <code>wiki/goals.md</code>, note progress and confirm at least one next action exists in <code>wiki/pending.md</code>; park stalled goals explicitly.</li><li><b>Celebrate</b>: scan the week&#x27;s <code>[DONE]</code> log entries and promote anything achievement-worthy to <code>wiki/achievements.md</code>.</li><li><b>Feed the queue</b>: check <code>wiki/reading-list.md</code> — anything read gets ingested, anything obsolete gets dropped.</li><li>Run <b>LINT</b> (below).</li><li>Append to <code>wiki/log.md</code>: <code>[REVIEW] YYYY-MM-DD — &lt;one-line summary of the week&gt;</code></li><li>Run <b>BUILD</b> (below) so <code>weekly.html</code> captures the reviewed state.</li></ol>
+<h3>BUILD</h3>
+<p>Trigger: after any wiki change, at the end of REVIEW, or &quot;rebuild the site&quot;</p>
+<p>Steps:</p>
+<ol><li>Run <code>python3 tools/build_vault.py</code> (no dependencies). It regenerates:</li></ol>
+<ul><li>the <code>FILES</code> manifest and embedded snapshot blocks in <code>index.html</code> — new topic pages</li></ul>
+<p>     appear in the deck automatically, with title and description derived from the page itself;</p>
+<ul><li><code>weekly.html</code> — a dated, self-contained digest of the whole vault.</li></ul>
+<ol><li>Never hand-edit the regions marked <code>BUILD:FILES</code> or <code>BUILD:SNAPSHOTS</code> in <code>index.html</code>,</li></ol>
+<p>   or <code>weekly.html</code> at all — the next build overwrites them.</p>
+<ol><li><code>python3 tools/build_vault.py --check</code> exits non-zero when outputs are stale (used by CI).</li></ol>
+<h3>LINT</h3>
+<p>Trigger: &quot;lint the wiki&quot; or periodic health check</p>
+<p>Steps:</p>
+<ol><li>Read <code>wiki/index.md</code> and all wiki pages.</li><li>Report:</li></ol>
+<ul><li><b>Contradictions</b>: claims in different pages that conflict.</li><li><b>Orphan pages</b>: pages not linked from <code>index.md</code> or any cross-reference.</li><li><b>Broken cross-references</b>: links pointing to pages that don&#x27;t exist.</li><li><b>Stale claims</b>: pages whose sources may have been superseded.</li><li><b>Data gaps</b>: topics mentioned in cross-references but lacking their own page.</li></ul>
+<ol><li>For each issue found, propose a fix and ask whether to apply it.</li></ol>
+<hr>
+<h2>Wiki Page Format</h2>
+<p>Each <code>wiki/&lt;topic&gt;.md</code> follows this template:</p>
+<pre><code># &lt;Topic Name&gt;
+
+## Summary
+&lt;2–4 sentence abstract of what this page covers&gt;
+
+## Key Points
+- &lt;point 1&gt;
+- &lt;point 2&gt;
+- ...
+
+## Cross-references
+- [[&lt;related topic&gt;]] — &lt;one-line reason for the link&gt;
+
+## Sources
+- `raw/&lt;filename&gt;` — &lt;brief description of this source&gt;</code></pre>
+<h2>Pending Item Format (<code>wiki/pending.md</code>)</h2>
+<p>One checkbox line per item, Obsidian-Tasks-style inline fields (only the ones that apply):</p>
+<pre><code>- [ ] &lt;action, starting with a verb&gt; ⏫ 📅 2026-07-24 · from: [[&lt;page&gt;]] · waiting-on: &lt;who&gt;</code></pre>
+<ul><li>Priority: <code>⏫</code> high · <code>🔼</code> normal (default, may be omitted) · <code>🔽</code> low</li><li><code>📅 YYYY-MM-DD</code> — due date; <code>✅ YYYY-MM-DD</code> — completion date (added on COMPLETE)</li><li>Sections in order: <b>Inbox</b> → <b>Next actions</b> → <b>Waiting on</b> → <b>Scheduled</b> → <b>Recently completed</b></li></ul>
+<h2>Achievement Format (<code>wiki/achievements.md</code>)</h2>
+<p>Grouped by year, then month, newest first:</p>
+<pre><code>### 🏆 &lt;achievement title&gt; — YYYY-MM-DD
+**What:** &lt;one or two sentences on what was accomplished&gt;
+**Impact:** &lt;why it mattered — outcome, numbers, recognition&gt;
+**Links:** [[&lt;related page&gt;]]</code></pre>
+<h2>Decision Format (<code>wiki/decisions.md</code>)</h2>
+<pre><code>### YYYY-MM-DD — &lt;decision title&gt;  `accepted`
+**Context:** &lt;what forced the choice&gt;
+**Options:** &lt;alternatives considered&gt;
+**Decision &amp; rationale:** &lt;what was chosen and why&gt;</code></pre>
+<p>Status is <code>accepted</code> until superseded — never edit history; add a new entry and mark the old one <code>superseded by &lt;new entry&gt;</code>.</p>
+<h2>Index Format (<code>wiki/index.md</code>)</h2>
+<p>Starts with the <b>five-pillar map</b> (the V.A.U.L.T table linking goals, achievements, decisions, log, and pending), then a <b>Queues</b> section (ideas, reading list), then the <b>Knowledge pages</b> catalog organized by category. Each catalog entry: <code>- [[&lt;topic&gt;]] — &lt;one-line description&gt;</code>. Ends with a <code>*Last updated: YYYY-MM-DD*</code> line.</p>
+<h2>Log Format (<code>wiki/log.md</code>)</h2>
+<p>Append-only. Newest entries at the bottom. Parseable prefixes:</p>
+<table><tr><th>Prefix</th><th>Meaning</th></tr><tr><td><code>[INGEST]</code></td><td>A new source was processed</td></tr><tr><td><code>[QUERY]</code></td><td>A query was filed as a wiki page</td></tr><tr><td><code>[LINT]</code></td><td>A lint run was completed</td></tr><tr><td><code>[UPDATE]</code></td><td>An existing wiki page was revised</td></tr><tr><td><code>[CAPTURE]</code></td><td>A pending item was added to the inbox</td></tr><tr><td><code>[DONE]</code></td><td>A pending item was completed</td></tr><tr><td><code>[ACHIEVE]</code></td><td>An achievement was recorded</td></tr><tr><td><code>[DECIDE]</code></td><td>A decision was logged</td></tr><tr><td><code>[REVIEW]</code></td><td>A weekly review was completed</td></tr><tr><td><code>[BUILD]</code></td><td>The site and weekly digest were rebuilt</td></tr></table>
+<hr>
+<h2>Conventions</h2>
+<ul><li>The LLM <b>reads</b> <code>raw/</code> but <b>never modifies</b> it.</li><li>The LLM <b>owns</b> <code>wiki/</code> entirely: creates, updates, and cross-links pages.</li><li>Humans <b>read</b> <code>wiki/</code> and <b>curate</b> <code>raw/</code>.</li><li>Cross-references use <code>[[page-name]]</code> notation (filename without <code>.md</code>). These are the edges in the site&#x27;s graph view and drive its &quot;Linked mentions&quot; (backlinks) panel — link generously.</li><li>Tags are Obsidian-style inline <code>#tag</code> words (hierarchies allowed: <code>#vault/pillar</code>). Put them on their own line under the page intro. They become filter chips in the deck.</li><li>All dates use <code>YYYY-MM-DD</code> format.</li><li>Keep pages focused: one entity or concept per page. Use cross-references rather than duplicating content.</li><li><code>index.html</code> reads the live <code>wiki/*.md</code> files when served over HTTP and falls back to embedded snapshots when opened from disk. <b>Never hand-edit those snapshots or the <code>FILES</code> manifest</b> — run <b>BUILD</b> (<code>python3 tools/build_vault.py</code>) after any wiki change and it regenerates both, plus <code>weekly.html</code>.</li></ul></div></section>
+
+</main>
+
+<footer class="wrap">
+  <span>V.A.U.L.T weekly digest · generated 2026-08-04</span>
+  <span>12 log entries · 0 topic pages</span>
+  <span><a href="index.html">← Back to the live vault</a></span>
+</footer>
+
+</body>
+</html>

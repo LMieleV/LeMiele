@@ -2,6 +2,8 @@
 
 The vault in one glance. Open `index.html` in a browser for the visual deck, or jump straight into a file below.
 
+#knowledge #map #vault/pillar
+
 ## The five pillars — V.A.U.L.T
 
 | Pillar | File | What lives there |

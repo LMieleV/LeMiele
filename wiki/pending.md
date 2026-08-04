@@ -2,6 +2,8 @@
 
 Open loops live here — captured fast, triaged weekly, and never lost. See `CLAUDE.md` → CAPTURE / TRIAGE / COMPLETE for the workflow.
 
+#tasks #gtd #vault/pillar
+
 **Open:** 0 · **Waiting:** 0 · **Overdue:** 0 · *Last triage: 2026-07-17*
 
 ## Inbox
