@@ -12,3 +12,4 @@ Append-only chronological record. Newest entries at the bottom.
 ---
 
 [INGEST] 2026-06-05 — Wiki initialized. Directory structure created: `raw/`, `wiki/`. Schema defined in `CLAUDE.md`.
+[QUERY] 2026-10-14 — Kitchen quote: separate vs. whole-apartment decision + email draft → wiki/kitchen-quote.md

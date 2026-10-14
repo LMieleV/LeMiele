@@ -8,6 +8,10 @@ Content catalog — updated on every ingest. Organized by category.
 
 - [[log]] — Chronological record of all wiki operations
 
+## Apartments
+
+- [[kitchen-quote]] — Kitchen quote strategy (quote separately, priority for move-in) and quote-request email draft
+
 ---
 
-*Last updated: 2026-06-05*
+*Last updated: 2026-10-14*
